@@ -1,0 +1,8 @@
+{
+	"name": "@frytg/dotfiles",
+	"scripts": {
+		"brew": "zsh ./brew.sh",
+		"install": "zsh ./install.sh",
+		"update": "zsh ./update.sh"
+	}
+}
