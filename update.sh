@@ -18,3 +18,6 @@ nvm install 22
 
 # gcloud
 gcloud components update --quiet
+
+# Rust
+rustup update

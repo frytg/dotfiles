@@ -5,6 +5,9 @@ set -e
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 
+# dotenvx
+brew install dotenvx/brew/dotenvx
+
 # Ghostty
 brew install --cask ghostty
 
@@ -14,11 +17,14 @@ brew install \
 	brotli \
 	colima \
 	ffmpeg \
+	flyctl \
 	hugo \
 	hurl \
+	hyperfine \
 	jq \
 	llama.cpp \
 	pkl \
 	ruby \
 	pyenv \
-	rsync
+	rsync \
+	scw
