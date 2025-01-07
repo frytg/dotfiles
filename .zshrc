@@ -1,3 +1,7 @@
+# set default env vars
+export DO_NOT_TRACK=1
+export HOMEBREW_NO_ANALYTICS=1
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '$HOME/dev/google-cloud-sdk/path.zsh.inc' ]; then . '$HOME/dev/google-cloud-sdk/path.zsh.inc'; fi
 

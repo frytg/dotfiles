@@ -10,6 +10,7 @@ ln -sf "$(PWD)/.ghostty" ~/.config/ghostty/config
 
 # link basic config files to home dir
 ln -sf "$(PWD)/.aliases" ~
+ln -sf "$(PWD)/.bunfig.toml" ~
 ln -sf "$(PWD)/.gitconfig" ~
 ln -sf "$(PWD)/.zshrc" ~
 

@@ -1,6 +1,3 @@
-#!/bin/zsh
-set -e
-
 alias ..="cd .."
 alias down="cd ~/Downloads"
 alias lsa="ls -al"
