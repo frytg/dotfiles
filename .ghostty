@@ -1,0 +1,25 @@
+# see docs for all options:
+# https://ghostty.org/docs/config/reference
+
+# colors and styling
+background = 181D16
+foreground = ECEBE3
+cursor-color = FFFF11
+
+# window styling
+window-padding-x = 13
+window-padding-y = 13
+window-colorspace = display-p3
+window-height = 42
+window-width = 140
+window-save-state = always
+
+# fonts
+font-family = IBM Plex Mono
+font-size = 13
+
+# initial directory (currently does not work)
+# working-directory = "~/Downloads"
+
+# to enable xterm something in sudo
+shell-integration-features = sudo
