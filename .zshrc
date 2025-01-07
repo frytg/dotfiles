@@ -15,6 +15,7 @@ export NVM_DIR="$HOME/.nvm"
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/v15.4.0/bin:$HOME/dev/google-cloud-sdk/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 export PATH="/usr/local/opt/libpq/bin:$PATH"
+export PATH="$HOME/.deno/bin:$PATH"
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 export GPG_TTY=$(tty)
 
