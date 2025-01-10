@@ -44,3 +44,6 @@ eval "$(pyenv init -)"
 
 source <(kubectl completion zsh)
 source ~/.aliases
+
+# bun completions
+[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
