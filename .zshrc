@@ -47,3 +47,7 @@ source ~/.aliases
 
 # bun completions
 [ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
+
+# Tailscale CLI
+# https://tailscale.com/kb/1080/cli?tab=macos
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
