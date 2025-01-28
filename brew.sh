@@ -11,6 +11,9 @@ brew install dotenvx/brew/dotenvx
 # Ghostty
 brew install --cask ghostty
 
+# MQTT client (from EMQX)
+brew install emqx/mqttx/mqttx-cli
+
 # other things
 brew install \
 	1password-cli \
@@ -18,6 +21,8 @@ brew install \
 	colima \
 	ffmpeg \
 	flyctl \
+	helm \
+	htop \
 	hugo \
 	hurl \
 	hyperfine \
