@@ -21,8 +21,10 @@ Using the `update.sh` script, you can update installed modules:
 or
 
 ```bash
-bun run update
+just update
 ```
+
+Alternatively update everything (`just all`) or install brew (`just brew`).
 
 ## Author
 

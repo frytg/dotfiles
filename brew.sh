@@ -14,6 +14,9 @@ brew install --cask ghostty
 # MQTT client (from EMQX)
 brew install emqx/mqttx/mqttx-cli
 
+# k9s
+brew install derailed/k9s/k9s
+
 # other things
 brew install \
 	1password-cli \
@@ -27,6 +30,7 @@ brew install \
 	hurl \
 	hyperfine \
 	jq \
+	just \
 	llama.cpp \
 	pkl \
 	ruby \
