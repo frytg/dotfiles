@@ -36,4 +36,5 @@ brew install \
 	ruby \
 	pyenv \
 	rsync \
-	scw
+	scw \
+	valkey
