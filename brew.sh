@@ -32,6 +32,7 @@ brew install \
 	jq \
 	just \
 	llama.cpp \
+	ouch \
 	pkl \
 	ruby \
 	pyenv \
