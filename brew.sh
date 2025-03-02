@@ -20,6 +20,7 @@ brew install derailed/k9s/k9s
 # other things
 brew install \
 	1password-cli \
+	age \
 	brotli \
 	colima \
 	ffmpeg \
