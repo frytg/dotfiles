@@ -35,6 +35,7 @@ brew install \
 	llama.cpp \
 	ouch \
 	pkl \
+	rage \
 	ruby \
 	pyenv \
 	rsync \
