@@ -17,6 +17,14 @@ brew install emqx/mqttx/mqttx-cli
 # k9s
 brew install derailed/k9s/k9s
 
+# tinygo
+brew tap tinygo-org/tools
+brew install tinygo
+
+# Rust probe-rs
+brew tap probe-rs/probe-rs
+brew install probe-rs
+
 # other things
 brew install \
 	1password-cli \
