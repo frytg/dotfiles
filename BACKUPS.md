@@ -13,7 +13,7 @@ Save this key in a safe place (i.e. password manager).
 Use the public key to backup a folder or file.
 
 ```bash
-just backup "path/to/folder" ".agebackupkeypub.txt"
+just wrap "path/to/folder" ".agebackupkeypub.txt"
 ```
 
 ## Restore an element
@@ -21,7 +21,7 @@ just backup "path/to/folder" ".agebackupkeypub.txt"
 Restore using the original key.
 
 ```bash
-just restore "path/to/folder.tar.gz.age" ".agebackupkey.txt"
+just unwrap "path/to/folder.tar.gz.age" ".agebackupkey.txt"
 ```
 
 ## Backup an entire folder
@@ -32,4 +32,12 @@ E.g. backup the Documents/iCloud folder:
 
 ```bash
 just backup-folder "icloud" ~/Documents .agebackupkeypub.txt
+```
+
+## Backup an item
+
+Backup an item to the remote backup bucket.
+
+```bash
+just backup-item "something" "path/to/folder" .agebackupkeypub.txt
 ```

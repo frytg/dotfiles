@@ -40,20 +40,20 @@ age-key-to-1password name:
 
 # backup a single folder into a tar.gz file and encrypt it using age
 [group('ENCRYPTION')]
-backup folder agekey=".agerecipients.txt":
+wrap folder AGE_KEY_PUB=".agekeypub.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
 	foldername="$(basename "{{folder}}")"
 
 	ouch compress "{{folder}}" "$HOME/${foldername}.tar.gz"
-	age --encrypt -R "{{agekey}}" --output "$HOME/${foldername}.tar.gz.age" "$HOME/${foldername}.tar.gz"
+	age --encrypt -R "{{AGE_KEY_PUB}}" --output "$HOME/${foldername}.tar.gz.age" "$HOME/${foldername}.tar.gz"
 	rm "$HOME/${foldername}.tar.gz"
-	open "$HOME"
+	# open "$HOME"
 
 # restore a file or folder from age
 [group('ENCRYPTION')]
-restore file agekey=".agekey.txt":
+unwrap file AGE_KEY_PUB=".agekey.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
@@ -61,32 +61,44 @@ restore file agekey=".agekey.txt":
 	filenamewithoutage=$(basename "$filename" .age)
 	folder=$(dirname "{{file}}")
 
-	just decrypt "$folder/$filename" "$folder/$filenamewithoutage" "{{agekey}}"
+	just decrypt "$folder/$filename" "$folder/$filenamewithoutage" "{{AGE_KEY_PUB}}"
 	if [[ "$filenamewithoutage" == *.tar.gz ]]; then
 		ouch decompress "$folder/$filenamewithoutage" --dir "$folder"
 		ouch list "$folder/$filenamewithoutage" --tree
 		rm "$folder/$filenamewithoutage"
-		open $folder
+		# open $folder
 	fi
 
 # decrypt a file using age
 [group('ENCRYPTION')]
-decrypt filename target agekey=".agekey.txt":
-	age --decrypt -i "{{agekey}}" --output "{{target}}" "{{filename}}"
+decrypt filename target AGE_KEY_PUB=".agekey.txt":
+	age --decrypt -i "{{AGE_KEY_PUB}}" --output "{{target}}" "{{filename}}"
 
-# backup a folder to the remote backup bucket
+# backup an item to the remote backup bucket
 [group('BACKUP')]
-backup-folder prefix path agekey=".agerecipients.txt":
+backup-item REMOTE_PREFIX ITEM_PATH AGE_KEY_PUB=".agekeypub.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	ls -1 {{path}} | while read -r folder; do
-		just backup "{{path}}/$folder" "{{agekey}}"
-		just offload "{{prefix}}" "$HOME/${folder}.tar.gz.age"
+	itemname="$(basename "{{ITEM_PATH}}")"
+
+	just wrap "{{ITEM_PATH}}" "{{AGE_KEY_PUB}}"
+	just offload "{{REMOTE_PREFIX}}" "$HOME/${itemname}.tar.gz.age"
+	rm "$HOME/${itemname}.tar.gz.age"
+
+# backup the elements of a folder to the remote backup bucket
+[group('BACKUP')]
+backup-folder REMOTE_PREFIX FOLDER_PATH AGE_KEY_PUB=".agekeypub.txt":
+	#!/usr/bin/env bash
+	set -euxo pipefail
+
+	ls -1 {{FOLDER_PATH}} | while read -r folder; do
+		just wrap "{{FOLDER_PATH}}/$folder" "{{AGE_KEY_PUB}}"
+		just offload "{{REMOTE_PREFIX}}" "$HOME/${folder}.tar.gz.age"
 		rm "$HOME/${folder}.tar.gz.age"
 	done
 
 # offload a file to the remote backup bucket
 [group('BACKUP')]
-offload prefix file:
-	mc cp "{{file}}" "$Y_BACKUP_MC_ALIAS/$Y_BACKUP_REMOTE_BUCKET/{{prefix}}/$(date +%Y-%m-%d)/$(basename "{{file}}")" --storage-class=GLACIER
+offload REMOTE_PREFIX file:
+	mc cp "{{file}}" "$Y_BACKUP_MC_ALIAS/$Y_BACKUP_REMOTE_BUCKET/{{REMOTE_PREFIX}}/$(date +%Y-%m-%d)/$(basename "{{file}}")" --storage-class=GLACIER
