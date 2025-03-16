@@ -25,6 +25,9 @@ brew install tinygo
 brew tap probe-rs/probe-rs
 brew install probe-rs
 
+# Mino client
+brew install minio/stable/mc
+
 # other things
 brew install \
 	1password-cli \

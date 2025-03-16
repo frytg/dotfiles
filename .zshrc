@@ -2,6 +2,10 @@
 export DO_NOT_TRACK=1
 export HOMEBREW_NO_ANALYTICS=1
 
+# set backups buckets
+export Y_BACKUP_REMOTE_BUCKET="frytg-remote-archive-2025-03"
+export Y_BACKUP_MC_ALIAS="scwfr"
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '$HOME/dev/google-cloud-sdk/path.zsh.inc' ]; then . '$HOME/dev/google-cloud-sdk/path.zsh.inc'; fi
 

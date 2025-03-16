@@ -38,23 +38,15 @@ create-public-key name="key":
 age-key-to-1password name:
 	op document create "./{{name}}.txt" --title "Age key > {{name}}" --tags "age" --file-name "{{name}}.txt"
 
-backup-folders path agekey=".agerecipients.txt":
-	#!/usr/bin/env bash
-	set -euxo pipefail
-
-	ls -1 {{path}} | while read -r folder; do
-		just backup "$folder" "{{agekey}}"
-	done
-
 # backup a single folder into a tar.gz file and encrypt it using age
 [group('ENCRYPTION')]
 backup folder agekey=".agerecipients.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	foldername="$(basename {{folder}})"
+	foldername="$(basename "{{folder}}")"
 
-	ouch compress {{folder}} "$HOME/${foldername}.tar.gz"
+	ouch compress "{{folder}}" "$HOME/${foldername}.tar.gz"
 	age --encrypt -R "{{agekey}}" --output "$HOME/${foldername}.tar.gz.age" "$HOME/${foldername}.tar.gz"
 	rm "$HOME/${foldername}.tar.gz"
 	open "$HOME"
@@ -81,3 +73,20 @@ restore file agekey=".agekey.txt":
 [group('ENCRYPTION')]
 decrypt filename target agekey=".agekey.txt":
 	age --decrypt -i "{{agekey}}" --output "{{target}}" "{{filename}}"
+
+# backup a folder to the remote backup bucket
+[group('BACKUP')]
+backup-folder prefix path agekey=".agerecipients.txt":
+	#!/usr/bin/env bash
+	set -euxo pipefail
+
+	ls -1 {{path}} | while read -r folder; do
+		just backup "{{path}}/$folder" "{{agekey}}"
+		just offload "{{prefix}}" "$HOME/${folder}.tar.gz.age"
+		rm "$HOME/${folder}.tar.gz.age"
+	done
+
+# offload a file to the remote backup bucket
+[group('BACKUP')]
+offload prefix file:
+	mc cp "{{file}}" "$Y_BACKUP_MC_ALIAS/$Y_BACKUP_REMOTE_BUCKET/{{prefix}}/$(date +%Y-%m-%d)/$(basename "{{file}}")" --storage-class=GLACIER
