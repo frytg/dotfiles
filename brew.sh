@@ -51,4 +51,5 @@ brew install \
 	pyenv \
 	rsync \
 	scw \
+	sops \
 	valkey
