@@ -38,6 +38,7 @@ brew install \
 	flyctl \
 	helm \
 	htop \
+	httpstat \
 	hugo \
 	hurl \
 	hyperfine \
