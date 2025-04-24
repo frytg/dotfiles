@@ -17,9 +17,23 @@ install:
 [group('SYSTEM')]
 update:
 	git pull
-	zsh ./update.sh
+	bun upgrade
+	deno upgrade
+	gcloud components update --quiet
+	rustup update
+	brew update
+	brew upgrade
 	zsh ./brew.sh
+
+	# Node/ nvm
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 20
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 22
 alias up := update
+
+[group('SYSTEM')]
+install-nix:
+	# see https://nixos.org/download/
+	sh <(curl -L https://nixos.org/nix/install)
 
 # create a new age encryption key into a given filename
 [group('ENCRYPTION')]
