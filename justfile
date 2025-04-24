@@ -16,7 +16,9 @@ install:
 
 [group('SYSTEM')]
 update:
+	git pull
 	zsh ./update.sh
+	zsh ./brew.sh
 alias up := update
 
 # create a new age encryption key into a given filename

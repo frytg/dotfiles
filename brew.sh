@@ -46,6 +46,7 @@ brew install \
 	just \
 	llama.cpp \
 	ouch \
+	opentofu \
 	pkl \
 	rage \
 	ruby \
