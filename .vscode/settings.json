@@ -1,0 +1,118 @@
+{
+	"[javascript]": {
+		"editor.codeActionsOnSave": {
+			"quickfix.biome": "explicit",
+			"source.organizeImports.biome": "explicit"
+		},
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.codeActionsOnSave": {
+			"quickfix.biome": "explicit",
+			"source.organizeImports.biome": "explicit"
+		},
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascriptreact]": {
+		"editor.formatOnSave": false
+	},
+	"[json]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[terraform]": {
+		"editor.defaultFormatter": "hashicorp.terraform"
+	},
+	"[toml]": {
+		"editor.defaultFormatter": "tamasfe.even-better-toml"
+	},
+	"[vue]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[xml]": {
+		"editor.defaultFormatter": "redhat.vscode-xml"
+	},
+
+	"breadcrumbs.enabled": true,
+	"chat.editor.fontSize": 14,
+
+	"editor.accessibilitySupport": "off",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.fontFamily": "IBM Plex Mono, Menlo, Monaco, 'Courier New', monospace",
+	"editor.fontSize": 15,
+	"editor.lineHeight": 1.5,
+	"editor.formatOnSave": true,
+	"editor.inlineSuggest.enabled": true,
+	"editor.insertSpaces": false,
+	"editor.minimap.enabled": false,
+	"editor.minimap.sectionHeaderFontSize": 10,
+	"editor.wordWrap": "on",
+	"editor.tabSize": 4,
+
+	"git.confirmSync": false,
+	"git.enableCommitSigning": true,
+	"git.showPushSuccessNotification": true,
+
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"javascript.validate.enable": false,
+
+	"markdown.extension.toc.updateOnSave": false,
+	"markdown.preview.fontSize": 15,
+
+	"redhat.telemetry.enabled": false,
+	"scm.inputFontSize": 14,
+	"telemetry.telemetryLevel": "off",
+	"terminal.integrated.fontSize": 15,
+	"window.zoomLevel": -1,
+
+	"workbench.colorTheme": "Dark Greeny",
+	"workbench.iconTheme": "vscode-jetbrains-icon-theme-2023-dark",
+	"workbench.startupEditor": "newUntitledFile",
+
+	"yaml.validate": false,
+	"yaml.customTags": [
+		"!And",
+		"!And sequence",
+		"!If",
+		"!If sequence",
+		"!Not",
+		"!Not sequence",
+		"!Equals",
+		"!Equals sequence",
+		"!Or",
+		"!Or sequence",
+		"!FindInMap",
+		"!FindInMap sequence",
+		"!Base64",
+		"!Join",
+		"!Join sequence",
+		"!Cidr",
+		"!Ref",
+		"!Sub",
+		"!Sub sequence",
+		"!GetAtt",
+		"!GetAZs",
+		"!ImportValue",
+		"!ImportValue sequence",
+		"!Select",
+		"!Select sequence",
+		"!Split",
+		"!Split sequence"
+	],
+
+	"cursor.cpp.disabledLanguages": ["plaintext", "scminput"],
+	"cursor.composer.shouldChimeAfterChatFinishes": true,
+
+	"search.exclude": {
+		"**/node_modules": true
+	},
+
+	"errorLens.enabled": true,
+	"errorLens.padding": "0",
+	"errorLens.gutterIconsEnabled": true,
+	"errorLens.removeLinebreaks": false,
+	"errorLens.scrollbarHackEnabled": true,
+	"errorLens.fontWeight": "600"
+}

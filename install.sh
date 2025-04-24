@@ -14,6 +14,10 @@ ln -sf "$(PWD)/.bunfig.toml" ~
 ln -sf "$(PWD)/.gitconfig" ~
 ln -sf "$(PWD)/.zshrc" ~
 
+# link vscode config
+ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
+ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
+
 # setup ssh config
 mkdir -p ~/.ssh
 ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
