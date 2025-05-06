@@ -26,6 +26,15 @@ just update
 
 Alternatively update everything (`just all`) or install brew (`just brew`).
 
+## Tools
+
+### Crane
+
+Useful tool for managing containers.
+
+- [Docs](https://github.com/google/go-containerregistry/blob/main/cmd/crane/doc/crane.md)
+- [Common Commands](https://github.com/google/go-containerregistry/blob/main/cmd/crane/recipes.md)
+
 ## Author
 
 Created by [@frytg](https://github.com/frytg) / [frytg.digital](https://www.frytg.digital)

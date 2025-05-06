@@ -41,6 +41,8 @@ brew install \
 	age \
 	brotli \
 	colima \
+	cosign \
+	crane \
 	ffmpeg \
 	flyctl \
 	helm \
@@ -51,6 +53,7 @@ brew install \
 	hyperfine \
 	jq \
 	just \
+	libpq \
 	llama.cpp \
 	ouch \
 	opentofu \
