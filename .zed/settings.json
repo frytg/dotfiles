@@ -39,6 +39,13 @@
 		"source.fixAll": true,
 		"source.organizeImports": true
 	},
+	"git": {
+		"inline_blame": {
+			"enabled": true,
+			"min_column": 60,
+			"show_commit_summary": true
+		}
+	},
 	"language_models": {
 		"openai": {
 			"version": "1",
