@@ -18,6 +18,9 @@ ln -sf "$(PWD)/.zshrc" ~
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
 
+# link zed config
+ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json
+
 # setup ssh config
 mkdir -p ~/.ssh
 ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
