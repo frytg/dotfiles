@@ -62,10 +62,10 @@ wrap folder AGE_KEY_PUB=".agekeypub.txt":
 
 	foldername="$(basename "{{folder}}")"
 
-	ouch compress "{{folder}}" "$HOME/${foldername}.tar.gz"
-	age --encrypt -R "{{AGE_KEY_PUB}}" --output "$HOME/${foldername}.tar.gz.age" "$HOME/${foldername}.tar.gz"
-	rm "$HOME/${foldername}.tar.gz"
-	# open "$HOME"
+	ouch compress "{{folder}}" "$BACKUP_TEMP/${foldername}.tar.gz"
+	age --encrypt -R "{{AGE_KEY_PUB}}" --output "$BACKUP_TEMP/${foldername}.tar.gz.age" "$BACKUP_TEMP/${foldername}.tar.gz"
+	rm "$BACKUP_TEMP/${foldername}.tar.gz"
+	# open "$BACKUP_TEMP"
 
 # restore a file or folder from age
 [group('ENCRYPTION')]
@@ -99,8 +99,8 @@ backup-item REMOTE_PREFIX ITEM_PATH AGE_KEY_PUB=".agekeypub.txt":
 	itemname="$(basename "{{ITEM_PATH}}")"
 
 	just wrap "{{ITEM_PATH}}" "{{AGE_KEY_PUB}}"
-	just offload "{{REMOTE_PREFIX}}" "$HOME/${itemname}.tar.gz.age"
-	rm "$HOME/${itemname}.tar.gz.age"
+	just offload "{{REMOTE_PREFIX}}" "$BACKUP_TEMP/${itemname}.tar.gz.age"
+	rm "$BACKUP_TEMP/${itemname}.tar.gz.age"
 
 # backup the elements of a folder to the remote backup bucket
 [group('BACKUP')]
@@ -108,13 +108,14 @@ backup-folder REMOTE_PREFIX FOLDER_PATH AGE_KEY_PUB=".agekeypub.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	ls -1 {{FOLDER_PATH}} | while read -r folder; do
+	ls -1 "{{FOLDER_PATH}}" | while read -r folder; do
 		just wrap "{{FOLDER_PATH}}/$folder" "{{AGE_KEY_PUB}}"
-		just offload "{{REMOTE_PREFIX}}" "$HOME/${folder}.tar.gz.age"
-		rm "$HOME/${folder}.tar.gz.age"
+		just offload "{{REMOTE_PREFIX}}" "$BACKUP_TEMP/${folder}.tar.gz.age"
+		rm "$BACKUP_TEMP/${folder}.tar.gz.age"
 	done
 
 # offload a file to the remote backup bucket
+# # --storage-class=GLACIER
 [group('BACKUP')]
 offload REMOTE_PREFIX file:
-	mc cp "{{file}}" "$Y_BACKUP_MC_ALIAS/$Y_BACKUP_REMOTE_BUCKET/{{REMOTE_PREFIX}}/$(date +%Y-%m-%d)/$(basename "{{file}}")" --storage-class=GLACIER
+	mc put "{{file}}" "$Y_BACKUP_MC_ALIAS/$Y_BACKUP_REMOTE_BUCKET/{{REMOTE_PREFIX}}/$(date +%Y-%m-%d)/$(basename "{{file}}")" --parallel 8 --part-size 200MiB
