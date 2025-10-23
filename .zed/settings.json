@@ -11,8 +11,8 @@
 	"agent": {
 		"model_parameters": [],
 		"default_model": {
-			"provider": "openai",
-			"model": "anthropic/claude-3.5-sonnet"
+			"provider": "openrouter",
+			"model": "google/gemini-2.5-pro"
 		},
 		"version": "2"
 	},
