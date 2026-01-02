@@ -46,6 +46,13 @@ install-nix:
 	# see https://nixos.org/download/
 	sh <(curl -L https://nixos.org/nix/install)
 
+# sometimes colima needs to be reinstalled after clearing out old docker artifacts
+[group('DOCKER')]
+fix-colima:
+	rm -rf ~/.colima/
+	brew reinstall colima
+	colima start
+
 # create a new age encryption key into a given filename
 [group('ENCRYPTION')]
 create-age-key name="key":
