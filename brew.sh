@@ -64,4 +64,5 @@ brew install \
 	rsync \
 	scw \
 	sops \
-	valkey
+	valkey \
+	yq
