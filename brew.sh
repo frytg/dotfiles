@@ -55,6 +55,7 @@ brew install \
 	just \
 	libpq \
 	llama.cpp \
+	miniconda \
 	ouch \
 	opentofu \
 	pkl \

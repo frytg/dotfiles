@@ -53,6 +53,14 @@ fix-colima:
 	brew reinstall colima
 	colima start
 
+# list PGP keys and their fingerprints
+[group('ENCRYPTION')]
+list-pgp:
+	gpg --list-keys
+alias list-gpg := list-pgp
+alias lpgp := list-pgp
+alias lgpg := list-pgp
+
 # create a new age encryption key into a given filename
 [group('ENCRYPTION')]
 create-age-key name="key":
