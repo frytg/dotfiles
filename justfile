@@ -53,6 +53,12 @@ fix-colima:
 	brew reinstall colima
 	colima start
 
+alias sshhosts := ssh-hosts
+# edit local ssh known host config
+[group('SSH')]
+ssh-hosts:
+	nano ~/.ssh/known_hosts
+
 # list PGP keys and their fingerprints
 [group('ENCRYPTION')]
 list-pgp:

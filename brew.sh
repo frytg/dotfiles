@@ -8,6 +8,42 @@ if test ! $(which brew); then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
+# main tools
+brew install \
+	1password-cli \
+	age \
+	biome \
+	brotli \
+	colima \
+	cosign \
+	crane \
+	ffmpeg \
+	flyctl \
+	helm \
+	htop \
+	httpstat \
+	hugo \
+	hurl \
+	hyperfine \
+	jq \
+	just \
+	libpq \
+	llama.cpp \
+	mactop \
+	miniconda \
+	minijinja-cli \
+	ouch \
+	opentofu \
+	pkl \
+	rage \
+	ruby \
+	pyenv \
+	rsync \
+	scw \
+	sops \
+	valkey \
+	yq
+
 # Terraform
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
@@ -34,36 +70,3 @@ brew install probe-rs
 
 # Mino client
 brew install minio/stable/mc
-
-# other things
-brew install \
-	1password-cli \
-	age \
-	brotli \
-	colima \
-	cosign \
-	crane \
-	ffmpeg \
-	flyctl \
-	helm \
-	htop \
-	httpstat \
-	hugo \
-	hurl \
-	hyperfine \
-	jq \
-	just \
-	libpq \
-	llama.cpp \
-	miniconda \
-	ouch \
-	opentofu \
-	pkl \
-	rage \
-	ruby \
-	pyenv \
-	rsync \
-	scw \
-	sops \
-	valkey \
-	yq
