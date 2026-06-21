@@ -44,6 +44,10 @@ brew install \
 	valkey \
 	yq
 
+# https://github.com/syncthing/syncthing-macos
+# https://formulae.brew.sh/cask/syncthing-app
+brew install --cask syncthing-app
+
 # Terraform
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
