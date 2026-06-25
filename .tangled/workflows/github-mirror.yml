@@ -37,4 +37,4 @@ steps:
       git config user.name "Daniel Freytag"
       git config user.email "daniel@frytg.com"
       git remote add mirror git@github.com:frytg/dotfiles.git
-      git push --force mirror "${TANGLED_REF_NAME}"
+      git push --force mirror "${TANGLED_SHA}:refs/heads/${TANGLED_REF_NAME}"
