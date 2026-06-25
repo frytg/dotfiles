@@ -13,6 +13,7 @@ clone:
 dependencies:
   nixpkgs:
     - git
+    - openssh
 
 environment:
   GIT_REMOTE_REPO: "git@github.com:frytg/dotfiles.git"
