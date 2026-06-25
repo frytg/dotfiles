@@ -35,7 +35,7 @@ steps:
 
       # Nixery images may run without a passwd entry for the current uid;
       # OpenSSH refuses to start without one.
-      echo "root:x:0:0:root:/root:/bin/bash" >> /etc/passwd
+      echo "root:x:0:0:root:/root:/bin/sh" >> /etc/passwd
 
       mkdir -p ~/.ssh
       touch ~/.ssh/known_hosts
