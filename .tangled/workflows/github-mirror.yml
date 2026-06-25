@@ -32,6 +32,10 @@ steps:
       echo "HEAD: $(git rev-parse HEAD)"
       echo "GIT_REMOTE_REPO: ${GIT_REMOTE_REPO}"
 
+      # Nixery images may run without a passwd entry for the current uid;
+      # OpenSSH refuses to start without one.
+      echo "root:x:0:0:root:/root:/bin/bash" >> /etc/passwd
+
       mkdir -p ~/.ssh
       touch ~/.ssh/known_hosts
       eval "$(ssh-agent -s)" > /dev/null\
