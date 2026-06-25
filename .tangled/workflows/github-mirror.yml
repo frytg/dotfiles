@@ -37,17 +37,20 @@ steps:
       gid="$(id -g)"
       export HOME="/tmp/ci-${uid}"
       mkdir -p "$HOME"
+      mkdir -p "/root/.ssh"
 
       # Nixery images may run without a passwd entry for the current uid;
       # OpenSSH refuses to start without one.
       echo "root:x:0:0:root:/root:/bin/sh" >> /etc/passwd
       cat /etc/ssh/ssh_config
-      echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+      # echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+      echo "UserKnownHostsFile /root/.ssh/known_hosts" >> /etc/ssh/ssh_config
 
-      touch "/etc/ssh/known_hosts"
+      touch "/root/.ssh/known_hosts"
       eval "$(ssh-agent -s)" > /dev/null
       ssh-add - <<< "${GITHUB_DEPLOY_KEY}"
-      ssh-keyscan -t rsa,ed25519 github.com >> "/etc/ssh/known_hosts"
+      ssh-keyscan -t rsa,ed25519 github.com >> "/root/.ssh/known_hosts"
+      cat /root/.ssh/known_hosts
 
       git config user.name "Daniel Freytag"
       git config user.email "ci@frytg.digital"
