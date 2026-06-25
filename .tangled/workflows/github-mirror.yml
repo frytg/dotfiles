@@ -25,6 +25,8 @@ steps:
         exit 0
       fi
 
+      echo "TANGLED_REF_NAME: ${TANGLED_REF_NAME}"
+
       mkdir -p ~/.ssh
       touch ~/.ssh/known_hosts
       eval "$(ssh-agent -s)" > /dev/null
