@@ -41,4 +41,5 @@ steps:
       git config user.name "Daniel Freytag"
       git config user.email "ci@frytg.digital"
       git remote add mirror "${GIT_REMOTE_REPO}"
-      git push --force mirror "HEAD:refs/heads/${TANGLED_REF_NAME}"
+      git push mirror --all
+      git push mirror --tags
