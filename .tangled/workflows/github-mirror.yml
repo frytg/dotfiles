@@ -13,7 +13,6 @@ clone:
 dependencies:
   nixpkgs:
     - git
-    - openssh
 
 environment:
   GIT_REMOTE_REPO: "git@github.com:frytg/dotfiles.git"
@@ -31,10 +30,11 @@ steps:
       echo "TANGLED_REF_NAME: ${TANGLED_REF_NAME}"
       echo "TANGLED_SHA: ${TANGLED_SHA}"
       echo "HEAD: $(git rev-parse HEAD)"
+      echo "GIT_REMOTE_REPO: ${GIT_REMOTE_REPO}"
 
       mkdir -p ~/.ssh
       touch ~/.ssh/known_hosts
-      eval "$(ssh-agent -s)" > /dev/null
+      eval "$(ssh-agent -s)" > /dev/null\
       ssh-add - <<< "${GITHUB_DEPLOY_KEY}"
       ssh-keyscan -t rsa,ed25519 github.com >> ~/.ssh/known_hosts
 
