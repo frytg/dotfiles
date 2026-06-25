@@ -15,6 +15,9 @@ dependencies:
     - git
     - openssh
 
+environment:
+  GIT_REMOTE_REPO: "git@github.com:frytg/dotfiles.git"
+
 steps:
   - name: "Mirror to GitHub"
     command: |
@@ -30,11 +33,13 @@ steps:
 
       mkdir -p ~/.ssh
       touch ~/.ssh/known_hosts
-      eval "$(ssh-agent -s)" > /dev/null
-      ssh-add - <<< "$GITHUB_DEPLOY_KEY"
+      eval "$(ssh-agent -s)"
+      ssh-add - <<< "${GITHUB_DEPLOY_KEY}"
       ssh-keyscan -t rsa,ed25519 github.com >> ~/.ssh/known_hosts
+      echo "SSH setup complete"
 
       git config user.name "Daniel Freytag"
-      git config user.email "daniel@frytg.com"
-      git remote add mirror git@github.com:frytg/dotfiles.git
-      git push --force mirror "${TANGLED_SHA}:refs/heads/${TANGLED_REF_NAME}"
+      git config user.email "ci@frytg.digital"
+      git remote add mirror "${GIT_REMOTE_REPO}"
+      git push mirror ${TANGLED_REF_NAME}
+      echo "Push complete"
