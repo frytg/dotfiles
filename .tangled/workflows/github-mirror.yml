@@ -1,7 +1,5 @@
-# Mirror pushes from Tangled to the legacy GitHub remote.
-# Add a deploy key with write access to github.com/frytg/dotfiles as
-# GITHUB_DEPLOY_KEY under the repo's Settings → Secrets, and assign a
-# spindle under Settings → Spindles.
+# Mirror pushes from Tangled to github.com/frytg/dotfiles.
+# Add GITHUB_DEPLOY_KEY under Settings → Secrets and assign a spindle.
 
 when:
   - event: ["push", "manual"]
@@ -23,17 +21,17 @@ steps:
       set -euo pipefail
 
       if [ -z "${GITHUB_DEPLOY_KEY:-}" ]; then
-        echo "GITHUB_DEPLOY_KEY not set — skipping (add under Settings → Secrets)"
+        echo "GITHUB_DEPLOY_KEY not set — skipping"
         exit 0
       fi
 
       mkdir -p ~/.ssh
-      chmod 700 ~/.ssh
-      printf '%s\n' "$GITHUB_DEPLOY_KEY" > ~/.ssh/github_deploy
-      chmod 600 ~/.ssh/github_deploy
-      ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts 2>/dev/null || true
-      export GIT_SSH_COMMAND="ssh -i ~/.ssh/github_deploy -o IdentitiesOnly=yes -p 443"
+      touch ~/.ssh/known_hosts
+      eval "$(ssh-agent -s)" > /dev/null
+      ssh-add - <<< "$GITHUB_DEPLOY_KEY"
+      ssh-keyscan -t rsa,ed25519 github.com >> ~/.ssh/known_hosts
 
-      github_remote="git@ssh.github.com:frytg/dotfiles.git"
-      # Fast-forward push: Tangled is source of truth.
-      git push "$github_remote" "${TANGLED_SHA}:refs/heads/${TANGLED_REF_NAME}"
+      git config user.name "Daniel Freytag"
+      git config user.email "daniel@frytg.com"
+      git remote add mirror git@github.com:frytg/dotfiles.git
+      git push --force mirror "${TANGLED_REF_NAME}"
