@@ -4,27 +4,24 @@ A personal collection of dotfiles and scripts for syncing settings across machin
 
 ## Setup
 
-Run the following commands to set up dotfile links:
+Symlink dotfiles into place:
 
 ```bash
-./install.sh
+just install
 ```
 
-## Update Things
+## Just commands
 
-Using the `update.sh` script, you can update installed modules:
+This repo uses [just](https://github.com/casey/just) as a task runner. Run `just` or `just --list` to see all recipes.
 
-```bash
-./update.sh
-```
+| Command        | What it does                                                |
+| -------------- | ----------------------------------------------------------- |
+| `just install` | Symlink dotfiles via `install.sh`                           |
+| `just brew`    | Install Homebrew packages from `brew.sh`                    |
+| `just up`      | Pull latest dotfiles and upgrade toolchains (`just update`) |
+| `just all`     | Run `just brew` then `just up`                              |
 
-or
-
-```bash
-just update
-```
-
-Alternatively update everything (`just all`) or install brew (`just brew`).
+Other groups include backup/encryption (`wrap`, `backup-item`), Docker (`fix-colima`), and SSH helpers — see `just --list`.
 
 ## Tools
 
@@ -37,7 +34,7 @@ Useful tool for managing containers.
 
 ## Author
 
-Created by [@frytg](https://github.com/frytg) / [frytg.digital](https://www.frytg.digital)
+Created by [frytg.digital](https://www.frytg.digital)
 
 ## License
 

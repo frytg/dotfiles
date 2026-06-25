@@ -1,38 +1,36 @@
 {
 	"[javascript]": {
 		"editor.codeActionsOnSave": {
-			"quickfix.biome": "explicit",
-			"source.organizeImports.biome": "explicit",
+			"source.organizeImports.biome": "explicit"
 		},
-		"editor.defaultFormatter": "biomejs.biome",
+		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"[typescript]": {
 		"editor.codeActionsOnSave": {
-			"quickfix.biome": "explicit",
-			"source.organizeImports.biome": "explicit",
+			"source.organizeImports.biome": "explicit"
 		},
-		"editor.defaultFormatter": "biomejs.biome",
+		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"[javascriptreact]": {
-		"editor.formatOnSave": false,
+		"editor.formatOnSave": false
 	},
 	"[json]": {
-		"editor.defaultFormatter": "biomejs.biome",
+		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"[jsonc]": {
-		"editor.defaultFormatter": "biomejs.biome",
+		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"[terraform]": {
-		"editor.defaultFormatter": "hashicorp.terraform",
+		"editor.defaultFormatter": "hashicorp.terraform"
 	},
 	"[toml]": {
-		"editor.defaultFormatter": "tamasfe.even-better-toml",
+		"editor.defaultFormatter": "tamasfe.even-better-toml"
 	},
 	"[vue]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[xml]": {
-		"editor.defaultFormatter": "redhat.vscode-xml",
+		"editor.defaultFormatter": "redhat.vscode-xml"
 	},
 
 	"breadcrumbs.enabled": true,
@@ -99,14 +97,14 @@
 		"!Select",
 		"!Select sequence",
 		"!Split",
-		"!Split sequence",
+		"!Split sequence"
 	],
 
 	"cursor.cpp.disabledLanguages": ["plaintext", "scminput"],
 	"cursor.composer.shouldChimeAfterChatFinishes": true,
 
 	"search.exclude": {
-		"**/node_modules": true,
+		"**/node_modules": true
 	},
 
 	"errorLens.enabled": true,
@@ -122,13 +120,13 @@
 		"editor.quickSuggestions": {
 			"other": true,
 			"comments": false,
-			"strings": true,
+			"strings": true
 		},
-		"editor.defaultFormatter": "redhat.vscode-yaml",
+		"editor.defaultFormatter": "redhat.vscode-yaml"
 	},
 	"[github-actions-workflow]": {
-		"editor.defaultFormatter": "redhat.vscode-yaml",
+		"editor.defaultFormatter": "redhat.vscode-yaml"
 	},
 	"diffEditor.ignoreTrimWhitespace": false,
-	"window.autoDetectColorScheme": false,
+	"window.autoDetectColorScheme": false
 }

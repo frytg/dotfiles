@@ -52,6 +52,11 @@ brew install --cask syncthing-app
 brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 
+# git sync https://github.com/entireio/git-sync
+brew trust --cask entireio/tap/git-sync
+brew tap entireio/tap
+brew install --cask git-sync
+
 # dotenvx
 brew install dotenvx/brew/dotenvx
 
