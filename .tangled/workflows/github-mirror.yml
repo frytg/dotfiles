@@ -8,7 +8,7 @@ when:
 engine: nixery
 
 clone:
-  depth: 1
+  depth: 10
 
 dependencies:
   nixpkgs:
@@ -26,6 +26,7 @@ steps:
       fi
 
       echo "TANGLED_REF_NAME: ${TANGLED_REF_NAME}"
+      echo "TANGLED_SHA: ${TANGLED_SHA}"
 
       mkdir -p ~/.ssh
       touch ~/.ssh/known_hosts
