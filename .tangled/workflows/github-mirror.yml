@@ -8,7 +8,7 @@ when:
 engine: nixery
 
 clone:
-  depth: 0
+  depth: 20
 
 dependencies:
   nixpkgs:
@@ -33,15 +33,20 @@ steps:
       echo "HEAD: $(git rev-parse HEAD)"
       echo "GIT_REMOTE_REPO: ${GIT_REMOTE_REPO}"
 
+      uid="$(id -u)"
+      gid="$(id -g)"
+      export HOME="/tmp/ci-${uid}"
+      mkdir -p "$HOME/.ssh"
+
       # Nixery images may run without a passwd entry for the current uid;
       # OpenSSH refuses to start without one.
       echo "root:x:0:0:root:/root:/bin/sh" >> /etc/passwd
 
-      mkdir -p ~/.ssh
-      touch ~/.ssh/known_hosts
-      eval "$(ssh-agent -s)" > /dev/null\
+      mkdir -p "$HOME/.ssh"
+      touch "$HOME/.ssh/known_hosts"
+      eval "$(ssh-agent -s)" > /dev/null
       ssh-add - <<< "${GITHUB_DEPLOY_KEY}"
-      ssh-keyscan -t rsa,ed25519 github.com >> ~/.ssh/known_hosts
+      ssh-keyscan -t rsa,ed25519 github.com >> "$HOME/.ssh/known_hosts"
 
       git config user.name "Daniel Freytag"
       git config user.email "ci@frytg.digital"
