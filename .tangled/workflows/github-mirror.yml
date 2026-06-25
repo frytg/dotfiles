@@ -41,6 +41,8 @@ steps:
       # Nixery images may run without a passwd entry for the current uid;
       # OpenSSH refuses to start without one.
       echo "root:x:0:0:root:/root:/bin/sh" >> /etc/passwd
+      cat /etc/ssh/ssh_config
+      echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
 
       touch "/etc/ssh/known_hosts"
       eval "$(ssh-agent -s)" > /dev/null
