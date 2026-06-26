@@ -36,6 +36,7 @@ brew install \
 	opentofu \
 	pkl \
 	rage \
+	restic \
 	ruby \
 	pyenv \
 	rsync \

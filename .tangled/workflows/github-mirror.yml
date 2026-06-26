@@ -8,7 +8,7 @@ when:
 engine: nixery
 
 clone:
-  depth: 40
+  depth: 10
 
 dependencies:
   nixpkgs:
@@ -42,7 +42,6 @@ steps:
       # Nixery images may run without a passwd entry for the current uid;
       # OpenSSH refuses to start without one.
       echo "root:x:0:0:root:/root:/bin/sh" >> /etc/passwd
-      cat /etc/ssh/ssh_config
       # echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
       echo "UserKnownHostsFile /root/.ssh/known_hosts" >> /etc/ssh/ssh_config
 
