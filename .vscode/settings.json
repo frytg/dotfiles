@@ -128,5 +128,8 @@
 		"editor.defaultFormatter": "redhat.vscode-yaml"
 	},
 	"diffEditor.ignoreTrimWhitespace": false,
-	"window.autoDetectColorScheme": false
+	"window.autoDetectColorScheme": false,
+	"[go]": {
+		"editor.defaultFormatter": "golang.go"
+	}
 }

@@ -2,6 +2,8 @@
 
 A personal collection of dotfiles and scripts for syncing settings across machines.
 
+The primary repository lives on [tangled.org](https://tangled.org/frytg.digital/dotfiles), which gets synced to [github.com](https://github.com/frytg/dotfiles).
+
 ## Setup
 
 Symlink dotfiles into place:

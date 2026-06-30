@@ -24,3 +24,7 @@ ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json
 # setup ssh config
 mkdir -p ~/.ssh
 ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
+
+# setup skills link
+# mkdir -p ~/.agents
+# ln -sf "$(PWD)/skills" ~/.agents/skills
