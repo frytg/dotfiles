@@ -45,6 +45,12 @@ brew install \
 	valkey \
 	yq
 
+# UpCloud CLI
+# https://upcloudltd.github.io/upcloud-cli/latest/
+brew trust upcloudltd/tap
+brew tap UpCloudLtd/tap
+brew install upcloud-cli
+
 # https://github.com/syncthing/syncthing-macos
 # https://formulae.brew.sh/cask/syncthing-app
 brew install --cask syncthing-app

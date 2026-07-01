@@ -53,6 +53,11 @@ fix-colima:
 	brew reinstall colima
 	colima start
 
+# login to UpCloud using a token
+[group('UPCLOUD')]
+upcloud-login token:
+	echo {{token}} | upctl account login --with-token
+
 alias sshhosts := ssh-hosts
 # edit local ssh known host config
 [group('SSH')]
