@@ -5,15 +5,18 @@ when:
   - event: ["push", "manual"]
     branch: ["main"]
 
-engine: nixery
+engine: microvm
+image: nixos
 
 clone:
   depth: 10
 
 dependencies:
-  nixpkgs:
-    - git
-    - openssh
+  - git
+  - openssh
+
+registry:
+  nixpkgs: github:nixos/nixpkgs/nixos-unstable
 
 environment:
   GIT_REMOTE_REPO: "git@github.com:frytg/dotfiles.git"
@@ -33,23 +36,13 @@ steps:
       echo "HEAD: $(git rev-parse HEAD)"
       echo "GIT_REMOTE_REPO: ${GIT_REMOTE_REPO}"
 
-      uid="$(id -u)"
-      gid="$(id -g)"
-      export HOME="/tmp/ci-${uid}"
-      mkdir -p "$HOME"
-      mkdir -p "/root/.ssh"
+      mkdir -p "$HOME/.ssh"
+      chmod 700 "$HOME/.ssh"
+      touch "$HOME/.ssh/known_hosts"
 
-      # Nixery images may run without a passwd entry for the current uid;
-      # OpenSSH refuses to start without one.
-      echo "root:x:0:0:root:/root:/bin/sh" >> /etc/passwd
-      # echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
-      echo "UserKnownHostsFile /root/.ssh/known_hosts" >> /etc/ssh/ssh_config
-
-      touch "/root/.ssh/known_hosts"
       eval "$(ssh-agent -s)" > /dev/null
       ssh-add - <<< "${GITHUB_DEPLOY_KEY}"
-      ssh-keyscan -t rsa,ed25519 github.com >> "/root/.ssh/known_hosts"
-      cat /root/.ssh/known_hosts
+      ssh-keyscan -t rsa,ed25519 github.com >> "$HOME/.ssh/known_hosts"
 
       git config user.name "Daniel Freytag"
       git config user.email "ci@frytg.digital"
