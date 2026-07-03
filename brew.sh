@@ -19,6 +19,7 @@ brew install \
 	crane \
 	ffmpeg \
 	flyctl \
+	goat \
 	helm \
 	htop \
 	httpstat \
@@ -50,6 +51,9 @@ brew install \
 brew trust upcloudltd/tap
 brew tap UpCloudLtd/tap
 brew install upcloud-cli
+
+# https://github.com/nubjs/nub
+brew install nubjs/tap/nub
 
 # https://github.com/syncthing/syncthing-macos
 # https://formulae.brew.sh/cask/syncthing-app
