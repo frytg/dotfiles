@@ -3,23 +3,23 @@ export DO_NOT_TRACK=1
 export HOMEBREW_NO_ANALYTICS=1
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '$HOME/dev/google-cloud-sdk/path.zsh.inc' ]; then . '$HOME/dev/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/dev/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/dev/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '$HOME/dev/google-cloud-sdk/completion.zsh.inc' ]; then . '$HOME/dev/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/dev/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/dev/google-cloud-sdk/completion.zsh.inc"; fi
 
 # nvm setup
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/dev/google-cloud-sdk/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/dev/google-cloud-sdk/bin:/usr/bin:/bin:$PATH"
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 export GPG_TTY=$(tty)
 
 # Scaleway CLI autocomplete initialization.
-eval "$(scw autocomplete script shell=zsh)"
+command -v scw >/dev/null 2>&1 && eval "$(scw autocomplete script shell=zsh)"
 
 # Bun
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
@@ -42,11 +42,8 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-source <(kubectl completion zsh)
+command -v kubectl >/dev/null 2>&1 && source <(kubectl completion zsh)
 source ~/.aliases
-
-# bun completions
-[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
 
 # Tailscale CLI
 # https://tailscale.com/kb/1080/cli?tab=macos
@@ -60,7 +57,7 @@ export LIBCLANG_PATH="$HOME/.rustup/toolchains/esp/xtensa-esp32-elf-clang/esp-18
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/dan/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
 
 # >>> conda initialize >>>
