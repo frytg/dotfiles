@@ -2,10 +2,6 @@
 export DO_NOT_TRACK=1
 export HOMEBREW_NO_ANALYTICS=1
 
-# set backups buckets
-export Y_BACKUP_REMOTE_BUCKET="frytg-remote-archive-2025-03"
-export Y_BACKUP_MC_ALIAS="scwfr"
-
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '$HOME/dev/google-cloud-sdk/path.zsh.inc' ]; then . '$HOME/dev/google-cloud-sdk/path.zsh.inc'; fi
 
@@ -17,7 +13,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/v15.4.0/bin:$HOME/dev/google-cloud-sdk/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/dev/google-cloud-sdk/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 export GPG_TTY=$(tty)
