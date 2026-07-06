@@ -1,11 +1,75 @@
 {
+	"edit_predictions": {
+		"provider": "copilot"
+	},
+	"collaboration_panel": {
+		"button": false
+	},
+	"diff_view_style": "unified",
+	"agent": {
+		"dock": "left",
+		"model_parameters": [],
+		"default_model": {
+			"provider": "openrouter",
+			"model": "google/gemini-2.5-pro"
+		}
+	},
+	"agent_servers": {
+		"pi-acp": {
+			"type": "registry"
+		},
+		"cursor": {
+			"type": "registry"
+		}
+	},
+	"lsp": {
+		"just-lsp": {
+			"initialization_options": {
+				"formatting": {
+					"indentation": "\t"
+				}
+			}
+		},
+		"json-language-server": {
+			"settings": {}
+		}
+	},
+	"languages": {
+		// reconfigured to Biome https://biomejs.dev/reference/zed/
+		"Astro": { "formatter": { "language_server": { "name": "biome" } } },
+		"CSS": { "formatter": { "language_server": { "name": "biome" } } },
+		"GraphQL": { "formatter": { "language_server": { "name": "biome" } } },
+		"HTML": { "formatter": { "language_server": { "name": "biome" } } },
+		"JSON": { "formatter": { "language_server": { "name": "biome" } } },
+		"JSONC": { "formatter": { "language_server": { "name": "biome" } } },
+		"JSX": { "formatter": { "language_server": { "name": "biome" } } },
+		"JavaScript": { "formatter": { "language_server": { "name": "biome" } } },
+		"Svelte": { "formatter": { "language_server": { "name": "biome" } } },
+		"TSX": { "formatter": { "language_server": { "name": "biome" } } },
+		"TypeScript": { "formatter": { "language_server": { "name": "biome" } } },
+		"Vue.js": { "formatter": { "language_server": { "name": "biome" } } }
+	},
+	"auto_install_extensions": {
+		"biome": true,
+		"dockerfile": true,
+		"html": true,
+		"nix": true,
+		"terraform": true,
+		"toml": true,
+		"vue": true,
+		"just": true
+	},
 	"theme": "Ayu Dark",
 	"preferred_line_length": 120,
 	"show_whitespaces": "none",
 	"remove_trailing_whitespace_on_save": false,
 	"soft_wrap": "editor_width",
+	"agent_ui_font_size": 12.0,
 	"ui_font_family": "IBM Plex Mono",
-	"buffer_font_size": 13,
+	"ui_font_weight": 350.0,
+	"buffer_line_height": "comfortable",
+	"buffer_font_weight": 350.0,
+	"buffer_font_size": 13.0,
 	"buffer_font_family": "IBM Plex Mono",
 	"hard_tabs": true,
 	"tab_size": 3,
@@ -22,28 +86,11 @@
 			"show_commit_summary": true
 		}
 	},
-	"auto_install_extensions": {
-		"biome": true,
-		"dockerfile": true,
-		"html": true,
-		"nix": true,
-		"terraform": true,
-		"toml": true,
-		"vue": true
-	},
-	"agent": {
-		"dock": "left",
-		"model_parameters": [],
-		"default_model": {
-			"provider": "openrouter",
-			"model": "google/gemini-2.5-pro"
-		}
-	},
 	"base_keymap": "VSCode",
 	"telemetry": {
 		"diagnostics": false,
 		"metrics": false
 	},
 	"vim_mode": false,
-	"ui_font_size": 13
+	"ui_font_size": 12.0
 }

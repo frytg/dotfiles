@@ -39,12 +39,22 @@ update:
 	# Node/ nvm
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 20
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 22
+
 alias up := update
 
 [group('SYSTEM')]
 install-nix:
 	# see https://nixos.org/download/
 	sh <(curl -L https://nixos.org/nix/install)
+
+[group('LINT')]
+lint:
+	biome check --fix
+
+[group('LINT')]
+format:
+	biome lint --write
+	biome format --write
 
 # sometimes colima needs to be reinstalled after clearing out old docker artifacts
 [group('DOCKER')]
@@ -56,9 +66,10 @@ fix-colima:
 # login to UpCloud using a token
 [group('UPCLOUD')]
 upcloud-login token:
-	echo {{token}} | upctl account login --with-token
+	echo {{ token }} | upctl account login --with-token
 
 alias sshhosts := ssh-hosts
+
 # edit local ssh known host config
 [group('SSH')]
 ssh-hosts:
@@ -68,6 +79,7 @@ ssh-hosts:
 [group('ENCRYPTION')]
 list-pgp:
 	gpg --list-keys
+
 alias list-gpg := list-pgp
 alias lpgp := list-pgp
 alias lgpg := list-pgp
@@ -75,21 +87,21 @@ alias lgpg := list-pgp
 # create a new age encryption key into a given filename
 [group('ENCRYPTION')]
 create-age-key name="key":
-	age-keygen -o "{{name}}.txt"
-	just create-public-key "{{name}}"
-	just age-key-to-1password "{{name}}"
+	age-keygen -o "{{ name }}.txt"
+	just create-public-key "{{ name }}"
+	just age-key-to-1password "{{ name }}"
 
 # create a public key from a given age key
 [confirm]
 [group('ENCRYPTION')]
 create-public-key name="key":
-	age-keygen -y "{{name}}.txt" > "{{name}}pub.txt"
+	age-keygen -y "{{ name }}.txt" > "{{ name }}pub.txt"
 
 # create a 1password key from a given age key
 [confirm]
 [group('ENCRYPTION')]
 age-key-to-1password name:
-	op document create "./{{name}}.txt" --title "Age key > {{name}}" --tags "age" --file-name "{{name}}.txt"
+	op document create "./{{ name }}.txt" --title "Age key > {{ name }}" --tags "age" --file-name "{{ name }}.txt"
 
 # backup a single folder into a tar.gz file and encrypt it using age
 [group('ENCRYPTION')]
@@ -97,10 +109,10 @@ wrap folder AGE_KEY_PUB=".agekeypub.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	foldername="$(basename "{{folder}}")"
+	foldername="$(basename "{{ folder }}")"
 
-	ouch compress "{{folder}}" "$BACKUP_TEMP/${foldername}.tar.gz"
-	age --encrypt -R "{{AGE_KEY_PUB}}" --output "$BACKUP_TEMP/${foldername}.tar.gz.age" "$BACKUP_TEMP/${foldername}.tar.gz"
+	ouch compress "{{ folder }}" "$BACKUP_TEMP/${foldername}.tar.gz"
+	age --encrypt -R "{{ AGE_KEY_PUB }}" --output "$BACKUP_TEMP/${foldername}.tar.gz.age" "$BACKUP_TEMP/${foldername}.tar.gz"
 	rm "$BACKUP_TEMP/${foldername}.tar.gz"
 	# open "$BACKUP_TEMP"
 
@@ -110,11 +122,11 @@ unwrap file AGE_KEY_PUB=".agekey.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	filename=$(basename {{file}})
+	filename=$(basename {{ file }})
 	filenamewithoutage=$(basename "$filename" .age)
-	folder=$(dirname "{{file}}")
+	folder=$(dirname "{{ file }}")
 
-	just decrypt "$folder/$filename" "$folder/$filenamewithoutage" "{{AGE_KEY_PUB}}"
+	just decrypt "$folder/$filename" "$folder/$filenamewithoutage" "{{ AGE_KEY_PUB }}"
 	if [[ "$filenamewithoutage" == *.tar.gz ]]; then
 		ouch decompress "$folder/$filenamewithoutage" --dir "$folder"
 		ouch list "$folder/$filenamewithoutage" --tree
@@ -125,7 +137,7 @@ unwrap file AGE_KEY_PUB=".agekey.txt":
 # decrypt a file using age
 [group('ENCRYPTION')]
 decrypt filename target AGE_KEY_PUB=".agekey.txt":
-	age --decrypt -i "{{AGE_KEY_PUB}}" --output "{{target}}" "{{filename}}"
+	age --decrypt -i "{{ AGE_KEY_PUB }}" --output "{{ target }}" "{{ filename }}"
 
 # backup an item to the remote backup bucket
 [group('BACKUP')]
@@ -133,10 +145,10 @@ backup-item REMOTE_PREFIX ITEM_PATH AGE_KEY_PUB=".agekeypub.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	itemname="$(basename "{{ITEM_PATH}}")"
+	itemname="$(basename "{{ ITEM_PATH }}")"
 
-	just wrap "{{ITEM_PATH}}" "{{AGE_KEY_PUB}}"
-	just offload "{{REMOTE_PREFIX}}" "$BACKUP_TEMP/${itemname}.tar.gz.age"
+	just wrap "{{ ITEM_PATH }}" "{{ AGE_KEY_PUB }}"
+	just offload "{{ REMOTE_PREFIX }}" "$BACKUP_TEMP/${itemname}.tar.gz.age"
 	rm "$BACKUP_TEMP/${itemname}.tar.gz.age"
 
 # backup the elements of a folder to the remote backup bucket
@@ -145,14 +157,15 @@ backup-folder REMOTE_PREFIX FOLDER_PATH AGE_KEY_PUB=".agekeypub.txt":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	ls -1 "{{FOLDER_PATH}}" | while read -r folder; do
-		just wrap "{{FOLDER_PATH}}/$folder" "{{AGE_KEY_PUB}}"
-		just offload "{{REMOTE_PREFIX}}" "$BACKUP_TEMP/${folder}.tar.gz.age"
+	ls -1 "{{ FOLDER_PATH }}" | while read -r folder; do
+		just wrap "{{ FOLDER_PATH }}/$folder" "{{ AGE_KEY_PUB }}"
+		just offload "{{ REMOTE_PREFIX }}" "$BACKUP_TEMP/${folder}.tar.gz.age"
 		rm "$BACKUP_TEMP/${folder}.tar.gz.age"
 	done
 
 # offload a file to the remote backup bucket
+
 # # --storage-class=GLACIER
 [group('BACKUP')]
 offload REMOTE_PREFIX file:
-	mc put "{{file}}" "$Y_BACKUP_MC_ALIAS/$Y_BACKUP_REMOTE_BUCKET/{{REMOTE_PREFIX}}/$(date +%Y-%m-%d)/$(basename "{{file}}")" --parallel 8 --part-size 200MiB
+	mc put "{{ file }}" "$Y_BACKUP_MC_ALIAS/$Y_BACKUP_REMOTE_BUCKET/{{ REMOTE_PREFIX }}/$(date +%Y-%m-%d)/$(basename "{{ file }}")" --parallel 8 --part-size 200MiB
