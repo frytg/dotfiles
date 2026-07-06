@@ -37,15 +37,20 @@ update:
 	zsh ./brew.sh
 
 	# Node/ nvm
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 20
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 22
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 26
 
 alias up := update
 
+# install NixOS
 [group('SYSTEM')]
 install-nix:
 	# see https://nixos.org/download/
 	sh <(curl -L https://nixos.org/nix/install)
+
+# install PI.dev
+[group('SYSTEM')]
+install-pi:
+	bun add -g --ignore-scripts @earendil-works/pi-coding-agent
 
 [group('LINT')]
 lint:

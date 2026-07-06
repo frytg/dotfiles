@@ -21,6 +21,9 @@ ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/s
 # link zed config
 ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json
 
+# link pi.dev config
+ln -sf "$(PWD)/.pi/settings.json" ~/.pi/agent/settings.json
+
 # setup ssh config
 mkdir -p ~/.ssh
 ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
