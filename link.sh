@@ -19,15 +19,19 @@ ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
 
 # link zed config
+mkdir -p ~/.config/zed
 ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json
+ln -sf "$(PWD)/.zed/keymap.json" ~/.config/zed/keymap.json
 
 # link pi.dev config
+mkdir -p ~/.pi/agent
 ln -sf "$(PWD)/.pi/settings.json" ~/.pi/agent/settings.json
+ln -sf "$(PWD)/.agents/AGENTS.md" ~/.pi/agent/AGENTS.md
 
 # setup ssh config
 mkdir -p ~/.ssh
 ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
 
 # setup skills link
-# mkdir -p ~/.agents
-# ln -sf "$(PWD)/skills" ~/.agents/skills
+mkdir -p ~/.agents
+ln -sf "$(PWD)/skills" ~/.agents/skills

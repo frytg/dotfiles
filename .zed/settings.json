@@ -1,84 +1,49 @@
 {
-	"edit_predictions": {
-		"provider": "copilot"
+	"agent": {
+		"default_model": {
+			"model": "google/gemini-2.5-pro",
+			"provider": "openrouter"
+		},
+		"dock": "right",
+		"model_parameters": []
+	},
+	"agent_servers": {
+		"cursor": {
+			"type": "registry"
+		},
+		"pi-acp": {
+			"type": "registry"
+		}
+	},
+	"agent_ui_font_size": 12.0,
+	"auto_install_extensions": {
+		"biome": true,
+		"dockerfile": true,
+		"html": true,
+		"just": true,
+		"nix": true,
+		"terraform": true,
+		"toml": true,
+		"vue": true
+	},
+	"base_keymap": "VSCode",
+	"buffer_font_family": "IBM Plex Mono",
+	"buffer_font_size": 13.0,
+	"buffer_font_weight": 350.0,
+	"buffer_line_height": "comfortable",
+	"code_actions_on_format": {
+		"source.fixAll": true,
+		"source.organizeImports": true
 	},
 	"collaboration_panel": {
 		"button": false
 	},
 	"diff_view_style": "unified",
-	"agent": {
-		"dock": "left",
-		"model_parameters": [],
-		"default_model": {
-			"provider": "openrouter",
-			"model": "google/gemini-2.5-pro"
-		}
+	"edit_predictions": {
+		"provider": "copilot"
 	},
-	"agent_servers": {
-		"pi-acp": {
-			"type": "registry"
-		},
-		"cursor": {
-			"type": "registry"
-		}
-	},
-	"lsp": {
-		"just-lsp": {
-			"initialization_options": {
-				"formatting": {
-					"indentation": "\t"
-				}
-			}
-		},
-		"json-language-server": {
-			"settings": {}
-		}
-	},
-	"languages": {
-		// reconfigured to Biome https://biomejs.dev/reference/zed/
-		"Astro": { "formatter": { "language_server": { "name": "biome" } } },
-		"CSS": { "formatter": { "language_server": { "name": "biome" } } },
-		"GraphQL": { "formatter": { "language_server": { "name": "biome" } } },
-		"HTML": { "formatter": { "language_server": { "name": "biome" } } },
-		"JSON": { "formatter": { "language_server": { "name": "biome" } } },
-		"JSONC": { "formatter": { "language_server": { "name": "biome" } } },
-		"JSX": { "formatter": { "language_server": { "name": "biome" } } },
-		"JavaScript": { "formatter": { "language_server": { "name": "biome" } } },
-		"Svelte": { "formatter": { "language_server": { "name": "biome" } } },
-		"TSX": { "formatter": { "language_server": { "name": "biome" } } },
-		"TypeScript": { "formatter": { "language_server": { "name": "biome" } } },
-		"Vue.js": { "formatter": { "language_server": { "name": "biome" } } }
-	},
-	"auto_install_extensions": {
-		"biome": true,
-		"dockerfile": true,
-		"html": true,
-		"nix": true,
-		"terraform": true,
-		"toml": true,
-		"vue": true,
-		"just": true
-	},
-	"theme": "Ayu Dark",
-	"preferred_line_length": 120,
-	"show_whitespaces": "none",
-	"remove_trailing_whitespace_on_save": false,
-	"soft_wrap": "editor_width",
-	"agent_ui_font_size": 12.0,
-	"ui_font_family": "IBM Plex Mono",
-	"ui_font_weight": 350.0,
-	"buffer_line_height": "comfortable",
-	"buffer_font_weight": 350.0,
-	"buffer_font_size": 13.0,
-	"buffer_font_family": "IBM Plex Mono",
-	"hard_tabs": true,
-	"tab_size": 3,
-	"formatter": "auto",
 	"format_on_save": "on",
-	"code_actions_on_format": {
-		"source.fixAll": true,
-		"source.organizeImports": true
-	},
+	"formatter": "auto",
 	"git": {
 		"inline_blame": {
 			"enabled": true,
@@ -86,11 +51,125 @@
 			"show_commit_summary": true
 		}
 	},
-	"base_keymap": "VSCode",
+	"git_panel": {
+		"dock": "left",
+		"group_by": "none",
+		"tree_view": true
+	},
+	"hard_tabs": true,
+	"languages": {
+		"Astro": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"CSS": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"GraphQL": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"HTML": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"JSON": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"JSONC": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"JSX": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"JavaScript": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"Svelte": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"TSX": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"TypeScript": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		},
+		"Vue.js": {
+			"formatter": {
+				"language_server": {
+					"name": "biome"
+				}
+			}
+		}
+	},
+	"lsp": {
+		"json-language-server": {
+			"settings": {}
+		},
+		"just-lsp": {
+			"initialization_options": {
+				"formatting": {
+					"indentation": "\t"
+				}
+			}
+		}
+	},
+	"preferred_line_length": 120,
+	"project_panel": {
+		"dock": "left"
+	},
+	"remove_trailing_whitespace_on_save": false,
+	"show_whitespaces": "none",
+	"soft_wrap": "editor_width",
+	"tab_size": 3,
 	"telemetry": {
 		"diagnostics": false,
 		"metrics": false
 	},
-	"vim_mode": false,
-	"ui_font_size": 12.0
+	"theme": "Ayu Dark",
+	"ui_font_family": "IBM Plex Mono",
+	"ui_font_size": 12.0,
+	"ui_font_weight": 350.0,
+	"vim_mode": false
 }

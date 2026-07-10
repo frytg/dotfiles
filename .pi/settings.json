@@ -1,8 +1,10 @@
 {
-	"lastChangelogVersion": "0.80.3",
-	"theme": "dark",
-	"httpIdleTimeoutMs": 300000,
-	"defaultProvider": "openrouter",
-	"defaultModel": "moonshotai/kimi-k2.6",
-	"defaultThinkingLevel": "medium"
+  "lastChangelogVersion": "0.80.6",
+  "theme": "dark",
+  "httpIdleTimeoutMs": 300000,
+  "defaultProvider": "openrouter",
+  "defaultModel": "minimax/minimax-m3",
+  "defaultThinkingLevel": "medium",
+  "enableInstallTelemetry": false,
+  "defaultProjectTrust": "ask"
 }
