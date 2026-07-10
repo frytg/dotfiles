@@ -15,6 +15,7 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 - JSDoc on every function: short description, `@param` for each parameter, `@returns`. Applies to exported and module-private helpers. Skip only trivial one-liners.
 - Naming: files `kebab-case` (`.test.`/`.spec.` for tests), functions/variables `camelCase`, constants `UPPER_SNAKE_CASE`, types/interfaces `PascalCase`.
 - Tabs for JS/TS/JSON. 2-space indent for Markdown. 120-column wrap. Single quotes, semicolons as needed, ES5 trailing commas.
+- Linting via `just lint` must pass on every commit/PR.
 - Prefer lists over tables in Markdown. Tables add visual weight, don't render in plain-text tools, and force row-by-row scanning. Use a table only when a true two-axis comparison is the point.
 - No drive-by refactors, magic numbers, commented-out code, or unrelated changes in a diff.
 
@@ -52,11 +53,9 @@ Reach for these first when applicable. The list is short on purpose.
 - `hono` — web framework built on Web Standards.
 - `undici.fetch` — backend HTTP. Do not use global `fetch` in backend code by convention.
 
-### Cache / Redis
+### Cache
 
-- `@upstash/redis` — HTTP-based Redis client.
-- `redis` — TCP Redis client.
-- Pick HTTP or TCP per project; do not mix.
+- `redis` — TCP client. Wire-compatible with both Redis and Valkey; the backend is often Valkey on modern Linux distros and managed platforms.
 
 ### Frontend
 
@@ -72,6 +71,11 @@ Reach for these first when applicable. The list is short on purpose.
 
 - `@biomejs/biome` — lint and format (JS/TS/JSON/JSONC).
 
+### AI
+
+- `ai` — Vercel AI SDK. Unified interface for model providers, streaming, tool calling, and structured output.
+- `@openrouter/ai-sdk-provider` — OpenRouter provider for the `ai` SDK. Route to many models through one endpoint.
+
 ### Logging — `@frytg/logger`
 
 - JSR: <https://jsr.io/@frytg/logger>
@@ -80,7 +84,7 @@ Reach for these first when applicable. The list is short on purpose.
 ```ts
 import { logger } from "@frytg/logger";
 
-const log = logger({ source: "api/bluesky/post" });
+const log = logger({ source: "api/posts" });
 
 log.info("starting post");
 log.warn("rate limited", { retryAfter });
@@ -112,14 +116,13 @@ Formatting and parsing helpers. Prefer over hand-rolled `Intl.DateTimeFormat` or
 import { checkRequiredEnv, getRequiredEnv } from "@frytg/check-required-env";
 
 // Fails fast at import if unset. Use for integrations always required.
-checkRequiredEnv("MINIFLUX_URL");
+checkRequiredEnv("API_BASE_URL");
 
 // Read into a top-level const. No separate constants util.
-const BLUESKY_IDENTIFIER = getRequiredEnv("BLUESKY_IDENTIFIER");
-
-// Optional: check at request time, return 503 if unset.
-if (!process.env.BLTUESKY_APP_PASSWORD) return c.json({ error: "bluesky not configured" }, 503);
+const API_KEY = getRequiredEnv("API_KEY");
 ```
+
+The SDK throws and the process exits when a required var is missing — never reach for `process.env` directly to validate required env vars.
 
 Document new env vars in handler comments and add to the sops-encrypted env file (see below). Never log secret values.
 

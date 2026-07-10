@@ -1,6 +1,9 @@
 ---
 name: changelog
 description: Bumps the project version based on conventional commits on the current branch, writes a new entry to CHANGELOG.md following Keep a Changelog 1.1.0, and updates package.json#version. Use when the user asks to cut a release, prepare a version bump, or refresh the changelog.
+license: MIT
+metadata:
+  author: frytg
 ---
 
 # Changelog
@@ -60,7 +63,7 @@ Group the commits into Keep a Changelog sections. Drop non-user-facing types unl
 - **Added** — `feat`.
 - **Changed** — `refactor`, `style`, `perf`, `revert`.
 - **Fixed** — `fix`.
-- **Removed** — only when a commit explicitly removes a public API.
+- **Removed** — only when a commit body explicitly contains `Removed:` (case-sensitive) followed by a one-line description. A `feat!:` or `fix!:` is breaking but is not necessarily a removal — leave the breaking flag in the relevant section.
 - **Security** — `fix` commits whose body mentions `CVE-` or `security`.
 - _(omit)_ — `docs`, `test`, `chore`, `build`, `ci`.
 
@@ -98,7 +101,7 @@ Use today's date in `YYYY-MM-DD` (local time). The date is the release date, not
 ## 7. Update `package.json`
 
 - Read `package.json` and update the top-level `version` field to the new version.
-- Preserve all other fields, formatting, and key order. Use a targeted edit, not a rewrite.
+- Preserve all other fields, formatting, key order, and existing indentation (tabs vs spaces, 2 vs 4). Use a targeted edit, not a rewrite.
 - If the file is missing, stop — this skill does not create `package.json`.
 
 ## 8. Report and stop

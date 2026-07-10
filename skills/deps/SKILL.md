@@ -1,6 +1,9 @@
 ---
 name: deps
-description: Checks for outdated dependencies in a project using its configured package manager (bun, npm, nub, yarn, cargo, go, pip, bundler), and fetches upstream release notes for GitHub Actions and other dependencies to flag breaking changes. Use when the user asks to check for updates, look for outdated packages, audit dependencies, or review upgrade impact.
+description: Checks for outdated dependencies in a project using its configured package manager (bun, npm, nub, cargo, go, pip, bundler), and fetches upstream release notes for GitHub Actions and other dependencies to flag breaking changes. Use when the user asks to check for updates, look for outdated packages, audit dependencies, or review upgrade impact.
+license: MIT
+metadata:
+  author: frytg
 ---
 
 # Check Dependencies
@@ -15,14 +18,13 @@ Walk the project root for the first matching lockfile or manifest. Stop at the f
 | -------------------------------------- | -------------- | --------------------- |
 | `bun.lock` / `bun.lockb`               | bun            | `bun outdated`        |
 | `package-lock.json`                    | npm            | `npm outdated`        |
-| `pnpm-lock.yaml`                       | nub            | `nub outdated`        |
-| `yarn.lock`                            | yarn (classic) | `yarn outdated`       |
+| `lock.yaml`                            | nub            | `nub outdated`        |
 | `Cargo.lock`                           | cargo          | `cargo outdated`      |
 | `go.sum`                               | go modules     | `go list -u -m all`   |
 | `pyproject.toml` / `requirements*.txt` | pip            | `pip list --outdated` |
 | `Gemfile.lock`                         | bundler        | `bundle outdated`     |
 
-If multiple lockfiles are present (e.g. both `bun.lock` and `package-lock.json`), ask the user which manager to use. Don't guess.
+When multiple lockfiles are present, prefer (in order): `lock.yaml` (explicit nub declaration) > `bun.lock*` > `package-lock.json`. Only ask the user when the signal is truly ambiguous.
 
 `cargo outdated` requires `cargo install cargo-outdated` once.
 
@@ -50,18 +52,6 @@ nub outdated --json           # machine-readable
 nub outdated --long           # also show specifier and dep type
 nub outdated -r               # across all workspace packages
 nub outdated '<pattern>'      # e.g. '@babel/*'
-
-# Upgrade (respects semver ranges)
-nub update
-nub update <package>@latest   # bump a single package to latest
-nub add <package>@latest      # add or upgrade to a specific version
-nub dedupe                    # dedupe the dep tree
-```
-
-### yarn (classic)
-
-```bash
-yarn outdated
 ```
 
 ### cargo
@@ -99,15 +89,15 @@ For every `uses: owner/repo@ref` in `.github/workflows/*.yml` (or `.yaml`):
 
 1. Resolve `ref`. If it's a major-version tag (e.g. `@v4`), the next breaking change is the next major (e.g. `@v5`). If it's a SHA, resolve to the matching tag first:
    ```bash
-   gh api repos/{owner}/{repo}/git/refs/tags
+   gh api "repos/{owner}/{repo}/git/refs/tags"
    ```
 2. Fetch the next major's release notes:
    ```bash
    gh release view v5 --repo actions/checkout
    # or list recent releases
-   gh api repos/actions/checkout/releases?per_page=10
+   gh api "repos/actions/checkout/releases?per_page=10"
    ```
-3. For public repos, the raw API works without auth:
+3. For public repos, the raw API works without auth, but is rate-limited to 60 requests/hour/IP. Use `gh` with auth (`gh auth status`) for higher limits:
    ```bash
    curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest
    ```

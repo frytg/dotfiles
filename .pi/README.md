@@ -18,3 +18,7 @@ just install
 
 - `pi list` — list installed packages
 - `pi config` — enable or disable package resources
+
+## Web search
+
+Tavily is the recommended web search and content extraction provider. Install the [pi extension](https://docs.tavily.com/documentation/integrations/pi#step-3-install-the-tavily-pi-extension) and grab an API key from the [Tavily dashboard](https://app.tavily.com/home).
