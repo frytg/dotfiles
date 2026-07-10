@@ -2,6 +2,22 @@
 export DO_NOT_TRACK=1
 export HOMEBREW_NO_ANALYTICS=1
 
+# zsh completion system — load Homebrew's zsh-completions and initialize compinit.
+# Must run before any tool registers a completion (kubectl, gh, scw, gcloud, ...).
+fpath+=("/opt/homebrew/share/zsh-completions" "/opt/homebrew/share/zsh/site-functions")
+autoload -Uz compinit
+# Always skip compaudit's security check (-C): Homebrew installs directories as
+# group-writable, which makes compinit prompt on every new dump. We trust our
+# own fpath, so suppress the prompt and keep startup fast.
+# Dump is still skipped if < 24h old to avoid re-parsing all completions each shell.
+_comp_dump="$HOME/.zcompdump"
+if [[ -n "$_comp_dump"(#qN.mh+24) ]]; then
+  compinit -d "$_comp_dump" -C
+else
+  compinit -d "$_comp_dump" -C
+fi
+unset _comp_dump
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$HOME/dev/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/dev/google-cloud-sdk/path.zsh.inc"; fi
 
