@@ -7,7 +7,7 @@ This repository is **personal dotfiles**: shell config, editor settings, Homebre
 | Area             | Where to look                                                                                 |
 | ---------------- | --------------------------------------------------------------------------------------------- |
 | Symlink install  | `install.sh` — creates links from this repo into `~` and app config paths                     |
-| Task runner      | `justfile` — `just` / `just --list`; common flows: `just install`, `just update`, `just brew` |
+| Task runner      | `justfile` — `just` / `just --list`; common flows: `just link`, `just install`, `just brew` |
 | Homebrew bundles | `brew.sh`                                                                                     |
 | Backups / age    | `BACKUPS.md`, encryption-related `just` recipes in `justfile`                                 |
 | Docs             | `README.md`, `LICENSE` (Unlicense)                                                            |

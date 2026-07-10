@@ -13,3 +13,8 @@ From the repo root:
 ```sh
 just install
 ```
+
+## Manage
+
+- `pi list` — list installed packages
+- `pi config` — enable or disable package resources
