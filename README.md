@@ -19,7 +19,7 @@ This repo uses [just](https://github.com/casey/just) as a task runner. Run `just
 | Command        | What it does                                                |
 | -------------- | ----------------------------------------------------------- |
 | `just install` | Symlink dotfiles via `install.sh`                           |
-| `just brew`    | Install Homebrew packages from `brew.sh`                    |
+| `just brew`    | Install Homebrew packages from `Brewfile`                   |
 | `just up`      | Pull latest dotfiles and upgrade toolchains (`just update`) |
 | `just all`     | Run `just brew` then `just up`                              |
 

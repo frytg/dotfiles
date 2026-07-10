@@ -6,9 +6,11 @@ all:
 	just brew
 	just update
 
+# run brew install and updates
 [group('SYSTEM')]
 brew:
-	zsh ./brew.sh
+	zsh ./install-brew.sh
+	brew bundle
 
 [group('SYSTEM')]
 clear:
