@@ -157,7 +157,8 @@
 	},
 	"preferred_line_length": 120,
 	"project_panel": {
-		"dock": "left"
+		"dock": "left",
+		"sticky_scroll": true
 	},
 	"remove_trailing_whitespace_on_save": false,
 	"show_whitespaces": "none",

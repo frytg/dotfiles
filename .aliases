@@ -5,3 +5,8 @@ alias buno="bun update && bun outdated"
 alias bunu="buno"
 alias ports="lsof -i -P | grep LISTEN"
 alias j="just"
+
+# start pi with secrets from .pi/.env.sops.yaml injected via sops
+pi() {
+	SOPS_ENV_FILE=.pi/.env.sops.yaml just --global-justfile _env "pi" "$@"
+}

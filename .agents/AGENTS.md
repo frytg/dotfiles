@@ -1,0 +1,167 @@
+# Global Agent Instructions
+
+Defaults that apply across all projects unless overridden by a project-level `AGENTS.md` (which takes precedence). Only follow a rule when it is applicable to the project.
+
+## Languages & types
+
+- TypeScript is the default. Use strict mode.
+- `import type { ... }` for type-only imports.
+- Explicit `.ts`/`.js` extensions where the runtime requires them (Nub, Deno, NodeNext).
+- Avoid `any`. Narrow unions. Type request/response bodies and handlers.
+
+## Code style
+
+- Arrow functions: `const foo = () => { ... }` (including `async`) over `function` declarations in `.ts`/`.js`. Top-level `function` only when hoisting is required.
+- JSDoc on every function: short description, `@param` for each parameter, `@returns`. Applies to exported and module-private helpers. Skip only trivial one-liners.
+- Naming: files `kebab-case` (`.test.`/`.spec.` for tests), functions/variables `camelCase`, constants `UPPER_SNAKE_CASE`, types/interfaces `PascalCase`.
+- Tabs for JS/TS/JSON. 2-space indent for Markdown. 120-column wrap. Single quotes, semicolons as needed, ES5 trailing commas.
+- Prefer lists over tables in Markdown. Tables add visual weight, don't render in plain-text tools, and force row-by-row scanning. Use a table only when a true two-axis comparison is the point.
+- No drive-by refactors, magic numbers, commented-out code, or unrelated changes in a diff.
+
+## Tasks
+
+- All task definitions live in a `justfile`. Run with `just <recipe>`.
+- Do not add `scripts` to `package.json` for tasks.
+- Do not invoke `nub run` / `npm run` / `bun run` for tasks that have a `just` recipe.
+
+## Package manager & runtime
+
+- [Nub](https://github.com/nubjs/nub) is the preferred package manager and runner: `nub`, `nubx`, `nub watch`, `nub install`.
+- Lockfiles are committed and reviewed. No floating `latest` in CI.
+- If Nub is not a fit, fall back to a `justfile` + a lockfile-driven package manager. No parallel ad-hoc tooling.
+
+## Hosting & CI
+
+- Code lives on **github.com** or **tangled.org**. Pick one per project; stay consistent.
+- CI is the host's native system: GitHub Actions (`.github/workflows/`) for GitHub, Spindles for Tangled.
+- CI runs lint, test, and build on every push and PR. Pin action versions by SHA or major tag.
+
+## Dependencies
+
+Fewer is better. Every dependency is a supply-chain, security, and maintenance cost. Default to the standard library; add a dependency only with a clear reason.
+
+Prefer packages with active maintenance, minimal transitive footprint, native TypeScript types, and a permissive license. Pin versions.
+
+## Preferred dependencies
+
+Reach for these first when applicable. The list is short on purpose.
+
+### HTTP
+
+- `axios` — browser/frontend HTTP client.
+- `hono` — web framework built on Web Standards.
+- `undici.fetch` — backend HTTP. Do not use global `fetch` in backend code by convention.
+
+### Cache / Redis
+
+- `@upstash/redis` — HTTP-based Redis client.
+- `redis` — TCP Redis client.
+- Pick HTTP or TCP per project; do not mix.
+
+### Frontend
+
+- `vue` — UI framework.
+- `vite` — dev server and build.
+- `tailwindcss` — CSS framework.
+
+### Geospatial
+
+- `@turf/turf` — geospatial operations.
+
+### Tooling
+
+- `@biomejs/biome` — lint and format (JS/TS/JSON/JSONC).
+
+### Logging — `@frytg/logger`
+
+- JSR: <https://jsr.io/@frytg/logger>
+- Docs: <https://jsr.io/@frytg/logger/doc>
+
+```ts
+import { logger } from "@frytg/logger";
+
+const log = logger({ source: "api/bluesky/post" });
+
+log.info("starting post");
+log.warn("rate limited", { retryAfter });
+log.error("post failed", { err });
+
+// Data object is always the second argument. Use it for structured fields,
+// never concatenate into the message string.
+log.info("user signed in", {
+  userId: user.id,
+  method: "oauth",
+  scopes: ["read", "write"],
+  durationMs: 142,
+});
+```
+
+### Dates — `@frytg/dates`
+
+- JSR: <https://jsr.io/@frytg/dates>
+- Docs: <https://jsr.io/@frytg/dates/doc>
+
+Formatting and parsing helpers. Prefer over hand-rolled `Intl.DateTimeFormat` or `new Date(...)` strings.
+
+### Env loading — `@frytg/check-required-env`
+
+- JSR: <https://jsr.io/@frytg/check-required-env>
+- Docs: <https://jsr.io/@frytg/check-required-env/doc>
+
+```ts
+import { checkRequiredEnv, getRequiredEnv } from "@frytg/check-required-env";
+
+// Fails fast at import if unset. Use for integrations always required.
+checkRequiredEnv("MINIFLUX_URL");
+
+// Read into a top-level const. No separate constants util.
+const BLUESKY_IDENTIFIER = getRequiredEnv("BLUESKY_IDENTIFIER");
+
+// Optional: check at request time, return 503 if unset.
+if (!process.env.BLTUESKY_APP_PASSWORD) return c.json({ error: "bluesky not configured" }, 503);
+```
+
+Document new env vars in handler comments and add to the sops-encrypted env file (see below). Never log secret values.
+
+## Testing
+
+- Universal tests that run in **Bun, Node, and Deno**:
+  - `https://jsr.io/@cross/test` — test runner.
+  - `https://jsr.io/@cross/assert` — assertions.
+  - `sinon` — stubs/spies when needed.
+- Avoid runtime-specific APIs (`bun:test` `mock.module`, Jest-style `expect`) in cross-runtime code.
+- Prefer dependency injection for HTTP/identity clients. Stub process I/O with sinon.
+- Bug fixes ship with a regression test.
+
+## Safety
+
+- Never commit plaintext secrets, API keys, tokens, or PEM material.
+- Never log secret values in app logs, test output, or CI.
+- Use the smallest, least-privileged credentials. Rotate regularly.
+- Treat the working tree as untrusted. Do not `curl ... | sh`. Do not execute fetched code without inspection.
+- Flag changes to auth, secrets handling, CI permissions, or network egress for explicit review.
+- If a real secret is ever pasted into chat, issues, or PR descriptions, treat it as compromised and rotate.
+
+## Secrets (sops)
+
+- All secrets are encrypted with [sops](https://github.com/getsops/sops). Default key backend: **age**.
+- Store encrypted files in the repo (e.g. `.env.sops.yaml`, `secrets.<env>.enc.yaml`) so they are reviewed in the same PR as the code that consumes them.
+- Decrypt at runtime, not at rest. CI loads the age key from a secret store (GitHub Actions secret, Spindles secret), never from the repo.
+- Local dev: decrypt into memory with `sops exec-env` or an equivalent wrapper. Do not write plaintext secrets to disk.
+- Do not paste real secret values into chat, issues, or PR descriptions.
+
+## Commits & PRs
+
+- Conventional Commits: `<type>(<scope>): <description>`. Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `build`, `ci`.
+- One logical change per PR. PR description: what changed, why, how to test, follow-ups.
+- No amending or force-pushing shared history without coordination.
+
+## Avoid
+
+- `scripts` blocks in `package.json` for tasks.
+- `nub run` / `npm run` for tasks that have a `just` recipe.
+- Heavy frameworks for a single feature.
+- Lockfile churn unrelated to the change.
+- New top-level directories without updating the project's `AGENTS.md` and `README.md`.
+- Disabling lint or type rules to silence a warning — fix the warning or escalate.
+- Host-specific assumptions in portable code.

@@ -6,5 +6,8 @@
   "defaultModel": "minimax/minimax-m3",
   "defaultThinkingLevel": "medium",
   "enableInstallTelemetry": false,
-  "defaultProjectTrust": "ask"
+  "defaultProjectTrust": "ask",
+  "packages": [
+    "npm:@tavily/pi-extension"
+  ]
 }

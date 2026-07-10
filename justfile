@@ -1,6 +1,14 @@
 default:
 	just --list
 
+# use a default sops file, or allow to be overridden by SOPS_ENV_FILE environment variable
+DEFAULT_SOPS_FILE := '.env.sops.yaml'
+SELECTED_SOPS_FILE := env('SOPS_ENV_FILE', DEFAULT_SOPS_FILE)
+
+# run a command with the selected sops file (injecting environment variables)
+_env *args:
+	sops exec-env --same-process {{ SELECTED_SOPS_FILE }} "{{ args }}"
+
 # run brew install and updates
 [group('SYSTEM')]
 brew:
@@ -19,9 +27,13 @@ clear:
 	-docker system prune -a --volumes
 
 [group('SYSTEM')]
+link:
+	zsh ./link.sh
+
+[group('SYSTEM')]
 run:
 	git pull
-	zsh ./link.sh
+	just link
 	bun upgrade
 	deno upgrade
 	brew update
@@ -34,6 +46,10 @@ run:
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 26
 alias up := run
 alias install := run
+
+[group('LOCAL')]
+run-pi:
+	just _env "pi"
 
 # install NixOS
 [group('SYSTEM')]
@@ -103,7 +119,32 @@ create-public-key name="key":
 age-key-to-1password name:
 	op document create "./{{ name }}.txt" --title "Age key > {{ name }}" --tags "age" --file-name "{{ name }}.txt"
 
-# decrypt a file using age
+## ---------------------------------
+## ENCRYPTION shortcuts
+
+# add/ remove keys (if .sops.yaml setup was changed)
 [group('ENCRYPTION')]
-decrypt filename target AGE_KEY_PUB=".agekey.txt":
-	age --decrypt -i "{{ AGE_KEY_PUB }}" --output "{{ target }}" "{{ filename }}"
+update-keys:
+	just _update-key .pi/.env.sops.yaml
+
+_update-key file:
+	sops updatekeys {{ file }}
+
+# rotate keys (refreshed internal encryption keys)
+[group('ENCRYPTION')]
+rotate-keys:
+	just _rotate-key .pi/.env.sops.yaml
+
+_rotate-key file:
+	sops rotate --in-place {{ file }}
+
+# make changes to a secret file
+[group('ENCRYPTION')]
+edit-key file:
+	EDITOR=nano sops edit {{ file }}
+
+# decrypt a secret file
+[confirm('This will overwrite any previously decrypted files, are you sure? (type `yes` to continue)')]
+[group('ENCRYPTION')]
+decrypt-key file:
+	sops --output $(echo {{ file }} | sed 's/\.sops//g') --decrypt {{ file }}

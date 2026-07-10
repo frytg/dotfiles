@@ -14,6 +14,10 @@ ln -sf "$(PWD)/.bunfig.toml" ~
 ln -sf "$(PWD)/.gitconfig" ~
 ln -sf "$(PWD)/.zshrc" ~
 
+# link the justfile to the global justfile location so `just --global-justfile`
+mkdir -p ~/.config/just
+ln -sf "$(PWD)/justfile" ~/.config/just/justfile
+
 # link vscode config
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
@@ -32,6 +36,6 @@ ln -sf "$(PWD)/.agents/AGENTS.md" ~/.pi/agent/AGENTS.md
 mkdir -p ~/.ssh
 ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
 
-# setup skills link
+# setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents
-ln -sf "$(PWD)/skills" ~/.agents/skills
+ln -sfh "$(PWD)/skills" ~/.agents/skills
