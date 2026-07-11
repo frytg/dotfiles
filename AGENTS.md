@@ -1,38 +1,24 @@
 # Agent guidance
 
-This repository is **personal dotfiles**: shell config, editor settings, Homebrew automation, and small scripts. Treat changes as **machine-wide** once synced—prefer small, reviewable diffs and match existing style.
+This repository is **personal dotfiles**: shell config, editor settings, Homebrew automation, and small scripts. Treat changes as **machine-wide** once synced.
 
-## Quick orientation
+For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENTS.md`](./.agents/AGENTS.md).
 
-| Area             | Where to look                                                                                 |
-| ---------------- | --------------------------------------------------------------------------------------------- |
-| Symlink install  | `install.sh` — creates links from this repo into `~` and app config paths                     |
-| Task runner      | `justfile` — `just` / `just --list`; common flows: `just link`, `just install`, `just brew` |
-| Homebrew bundles | `brew.sh`                                                                                     |
-| Backups / age    | `BACKUPS.md`, encryption-related `just` recipes in `justfile`                                 |
-| Docs             | `README.md`, `LICENSE` (Unlicense)                                                            |
+## Symlink workflow
 
-Editing `.vscode/settings.json` or `.zed/settings.json` affects **Cursor, VS Code, and Zed** via symlinks from `install.sh` (paths are macOS-oriented).
+- New dotfiles are wired through `link.sh` (or have manual steps documented in `README.md`).
+- Editor settings are shared: `.vscode/settings.json` is symlinked to Cursor and VS Code, `.zed/settings.json` to Zed.
 
 ## Editing conventions
 
-- **JSON / JSONC** (e.g. `biome.json`, editor settings): tabs for indentation where the file already uses tabs; keep keys and structure consistent with siblings.
-- **Markdown**: `.editorconfig` uses 2-space indent for `*.md`.
-- **Shell**: `install.sh` and `brew.sh` use `zsh`; preserve `set -e` / existing patterns.
-- **Format/lint**: Run Biome when touching JS/TS/JSON/CSS it covers (`biome.json`). Formatter: tabs, line width 120, single quotes and `semicolons: asNeeded` for JS.
+- Shell scripts use `zsh` with `set -e`; preserve existing patterns.
 
 ## Secrets and safety
 
-- **Do not** add or commit secrets: private keys, `.env`, tokens, or PEM material. `.gitignore` includes `.env`, `keys/*`, `.age*.txt`, etc.
-- If the user pastes sensitive values into chat, do not persist them into tracked files unless they explicitly ask and understand the risk.
-- Prefer documenting _how_ to create keys (see `BACKUPS.md`) over embedding real key material.
+- Use the `.gitignore` (`.env`, `keys/*`, `.age*.txt`). For key creation, see `BACKUPS.md`.
+- If the user pastes a sensitive value into chat, do not persist it to tracked files unless they explicitly ask.
 
 ## Git and PRs
 
-- **Do not create commits or push** unless the user explicitly asks. If they ask for a commit, follow their stated message style and never modify `git config` or use destructive git operations without explicit request.
-- This repo may be cloned on multiple hosts; avoid host-specific assumptions unless the change is clearly scoped (comments, opt-in scripts).
-
-## Scope
-
-- Change only what the task requires; avoid drive-by refactors across unrelated dotfiles.
-- When adding new dotfiles, wire them through `install.sh` (or document manual steps in `README.md`) so the setup story stays accurate.
+- **Do not create commits or push** unless the user explicitly asks. If they do, follow their stated message style and never modify `git config` or run destructive git operations without explicit request.
+- This repo is cloned on multiple hosts; avoid host-specific changes unless scoped to a comment or opt-in script.

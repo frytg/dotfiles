@@ -15,6 +15,20 @@ brew:
 	zsh ./install-brew.sh
 	brew bundle
 
+# fix zsh compinit "insecure directories" prompt
+# Homebrew on macOS makes /opt/homebrew/share group-writable (drwxrwxr-x),
+# which trips compaudit's security check and makes compinit prompt on startup.
+# Run this if you see: "zsh compinit: insecure directories, run compaudit for list."
+[group('SYSTEM')]
+fix-zsh-completions:
+	@if [ -d /opt/homebrew/share ]; then \
+		chmod g-w /opt/homebrew/share && echo "ok: /opt/homebrew/share is no longer group-writable"; \
+	else \
+		echo "skipped: /opt/homebrew/share not found"; \
+	fi
+	rm -f "$HOME/.zcompdump"
+	@echo "ok: removed ~/.zcompdump — compinit will rebuild it on next shell"
+
 [group('SYSTEM')]
 clear:
 	brew cleanup --prune-prefix
@@ -34,6 +48,7 @@ link:
 run:
 	git pull
 	just link
+	pi update
 	bun upgrade
 	deno upgrade
 	brew update

@@ -6,23 +6,21 @@ The primary repository lives on [tangled.org](https://tangled.org/frytg.digital/
 
 ## Setup
 
-Symlink dotfiles into place:
+Install and symlink dotfiles into place:
 
 ```bash
-just link
+just install
 ```
 
 ## Just commands
 
 This repo uses [just](https://github.com/casey/just) as a task runner. Run `just` or `just --list` to see all recipes.
 
-| Command         | What it does                                                          |
-| --------------- | --------------------------------------------------------------------- |
-| `just link`     | Symlink dotfiles via `link.sh`                                        |
-| `just brew`     | Install Homebrew packages from `Brewfile`                             |
-| `just install`  | Pull, link, and upgrade toolchains (alias for `just run` / `just up`)  |
-
-Other groups include backup/encryption (`wrap`, `backup-item`), Docker (`fix-colima`), and SSH helpers — see `just --list`.
+| Command        | What it does                              |
+| -------------- | ----------------------------------------- |
+| `just link`    | Symlink dotfiles via `link.sh`            |
+| `just brew`    | Install Homebrew packages from `Brewfile` |
+| `just install` | Pull, link, and upgrade toolchains        |
 
 ## Tools
 
@@ -39,4 +37,4 @@ Created by [frytg.digital](https://www.frytg.digital)
 
 ## License
 
-[Unlicense](./LICENSE) - also see [unlicense.org](https://unlicense.org)
+[MIT](./LICENSE)

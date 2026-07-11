@@ -6,8 +6,17 @@
   "defaultModel": "minimax/minimax-m3",
   "defaultThinkingLevel": "medium",
   "enableInstallTelemetry": false,
+  "enableAnalytics": false,
   "defaultProjectTrust": "ask",
+  "externalEditor": "zed",
   "packages": [
-    "npm:@tavily/pi-extension"
-  ]
+    "npm:@tavily/pi-extension",
+    "npm:@tmustier/pi-usage-extension",
+    "npm:@mobrienv/pi-tidy-tools"
+  ],
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 16384,
+    "keepRecentTokens": 20000
+  }
 }

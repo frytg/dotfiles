@@ -39,3 +39,6 @@ ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents
 ln -sfh "$(PWD)/skills" ~/.agents/skills
+
+# link entire folder to ~/.dotfiles
+ln -sf "$(PWD)" ~/.dotfiles

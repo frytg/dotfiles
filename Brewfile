@@ -28,6 +28,7 @@ brew "ffmpeg"
 brew "flyctl"
 brew "goat"
 brew "gh" # https://cli.github.com
+brew "herdr" # https://herdr.dev
 brew "helm"
 brew "htop"
 brew "httpstat"

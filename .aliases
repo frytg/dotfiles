@@ -3,10 +3,11 @@ alias down="cd ~/Downloads"
 alias lsa="ls -al"
 alias buno="bun update && bun outdated"
 alias bunu="buno"
+alias nubo="nub install && nub outdated"
 alias ports="lsof -i -P | grep LISTEN"
 alias j="just"
 
 # start pi with secrets from .pi/.env.sops.yaml injected via sops
 pi() {
-	SOPS_ENV_FILE=.pi/.env.sops.yaml just --global-justfile _env "pi" "$@"
+	SOPS_ENV_FILE=~/.dotfiles/.pi/.env.sops.yaml just --global-justfile _env "pi" "$@"
 }
