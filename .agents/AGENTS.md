@@ -31,6 +31,27 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 - Lockfiles are committed and reviewed. No floating `latest` in CI.
 - If Nub is not a fit, fall back to a `justfile` + a lockfile-driven package manager. No parallel ad-hoc tooling.
 
+## Runtimes
+
+### Node version selection
+
+[Node is managed by nub](https://nubjs.com/docs/node) — not `nvm`, `fnm`, `mise`, or `Volta`. Do not install or wire up any of those in `.zshrc`, the `justfile`, or `Brewfile`. Nub provisions the right Node itself when you run a file with `nub` / `nubx` / `nub watch`.
+
+**Pin files** (highest precedence first, walked up from CWD; `node_modules/` is skipped so a dependency's own pin never drives your project):
+
+- `package.json` → `devEngines.runtime.node` (exact or range; non-Node runtime refuses by default)
+- `.node-version` (tool-agnostic standard; wins over `.nvmrc` in the same directory)
+- `.nvmrc`
+- `package.json` → `engines.node` (resolved as a range, not an exact pin; uses the newest available matching version)
+
+**Binary resolution** (once a version is pinned): `node` already on `PATH` whose version satisfies the pin → nub's own cache at `~/.cache/nub/node/<version>/` → nvm scan (read-only, never invokes nvm) → download the matching stock build from nodejs.org (SHA-256 verified, then cached).
+
+**With no pin anywhere up the tree**, nub uses whatever `node` is already on `PATH`. For ambient shell commands outside `nub`, keep `node` on `PATH` (e.g. via `brew install node` or a one-time `nub node install <version>` to warm the cache).
+
+**Hard override**: `NODE_EXECUTABLE=/abs/path/to/node` bypasses pin-file reading, the cache, and nvm — useful in CI or when debugging a specific build.
+
+**Pre-warming a cache** (CI setup step, working offline): `nub node install` reads the project's pin and provisions it; aliases like `lts`, `latest`, `lts/*`, a bare major (`26`), or `major.minor` (`22.13`) all work.
+
 ## Hosting & CI
 
 - Code lives on **github.com** or **tangled.org**. Pick one per project; stay consistent.
