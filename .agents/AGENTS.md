@@ -19,11 +19,26 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 - Prefer lists over tables in Markdown. Tables add visual weight, don't render in plain-text tools, and force row-by-row scanning. Use a table only when a true two-axis comparison is the point.
 - No drive-by refactors, magic numbers, commented-out code, or unrelated changes in a diff.
 
+## Writing style
+
+Direct technical prose, the way you'd answer in chat. Not docs, not a report.
+
+- **Match form to content, and vary it.** Bold-on-its-own-line for distinct sections or comparison axes. Numbered list for sequences, each item a short bold lead in a full sentence. Plain bullets for parallel enumerable facts. Prose for reasoning, causality, and narrative. A long answer where every block has the same shape is a style failure. Don't shred connected reasoning into bullets — when items connect with "because/so/but", those connections are the content.
+- **Open with the verdict, not a bolded headline.** One or two plain sentences: the call and its central caveat.
+- **Every paragraph and bullet carries claim, mechanism, and consequence in the same breath.** "MoR is cheap to write, but reads reconcile delete files against data files, so scans get slower and flakier until compaction" beats "MoR increases scan cost, latency, and metadata overhead."
+- **Conversational, not dramatic.** Contractions. "So" and "but", not "therefore" and "however". No scaffolding ("it is worth noting", "importantly"). No hype adjectives ("brutally", "killer feature", "sharp edge", "the trap"). No setup phrases ("here's the thing", "the truth is", "the dirty secret"). No "not just X, but Y" — state the point directly.
+- **Length matches the question.** A yes/no gets 2-4 sentences. A "which one" gets a few paragraphs. Only a multi-part design question earns a long answer. Cut anything that doesn't change what the reader does next. Shortness comes from cutting low-value content, not from clipping sentences.
+- **Close with a bottom line only when the answer weighed a real decision.** Plain prose: the call plus the condition that would flip it. Factual or confirmation answers just end.
+
 ## Tasks
 
 - All task definitions live in a `justfile`. Run with `just <recipe>`.
 - Do not add `scripts` to `package.json` for tasks.
 - Do not invoke `nub run` / `npm run` / `bun run` for tasks that have a `just` recipe.
+
+## Skills
+
+When creating new skills, follow the [Agent Skills spec](https://agentskills.io/home) for the directory layout, frontmatter, and discovery rules. See the full [specification](https://agentskills.io/specification.md) for required fields, allowed properties, and validation.
 
 ## Package manager & runtime
 
@@ -92,6 +107,11 @@ Reach for these first when applicable. The list is short on purpose.
 
 - `@biomejs/biome` — lint and format (JS/TS/JSON/JSONC).
 
+### Ease-of-use
+
+- `esm.sh` - CDN for NPM, JSR, GitHub, Deno file imports for quick scripts ([docs as markdown](https://esm.sh/gh/esm-dev/esm.sh@main/README.md))
+  - do not use in production, only for quick scripts and prototyping. Use a proper package manager for production code.
+
 ### AI
 
 - `ai` — Vercel AI SDK. Unified interface for model providers, streaming, tool calling, and structured output.
@@ -103,20 +123,20 @@ Reach for these first when applicable. The list is short on purpose.
 - Docs: <https://jsr.io/@frytg/logger/doc>
 
 ```ts
-import { logger } from "@frytg/logger";
+import { logger } from '@frytg/logger';
 
-const log = logger({ source: "api/posts" });
+const log = logger({ source: 'api/posts' });
 
-log.info("starting post");
-log.warn("rate limited", { retryAfter });
-log.error("post failed", { err });
+log.info('starting post');
+log.warn('rate limited', { retryAfter });
+log.error('post failed', { err });
 
 // Data object is always the second argument. Use it for structured fields,
 // never concatenate into the message string.
-log.info("user signed in", {
+log.info('user signed in', {
   userId: user.id,
-  method: "oauth",
-  scopes: ["read", "write"],
+  method: 'oauth',
+  scopes: ['read', 'write'],
   durationMs: 142,
 });
 ```
@@ -134,13 +154,13 @@ Formatting and parsing helpers. Prefer over hand-rolled `Intl.DateTimeFormat` or
 - Docs: <https://jsr.io/@frytg/check-required-env/doc>
 
 ```ts
-import { checkRequiredEnv, getRequiredEnv } from "@frytg/check-required-env";
+import { checkRequiredEnv, getRequiredEnv } from '@frytg/check-required-env';
 
 // Fails fast at import if unset. Use for integrations always required.
-checkRequiredEnv("API_BASE_URL");
+checkRequiredEnv('API_BASE_URL');
 
 // Read into a top-level const. No separate constants util.
-const API_KEY = getRequiredEnv("API_KEY");
+const API_KEY = getRequiredEnv('API_KEY');
 ```
 
 The SDK throws and the process exits when a required var is missing — never reach for `process.env` directly to validate required env vars.
