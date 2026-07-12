@@ -4,6 +4,7 @@ description: Checks for outdated dependencies in a project using its configured 
 license: MIT
 metadata:
   author: frytg
+  agent: pi
 ---
 
 # Check Dependencies
@@ -14,15 +15,15 @@ Detect the project's package manager, list outdated dependencies, and surface br
 
 Walk the project root for the first matching lockfile or manifest. Stop at the first hit.
 
-| File                                   | Manager        | Outdated command      |
-| -------------------------------------- | -------------- | --------------------- |
-| `bun.lock` / `bun.lockb`               | bun            | `bun outdated`        |
-| `package-lock.json`                    | npm            | `npm outdated`        |
-| `lock.yaml`                            | nub            | `nub outdated`        |
-| `Cargo.lock`                           | cargo          | `cargo outdated`      |
-| `go.sum`                               | go modules     | `go list -u -m all`   |
-| `pyproject.toml` / `requirements*.txt` | pip            | `pip list --outdated` |
-| `Gemfile.lock`                         | bundler        | `bundle outdated`     |
+| File                                   | Manager    | Outdated command      |
+| -------------------------------------- | ---------- | --------------------- |
+| `bun.lock` / `bun.lockb`               | bun        | `bun outdated`        |
+| `package-lock.json`                    | npm        | `npm outdated`        |
+| `lock.yaml`                            | nub        | `nub outdated`        |
+| `Cargo.lock`                           | cargo      | `cargo outdated`      |
+| `go.sum`                               | go modules | `go list -u -m all`   |
+| `pyproject.toml` / `requirements*.txt` | pip        | `pip list --outdated` |
+| `Gemfile.lock`                         | bundler    | `bundle outdated`     |
 
 When multiple lockfiles are present, prefer (in order): `lock.yaml` (explicit nub declaration) > `bun.lock*` > `package-lock.json`. Only ask the user when the signal is truly ambiguous.
 

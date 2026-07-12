@@ -57,9 +57,18 @@ clear:
 	-npm cache verify
 	-docker system prune -a --volumes
 
+# setup symlinks
 [group('SYSTEM')]
 link:
 	zsh ./link.sh
+
+# setup macos defaults
+[group('SYSTEM')]
+macos:
+	zsh ./macos.sh
+	killall Finder
+	killall Dock
+	killall SystemUIServer
 
 [group('SYSTEM')]
 run:
@@ -73,6 +82,7 @@ run:
 	just brew
 	rustup update
 	gcloud components update --quiet
+	just macos
 alias up := run
 alias install := run
 

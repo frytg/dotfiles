@@ -4,6 +4,7 @@ description: Bumps the project version based on conventional commits on the curr
 license: MIT
 metadata:
   author: frytg
+  agent: pi
 ---
 
 # Changelog
