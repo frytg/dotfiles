@@ -127,7 +127,7 @@ const log = logger({ source: 'api/posts' });
 
 log.info('starting post');
 log.warn('rate limited', { retryAfter });
-log.error('post failed', { err });
+log.error({ message: 'post failed', error });
 
 // Data object is always the second argument. Use it for structured fields,
 // never concatenate into the message string.

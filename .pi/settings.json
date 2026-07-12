@@ -12,7 +12,8 @@
   "packages": [
     "npm:@tavily/pi-extension",
     "npm:@tmustier/pi-usage-extension",
-    "npm:@mobrienv/pi-tidy-tools"
+    "npm:@mobrienv/pi-tidy-tools",
+    "npm:@datadog/pi-plugin"
   ],
   "compaction": {
     "enabled": true,
