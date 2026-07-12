@@ -14,6 +14,13 @@ ln -sf "$(PWD)/.bunfig.toml" ~
 ln -sf "$(PWD)/.gitconfig" ~
 ln -sf "$(PWD)/.zshrc" ~
 
+# build precompiled zsh completions (saves ~5s per shell startup).
+# best-effort: missing tools just mean the completion won't be available.
+mkdir -p "$HOME/.zsh_completions"
+if command -v kubectl >/dev/null 2>&1; then
+  kubectl completion zsh > "$HOME/.zsh_completions/_kubectl" 2>/dev/null || true
+fi
+
 # link the justfile to the global justfile location so `just --global-justfile`
 mkdir -p ~/.config/just
 ln -sf "$(PWD)/justfile" ~/.config/just/justfile

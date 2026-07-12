@@ -1,95 +1,107 @@
-# set default env vars
+# shell startup notes:
+#   - Heavy work (conda, pyenv, scw autocomplete) is lazy-loaded
+#     via wrapper functions. The real tool is loaded on first invocation.
+#   - Node is managed by nub, not nvm. See .agents/AGENTS.md → "Runtimes".
+#   - kubectl completion is precompiled to ~/.zsh_completions/_kubectl by
+#     link.sh, then picked up via fpath. Run `just refresh-completions`
+#     to rebuild after upgrading kubectl.
+#   - gem user bin path is cached in ~/.cache/zsh/gemdir (7d TTL) so we
+#     don't spawn `gem environment` on every shell.
+#   - After changing this file, run `just refresh-completions` to rebuild
+#     ~/.zcompdump so new completions register.
+# this file was optimized with pi
+
+# ---- env vars ---------------------------------------------------------------
+
 export DO_NOT_TRACK=1
 export HOMEBREW_NO_ANALYTICS=1
-
-# zsh completion system — load Homebrew's zsh-completions and initialize compinit.
-# Must run before any tool registers a completion (kubectl, gh, scw, gcloud, ...).
-fpath+=("/opt/homebrew/share/zsh-completions" "/opt/homebrew/share/zsh/site-functions")
-autoload -Uz compinit
-# Always skip compaudit's security check (-C): Homebrew installs directories as
-# group-writable, which makes compinit prompt on every new dump. We trust our
-# own fpath, so suppress the prompt and keep startup fast.
-# Dump is still skipped if < 24h old to avoid re-parsing all completions each shell.
-_comp_dump="$HOME/.zcompdump"
-if [[ -n "$_comp_dump"(#qN.mh+24) ]]; then
-  compinit -d "$_comp_dump" -C
-else
-  compinit -d "$_comp_dump" -C
-fi
-unset _comp_dump
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/dev/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/dev/google-cloud-sdk/path.zsh.inc"; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f "$HOME/dev/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/dev/google-cloud-sdk/completion.zsh.inc"; fi
-
-# nvm setup
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/dev/google-cloud-sdk/bin:/usr/bin:/bin:$PATH"
-export PATH="/usr/local/opt/libpq/bin:$PATH"
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 export GPG_TTY=$(tty)
 
-# Scaleway CLI autocomplete initialization.
-command -v scw >/dev/null 2>&1 && eval "$(scw autocomplete script shell=zsh)"
+# ---- completion system ------------------------------------------------------
 
-# Bun
+# Custom completions (precompiled kubectl, etc.) take precedence over Homebrew's.
+fpath=("$HOME/.zsh_completions" "/opt/homebrew/share/zsh/site-functions" $fpath)
+autoload -Uz compinit
+# -C skips the security audit (Homebrew dirs are group-writable on macOS).
+# compinit auto-rebuilds the dump if fpath entries are newer, so no manual
+# check is needed. `just refresh-completions` forces a full rebuild.
+compinit -d "$HOME/.zcompdump" -C
+
+# ---- PATH -------------------------------------------------------------------
+
+# One assignment per logical group, all relative to $PATH (no duplication).
+# Order: Homebrew, system, language toolchains, project-local.
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH="$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.lmstudio/bin:$HOME/dev/google-cloud-sdk/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/ruby/bin:$PATH"
+
+# Bun shell completion
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Deno
-export PATH="$HOME/.deno/bin:$PATH"
+# ---- gcloud -----------------------------------------------------------------
 
-# Rust/ Cargo
-export PATH="$HOME/.cargo/bin:$PATH"
+[ -f "$HOME/dev/google-cloud-sdk/path.zsh.inc" ] && . "$HOME/dev/google-cloud-sdk/path.zsh.inc"
+[ -f "$HOME/dev/google-cloud-sdk/completion.zsh.inc" ] && . "$HOME/dev/google-cloud-sdk/completion.zsh.inc"
 
-if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
-  export PATH=/opt/homebrew/opt/ruby/bin:$PATH
-  export PATH=`gem environment gemdir`/bin:$PATH
-  # eval "$(rbenv init - zsh)"
+# ---- ESP32 / Rust -----------------------------------------------------------
+
+export PATH="$HOME/.rustup/toolchains/esp/xtensa-esp-elf/esp-14.2.0_20240906/xtensa-esp-elf/bin:$PATH"
+export LIBCLANG_PATH="$HOME/.rustup/toolchains/esp-xtensa-esp32-elf-clang/esp-18.1.2_20240912/esp-clang/lib"
+
+# ---- Ruby gem user bin (cached) ---------------------------------------------
+
+# `gem environment gemdir` spawns a Ruby process; cache the result for a week.
+_gemdir_cache="$HOME/.cache/zsh/gemdir"
+if [[ ! -s "$_gemdir_cache" || -n "$_gemdir_cache"(#qN.mh+168) ]]; then
+  mkdir -p "${_gemdir_cache:h}"
+  command -v gem >/dev/null 2>&1 && gem environment gemdir >| "$_gemdir_cache" 2>/dev/null
 fi
+[[ -s "$_gemdir_cache" ]] && export PATH="$(<$_gemdir_cache)/bin:$PATH"
+unset _gemdir_cache
 
+# ---- pyenv (lazy) -----------------------------------------------------------
+
+# Shims in PATH let `python`/`pip` work without loading pyenv init. The
+# `pyenv` command itself is only initialised on first invocation.
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+[[ -d $PYENV_ROOT/shims ]] && export PATH="$PYENV_ROOT/shims:$PATH"
+pyenv() {
+  unfunction pyenv
+  eval "$(pyenv init -)"
+  pyenv "$@"
+}
 
-command -v kubectl >/dev/null 2>&1 && source <(kubectl completion zsh)
-source ~/.aliases
+# ---- conda (lazy) -----------------------------------------------------------
 
-# Tailscale CLI
-# https://tailscale.com/kb/1080/cli?tab=macos
-alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
-
-# ESP32/ Rust-specific tooling
-export PATH="$HOME/.rustup/toolchains/esp/xtensa-esp-elf/esp-14.2.0_20240906/xtensa-esp-elf/bin:$PATH"
-export LIBCLANG_PATH="$HOME/.rustup/toolchains/esp/xtensa-esp32-elf-clang/esp-18.1.2_20240912/esp-clang/lib"
-
-# postgres
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:$HOME/.lmstudio/bin"
-# End of LM Studio CLI section
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
+# `conda init` ships a 1s shell hook. Wrap `conda` itself so the hook only
+# runs when the user actually invokes conda. The hook is idempotent: re-
+# entering doesn't stack PATH entries.
+conda() {
+  unfunction conda
+  local __conda_setup
+  __conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+  if [ $? -eq 0 ]; then
     eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+  elif [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+    . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+  else
+    export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
+  fi
+  unset __conda_setup
+  conda "$@"
+}
 
-# Hermes Agent — ensure ~/.local/bin is on PATH
-export PATH="$HOME/.local/bin:$PATH"
+# ---- scw (lazy autocomplete) -------------------------------------------------
+
+# Only the completion script is expensive (~50ms); the `scw` binary itself
+# stays a child process. Load the completion on first use.
+scw() {
+  unfunction scw
+  eval "$(command scw autocomplete script shell=zsh)"
+  scw "$@"
+}
+
+# ---- aliases / user functions ----------------------------------------------
+
+source ~/.aliases

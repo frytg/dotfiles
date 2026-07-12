@@ -29,6 +29,23 @@ fix-zsh-completions:
 	rm -f "$HOME/.zcompdump"
 	@echo "ok: removed ~/.zcompdump — compinit will rebuild it on next shell"
 
+# rebuild zsh completion cache: ~/.zcompdump (parsed completions) and
+# ~/.zsh_completions/_kubectl (precompiled, avoids 5s `kubectl completion`
+# spawn on every shell). Run after installing new tools that ship completions
+# or after upgrading kubectl.
+[group('SYSTEM')]
+refresh-completions:
+	rm -f "$HOME/.zcompdump"
+	mkdir -p "$HOME/.zsh_completions"
+	@if command -v kubectl >/dev/null 2>&1; then \
+		kubectl completion zsh > "$HOME/.zsh_completions/_kubectl" 2>/dev/null \
+			&& echo "ok: rebuilt ~/.zsh_completions/_kubectl" \
+			|| echo "warn: kubectl completion failed"; \
+	else \
+		echo "skipped: kubectl not on PATH"; \
+	fi
+	@echo "ok: removed ~/.zcompdump — compinit will rebuild it on next shell"
+
 [group('SYSTEM')]
 clear:
 	brew cleanup --prune-prefix
@@ -56,9 +73,6 @@ run:
 	just brew
 	rustup update
 	gcloud components update --quiet
-
-	# Node/ nvm
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 26
 alias up := run
 alias install := run
 
