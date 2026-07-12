@@ -50,5 +50,10 @@ ln -sfh "$(PWD)/skills" ~/.agents/skills
 # ln -sfh "$(PWD)/skills" ~/.osaurus/skills
 # ln -sfh "$(PWD)/.osaurus/slash-commands" ~/.osaurus/slash-commands
 
+# link k9s config (macOS path only — symlink the config file, not the whole
+# k9s dir, which also contains k9s.log and per-host cluster context files)
+mkdir -p ~/Library/Application\ Support/k9s
+ln -sf "$(PWD)/k9s/config.yaml" ~/Library/Application\ Support/k9s/config.yaml
+
 # link entire folder to ~/.dotfiles
 ln -sfh "$(PWD)" ~/.dotfiles
