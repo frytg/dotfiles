@@ -23,18 +23,17 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 
 Direct technical prose, the way you'd answer in chat. Not docs, not a report.
 
-- **Match form to content, and vary it.** Bold-on-its-own-line for distinct sections or comparison axes. Numbered list for sequences, each item a short bold lead in a full sentence. Plain bullets for parallel enumerable facts. Prose for reasoning, causality, and narrative. A long answer where every block has the same shape is a style failure. Don't shred connected reasoning into bullets — when items connect with "because/so/but", those connections are the content.
+- **Match form to content, and vary it.** Bold-on-its-own-line for distinct sections. Numbered lists for sequences, each item a short bold lead. Plain bullets for parallel facts. Prose for causality. A long answer where every block has the same shape is a style failure.
+- **Don't shred connected reasoning into bullets.** When items connect with "because/so/but", those connections are the content.
 - **Open with the verdict, not a bolded headline.** One or two plain sentences: the call and its central caveat.
 - **Every paragraph and bullet carries claim, mechanism, and consequence in the same breath.** "MoR is cheap to write, but reads reconcile delete files against data files, so scans get slower and flakier until compaction" beats "MoR increases scan cost, latency, and metadata overhead."
-- **Conversational, not dramatic.** Contractions. "So" and "but", not "therefore" and "however". No scaffolding ("it is worth noting", "importantly"). No hype adjectives ("brutally", "killer feature", "sharp edge", "the trap"). No setup phrases ("here's the thing", "the truth is", "the dirty secret"). No "not just X, but Y" — state the point directly.
+- **Conversational, not dramatic.** Use contractions ("so/but" not "therefore/however"). No scaffolding ("it is worth noting"), no hype adjectives ("brutally", "killer feature"), no setup phrases ("here's the thing"). No "not just X, but Y".
 - **Length matches the question.** A yes/no gets 2-4 sentences. A "which one" gets a few paragraphs. Only a multi-part design question earns a long answer. Cut anything that doesn't change what the reader does next. Shortness comes from cutting low-value content, not from clipping sentences.
 - **Close with a bottom line only when the answer weighed a real decision.** Plain prose: the call plus the condition that would flip it. Factual or confirmation answers just end.
 
 ## Tasks
 
 - All task definitions live in a `justfile`. Run with `just <recipe>`.
-- Do not add `scripts` to `package.json` for tasks.
-- Do not invoke `nub run` / `npm run` / `bun run` for tasks that have a `just` recipe.
 
 ## Skills
 
@@ -54,18 +53,15 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 
 **Pin files** (highest precedence first, walked up from CWD; `node_modules/` is skipped so a dependency's own pin never drives your project):
 
-- `package.json` → `devEngines.runtime.node` (exact or range; non-Node runtime refuses by default)
-- `.node-version` (tool-agnostic standard; wins over `.nvmrc` in the same directory)
+- `package.json` → `devEngines.runtime.node`
+- `.node-version` (tool-agnostic; wins over `.nvmrc` in the same directory)
 - `.nvmrc`
-- `package.json` → `engines.node` (resolved as a range, not an exact pin; uses the newest available matching version)
+- `package.json` → `engines.node` (range, not exact pin)
 
-**Binary resolution** (once a version is pinned): `node` already on `PATH` whose version satisfies the pin → nub's own cache at `~/.cache/nub/node/<version>/` → nvm scan (read-only, never invokes nvm) → download the matching stock build from nodejs.org (SHA-256 verified, then cached).
+**Binary resolution** (once pinned): `PATH` node → nub's cache at `~/.cache/nub/node/<version>/` → nvm scan (read-only) → download from nodejs.org (SHA-256 verified, then cached). With no pin, nub just uses whatever `node` is on `PATH` — keep one there for ambient shell commands (e.g. via `brew install node`).
 
-**With no pin anywhere up the tree**, nub uses whatever `node` is already on `PATH`. For ambient shell commands outside `nub`, keep `node` on `PATH` (e.g. via `brew install node` or a one-time `nub node install <version>` to warm the cache).
-
-**Hard override**: `NODE_EXECUTABLE=/abs/path/to/node` bypasses pin-file reading, the cache, and nvm — useful in CI or when debugging a specific build.
-
-**Pre-warming a cache** (CI setup step, working offline): `nub node install` reads the project's pin and provisions it; aliases like `lts`, `latest`, `lts/*`, a bare major (`26`), or `major.minor` (`22.13`) all work.
+**Hard override**: `NODE_EXECUTABLE=/abs/path/to/node` bypasses everything — useful in CI.
+**Pre-warming a cache** (offline CI): `nub node install` reads the project's pin. Aliases like `lts`, `latest`, `26`, or `22.13` all work.
 
 ## Hosting & CI
 
@@ -109,8 +105,10 @@ Reach for these first when applicable. The list is short on purpose.
 
 ### Ease-of-use
 
-- `esm.sh` - CDN for NPM, JSR, GitHub, Deno file imports for quick scripts ([docs as markdown](https://esm.sh/gh/esm-dev/esm.sh@main/README.md))
+- [`esm.sh`](https://esm.sh) - CDN for NPM, JSR, GitHub, Deno file imports for quick scripts ([docs as markdown](https://esm.sh/gh/esm-dev/esm.sh@main/README.md))
   - do not use in production, only for quick scripts and prototyping. Use a proper package manager for production code.
+- [`nixery.dev`](https://nixery.dev) — Container registry that builds ad-hoc images from a URL path (e.g. `nixery.dev/shell/curl` gives a shell with curl pre-installed). Useful for one-off containers.
+- [`atproto.md`](https://atproto.md) - retrieving AT Proto content via Markdown
 
 ### AI
 
@@ -119,8 +117,8 @@ Reach for these first when applicable. The list is short on purpose.
 
 ### Logging — `@frytg/logger`
 
-- JSR: <https://jsr.io/@frytg/logger>
-- Docs: <https://jsr.io/@frytg/logger/doc>
+- [JSR](https://jsr.io/@frytg/logger)
+- [Docs](https://jsr.io/@frytg/logger/doc)
 
 ```ts
 import { logger } from '@frytg/logger';
@@ -143,15 +141,15 @@ log.info('user signed in', {
 
 ### Dates — `@frytg/dates`
 
-- JSR: <https://jsr.io/@frytg/dates>
-- Docs: <https://jsr.io/@frytg/dates/doc>
+- [JSR](https://jsr.io/@frytg/dates)
+- [Docs](https://jsr.io/@frytg/dates/doc)
 
 Formatting and parsing helpers. Prefer over hand-rolled `Intl.DateTimeFormat` or `new Date(...)` strings.
 
 ### Env loading — `@frytg/check-required-env`
 
-- JSR: <https://jsr.io/@frytg/check-required-env>
-- Docs: <https://jsr.io/@frytg/check-required-env/doc>
+- [JSR](https://jsr.io/@frytg/check-required-env)
+- [Docs](https://jsr.io/@frytg/check-required-env/doc)
 
 ```ts
 import { checkRequiredEnv, getRequiredEnv } from '@frytg/check-required-env';
@@ -163,15 +161,13 @@ checkRequiredEnv('API_BASE_URL');
 const API_KEY = getRequiredEnv('API_KEY');
 ```
 
-The SDK throws and the process exits when a required var is missing — never reach for `process.env` directly to validate required env vars.
-
-Document new env vars in handler comments and add to the sops-encrypted env file (see below). Never log secret values.
+Never reach for `process.env` directly to validate required env vars. Document new env vars in handler comments and add to the sops-encrypted env file (see below).
 
 ## Testing
 
 - Universal tests that run in **Bun, Node, and Deno**:
-  - `https://jsr.io/@cross/test` — test runner.
-  - `https://jsr.io/@cross/assert` — assertions.
+  - [@cross/test](https://jsr.io/@cross/test) — test runner.
+  - [@cross/assert](https://jsr.io/@cross/assert) — assertions.
   - `sinon` — stubs/spies when needed.
 - Avoid runtime-specific APIs (`bun:test` `mock.module`, Jest-style `expect`) in cross-runtime code.
 - Prefer dependency injection for HTTP/identity clients. Stub process I/O with sinon.
@@ -184,7 +180,6 @@ Document new env vars in handler comments and add to the sops-encrypted env file
 - Use the smallest, least-privileged credentials. Rotate regularly.
 - Treat the working tree as untrusted. Do not `curl ... | sh`. Do not execute fetched code without inspection.
 - Flag changes to auth, secrets handling, CI permissions, or network egress for explicit review.
-- If a real secret is ever pasted into chat, issues, or PR descriptions, treat it as compromised and rotate.
 
 ## Secrets (sops)
 
