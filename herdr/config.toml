@@ -38,4 +38,5 @@ red            = "#FF003C"   # red              — error
 green          = "#55AA55"   # green            — success
 blue           = "#2AC2F1"   # light-blue       — info (dashy's `blue` is too dark for an accent)
 teal           = "#55AA55"   # green            — dashy has no distinct cyan
-mauve          = "#B443FA"   # purple           — secondary accent (e.g. pull requests)
+mauve          = "#2AC2F1"   # light-blue       — secondary accent (branches, labels)
+                                            # dashy's purple (#B443FA) was too punchy for repeating labels
