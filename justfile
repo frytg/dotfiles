@@ -66,19 +66,27 @@ link:
 [group('SYSTEM')]
 macos:
 	zsh ./macos.sh
+	just macos-reload
+
+# reload macos defaults
+[confirm('This will reload macOS defaults, are you sure? (type `yes` to continue)')]
+[group('SYSTEM')]
+macos-reload:
 	killall Finder
 	killall Dock
 	killall SystemUIServer
 
+# run all updates and link symlinks
 [group('SYSTEM')]
 run:
 	git pull
 	just link
 	pi update
+	pi update --extensions
 	bun upgrade
 	deno upgrade
 	brew update
-	brew upgrade
+	brew upgrade --yes
 	just brew
 	rustup update
 	gcloud components update --quiet

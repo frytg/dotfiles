@@ -1,1 +1,9 @@
-npm
+bin/
+datadog/
+extensions/
+mcp-oauth/
+npm/
+sessions/
+mcp-cache.json
+mcp-onboarding.json
+trust.json

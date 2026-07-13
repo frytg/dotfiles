@@ -5,7 +5,7 @@
   "defaultProvider": "openrouter",
   "defaultModel": "minimax/minimax-m3",
   "defaultThinkingLevel": "medium",
-  "enableInstallTelemetry": false,
+  "enableInstallTelemetry": true,
   "enableAnalytics": false,
   "defaultProjectTrust": "ask",
   "externalEditor": "zed",
@@ -13,7 +13,8 @@
     "npm:@tavily/pi-extension",
     "npm:@tmustier/pi-usage-extension",
     "npm:@mobrienv/pi-tidy-tools",
-    "npm:@datadog/pi-plugin"
+    "npm:@datadog/pi-plugin",
+    "npm:pi-mcp-adapter"
   ],
   "compaction": {
     "enabled": true,

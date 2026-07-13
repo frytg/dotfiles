@@ -14,13 +14,6 @@ ln -sf "$(PWD)/.bunfig.toml" ~
 ln -sf "$(PWD)/.gitconfig" ~
 ln -sf "$(PWD)/.zshrc" ~
 
-# build precompiled zsh completions (saves ~5s per shell startup).
-# best-effort: missing tools just mean the completion won't be available.
-mkdir -p "$HOME/.zsh_completions"
-if command -v kubectl >/dev/null 2>&1; then
-  kubectl completion zsh > "$HOME/.zsh_completions/_kubectl" 2>/dev/null || true
-fi
-
 # link the justfile to the global justfile location so `just --global-justfile`
 mkdir -p ~/.config/just
 ln -sf "$(PWD)/justfile" ~/.config/just/justfile
@@ -35,9 +28,8 @@ ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json
 ln -sf "$(PWD)/.zed/keymap.json" ~/.config/zed/keymap.json
 
 # link pi.dev config
-mkdir -p ~/.pi/agent
-ln -sf "$(PWD)/.pi/settings.json" ~/.pi/agent/settings.json
-ln -sf "$(PWD)/.agents/AGENTS.md" ~/.pi/agent/AGENTS.md
+mkdir -p ~/.pi
+# ln -sf "$(PWD)/.agents/AGENTS.md" "$(PWD)/.pi/agent/AGENTS.md"
 
 # setup ssh config
 mkdir -p ~/.ssh
@@ -57,3 +49,10 @@ ln -sf "$(PWD)/k9s/config.yaml" ~/Library/Application\ Support/k9s/config.yaml
 
 # link entire folder to ~/.dotfiles
 ln -sfh "$(PWD)" ~/.dotfiles
+
+# build precompiled zsh completions (saves ~5s per shell startup).
+# best-effort: missing tools just mean the completion won't be available.
+mkdir -p "$HOME/.zsh_completions"
+if command -v kubectl >/dev/null 2>&1; then
+  kubectl completion zsh > "$HOME/.zsh_completions/_kubectl" 2>/dev/null || true
+fi
