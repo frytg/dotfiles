@@ -1,6 +1,6 @@
 ---
 name: obsidian
-description: Work with an Obsidian vault using the agent's file tools (read/edit/write) and the official `obsidian` CLI. Use when the user asks to capture into their vault, find or update a note, toggle a task, set a frontmatter property, or run any Obsidian-side operation. Vault files are plain Markdown under `$OBISDIAN_VAULT_DIR` — prefer the file tools for I/O; fall back to the CLI for Obsidian-aware operations (search, tags, backlinks, tasks, move-with-link-rewriting, plugin/theme control).
+description: Work with an Obsidian vault using the agent's file tools and the official `obsidian` CLI. Use when the user asks to capture into their vault, find or update a note, set a frontmatter property, or run any Obsidian-side operation.
 license: MIT
 metadata:
   author: frytg
@@ -11,7 +11,7 @@ metadata:
 
 Work with an Obsidian vault. The vault is a directory of plain Markdown files, so file tools handle most I/O; the official `obsidian` CLI covers the rest.
 
-## 1. Requirements
+## Requirements
 
 - Obsidian 1.12.7+ installed (older releases don't have the CLI).
 - **Settings → General → Command line interface** enabled.
@@ -28,17 +28,18 @@ obsidian vaults
 
 > The first two lines of stderr from every command are a banner (`Loading updated app package ...` and `Your Obsidian installer is out of date ...` on 1.12.7). Noise, not errors — parse the real output below.
 
-## 2. The vault
+## The vault
 
-`$OBISDIAN_VAULT_DIR` is the source of truth. The skill treats it as the active vault.
+Resolve the active vault's path with the CLI — it's the source of truth for file tools:
 
-- **Expand tilde for non-shell tools.** The env var is typically a `~`-prefixed path. Shell expands it; programmatic consumers (Node, Python, `find -path`) do not. Resolve explicitly:
-  ```bash
-  VAULT="${OBISDIAN_VAULT_DIR/#\~/$HOME}"
-  cd "$VAULT"
-  ```
-- **Path → vault name.** The `vault=<name>` argument is the **basename of the path**, not the path itself. Run `obsidian vaults` to see the registered names; use the basename of the path you want to target.
-- **Multiple vaults are common.** Obsidian lets one host hold many vaults side by side, and the CLI defaults to whichever was opened last. When a CLI call could hit the wrong one, pass `vault=<name>` explicitly. With file tools there is no ambiguity — the path is the path.
+```bash
+VAULT=$(obsidian vault info=path)
+```
+
+Use `$VAULT` for absolute paths to read/edit/write. The CLI requires the app to be running.
+
+- **Multiple vaults.** Run `obsidian vaults` to see registered names. The `vault=<name>` flag on any CLI command targets a specific vault by name. For a non-active vault's path: `obsidian vault info=path vault=<name>`. With file tools there is no ambiguity — the path is the path.
+- **Vault info fields.** `obsidian vault` prints the full info (name, path, file count, folder count, size). Use `info=<field>` to pull a single one — `path`, `name`, `files`, `folders`, `size`.
 - **Vault layout on disk:**
   - Notes: `*.md`.
   - Config: `.obsidian/`. **Don't edit** unless asked — it's plugin state, app settings, workspace layout, and gets silently overwritten.
@@ -46,7 +47,7 @@ obsidian vaults
   - Attachments: vault-configured folder (often `_Assets/`).
 - **Frontmatter, tags, wikilinks** are just Markdown — a `tags: [foo]` line in YAML, `#tag` inline, `[[Note Name]]` square-bracket links. Treat them as text unless the CLI offers a structured command.
 
-## 3. Tool selection
+## Tool selection
 
 Three tools can touch the vault. Pick by intent.
 
@@ -57,7 +58,6 @@ The vault is just a directory. Use your file tools directly:
 - **Read a note:** open the absolute path under `$VAULT` with the read tool. No `obsidian read` round-trip.
 - **Create a new note:** `write` the full file at the target path. Same outcome as `obsidian create`, no app required.
 - **Edit an existing note:** `edit` with targeted `oldText`/`newText`. Atomic, diffable, undo-friendly. Replaces `obsidian append` / `prepend` / `property:set` for scalar properties.
-- **Toggle a known task:** `edit` to flip `- [ ]` → `- [x]`. One targeted change, no line-number arithmetic (which `obsidian task` requires).
 - **Create from a template:** `obsidian template:read` to get the body, then `write` the new file. Faster than `obsidian create ... template=`.
 
 Advantage: works whether or not the Obsidian app is running, atomic edits, and the agent's diff/undo semantics apply.
@@ -67,7 +67,6 @@ Advantage: works whether or not the Obsidian app is running, atomic edits, and t
 Use it when the operation depends on the app's index, plugins, or link graph:
 
 - **Search and discovery:** `search`, `files`, `folders`, `tags`, `tag`, `properties`, `backlinks`, `links`, `orphans`, `deadends`, `unresolved`. These read the index — no equivalent at the file level.
-- **Tasks listing:** `tasks all todo`. The only way to query tasks across the vault.
 - **Daily note path:** `daily:path` to get today's path, then read/write it with file tools.
 - **Structured properties** (arrays, dates, objects): `property:set` keeps YAML well-formed. Editing frontmatter directly with `edit` is fine for scalars but error-prone for arrays — `tags: [a, b]` vs `tags:\n  - a\n  - b` — and the CLI normalises.
 - **Move / rename:** `move` rewrites `[[wikilinks]]` pointing at the file. A plain `mv` leaves them broken and `unresolved` lists them forever.
@@ -84,7 +83,7 @@ When the work is regular and the per-file edit is scripted:
 Pattern: discover with `rg`, preview, script the edit, re-`rg` to confirm:
 
 ```bash
-VAULT="${OBISDIAN_VAULT_DIR/#\~/$HOME}"
+VAULT=$(obsidian vault info=path)
 rg -l 'TODO' "$VAULT" --glob '*.md'           # discover
 rg -c 'TODO' "$VAULT" --glob '*.md' | head    # preview counts
 # ... apply edits ...
@@ -93,7 +92,7 @@ rg 'TODO' "$VAULT" --glob '*.md' | wc -l      # confirm
 
 Avoid the CLI for bulk — every `obsidian` call spawns a Node process and talks to the running app, which is slow at scale.
 
-## 4. Common workflows
+## Common workflows
 
 End-to-end recipes showing the right tool per step.
 
@@ -114,13 +113,7 @@ TEMPLATE_BODY=$(obsidian template:read name="Daily Standup")
 # write the body into "$VAULT/Meetings/2026-07-13.md" with the file tool
 ```
 
-**Edit a known task to done.** Don't hunt for a line number — match the text.
-
-```
-edit "$VAULT/Projects/Foo.md"  oldText="- [ ] review PR"  newText="- [x] review PR"
-```
-
-**Set a frontmatter property (scalar).** Edit the YAML in place.
+edit "$VAULT/$DAILY"  oldText="...last line"  newText="...last line\n\n## Reflection"
 
 ```
 edit "$VAULT/Projects/Foo.md"  oldText="status: active"  newText="status: done"
@@ -136,13 +129,7 @@ obsidian property:set file=Foo name=tags value="[work, urgent]"
 
 ```bash
 DAILY=$(obsidian daily:path)                  # → "2026-07-13.md"
-edit "$VAULT/$DAILY"  oldText="...last line"  newText="...last line\n\n- [ ] Review inbox"
-```
-
-**Search for tasks across the vault.** Only the CLI can do this.
-
-```bash
-obsidian tasks all todo format=tsv
+edit "$VAULT/$DAILY"  oldText="...last line"  newText="...last line\n\n## Reflection"
 ```
 
 **Find broken wikilinks.**
@@ -160,13 +147,91 @@ obsidian move path="Inbox/Old.md" to="Projects/New.md"
 **Bulk-rename a tag across the vault.** Bash + `rg` for the discovery and confirmation loop, file tool for the edits.
 
 ```bash
-VAULT="${OBISDIAN_VAULT_DIR/#\~/$HOME}"
+VAULT=$(obsidian vault info=path)
 rg -l '#old-tag' "$VAULT" --glob '*.md'       # discover
 # for each file: edit "#old-tag" → "#new-tag" with the file tool
 rg '#old-tag' "$VAULT" --glob '*.md' | wc -l  # confirm zero
 ```
 
-## 5. CLI reference
+## Note syntax
+
+Obsidian extends CommonMark. A handful of patterns come up constantly when writing notes — get these right and the rest behaves like standard Markdown. The agent edits notes as plain text, so knowing the syntax is what separates a clean edit from one that renders as raw backticks.
+
+### Wikilinks
+
+The headline feature. No paths — the vault resolves by name, case-insensitive, and rewrites links on rename.
+
+```markdown
+[[Recipe]]                          basic link
+[[Recipe|Lasagna]]                  alias display text
+[[Recipe#Ingredients]]              link to a heading
+[[Recipe#^step-3]]                  link to a block
+[[#Method]]                         same-note heading link
+```
+
+Block IDs are the one bit of new syntax: append `^block-id` to a paragraph to make it linkable. For lists and quotes, put the ID on its own line directly after the block.
+
+### Callouts
+
+Sidebar callouts for asides, warnings, and tips. The type is one of Obsidian's built-in keywords; the title is optional; a trailing `-` or `+` folds the body (`-` = collapsed by default, `+` = expanded by default, no marker = always open).
+
+```markdown
+> [!note]
+> Inline aside.
+
+> [!warning] Watch out
+> Title comes before the body.
+
+> [!tip]-
+> Hidden until clicked.
+```
+
+Built-in types: `note`, `tip`, `info`, `warning`, `danger`, `example`, `quote`, `question`, `success`, `failure`, `bug`, `abstract`, `todo`. Custom types render as `note` unless a CSS class is registered for them.
+
+### Properties (frontmatter)
+
+YAML block at the top of the file. Three keys Obsidian treats specially: `tags` (searchable labels), `aliases` (alternative names for link suggestions), `cssclasses` (CSS hooks for styling). Everything else is opaque — Obsidian stores it without interpreting.
+
+```markdown
+---
+title: Lasagna
+date: 2026-07-13
+tags: [recipe, italian]
+aliases: [Lasagne]
+---
+```
+
+For array values, `property:set` keeps the YAML well-formed whether you prefer inline (`[a, b]`) or block list form. Pick one shape per file to keep diffs small.
+
+### Tags
+
+`#tag` anywhere in body content. Letters, numbers, `_`, `-`, `/` are allowed; numbers can't be the first character. Slashes make nested tags: `#project/active`.
+
+The same tag can live in body or under `tags:` in frontmatter — Obsidian merges them. Frontmatter is better for tags you want indexed cleanly; inline is better for tags that earn their keep in context.
+
+### Highlights
+
+`==text==` marks text for the highlighter pen. Renders as a yellow background by default; themeable via CSS.
+
+### Embeds
+
+Prefix any wikilink with `!` to inline its content.
+
+```markdown
+![[Recipe]]                   full note inline
+![[Recipe#Ingredients]]       one section
+![[photo.jpg]]                image
+![[photo.jpg|300]]            image, width 300px
+![[manual.pdf#page=3]]        one PDF page
+```
+
+The renderer is selected by the target's MIME type, so audio, video, and search embeds all use the same `![[…]]` shape.
+
+### What doesn't need Obsidian-specific syntax
+
+Standard Markdown (headings, lists, quotes, tables, code blocks), LaTeX math (`$inline$` / `$$block$$`), and Mermaid diagrams (` ```mermaid `) all work without any new syntax. Reach for them when the note calls for them — no Obsidian-specific reference needed.
+
+## CLI reference
 
 `obsidian <command> [name=value] [flag]`. `key=value` pairs; quote values with spaces. `--copy` copies output to the clipboard. `format=json|tsv|csv|text` is offered by list-style commands.
 
@@ -189,6 +254,16 @@ obsidian unresolved verbose counts              # broken wikilinks
 obsidian properties                             # all property keys
 obsidian backlinks file=Recipe                  # what links here
 obsidian links file=Recipe                      # what this links to
+```
+
+### Vault
+
+```bash
+obsidian vaults                              # list registered vault names
+obsidian vault                               # full info for active vault (tsv)
+obsidian vault info=path                     # absolute path of active vault
+obsidian vault info=name                     # name, files, folders, or size also work
+obsidian vault info=path vault=Other         # path of a named, non-active vault
 ```
 
 ### Read
@@ -238,23 +313,11 @@ obsidian delete file=Note
 obsidian daily                                   # open today's
 obsidian daily:path                              # print path
 obsidian daily:read                              # print contents
-obsidian daily:append content="- [ ] Review inbox"
+obsidian daily:append content="## Reflection"
 obsidian daily:prepend content="## Morning"
 ```
 
 For non-trivial edits, use `daily:path` to get the path and edit the file with the file tool.
-
-### Tasks
-
-The CLI is the only way to **list** tasks across the vault. For a **known** task, the file tool is faster (match the text, toggle the checkbox).
-
-```bash
-obsidian tasks all todo
-obsidian tasks all done
-obsidian tasks file=Note todo
-obsidian task file=Note line=8 done
-obsidian task file=Note line=8 todo
-```
 
 ### Properties
 
@@ -304,7 +367,7 @@ obsidian dev:console
 obsidian dev:screenshot file=shot.png
 ```
 
-## 6. Safety
+## Safety
 
 - **Never `delete` without explicit ask.** The CLI does not move to trash. Recover via `history:restore` only if file history was on.
 - **Prefer `obsidian move` over `mv`.** The CLI rewrites `[[wikilinks]]`; `mv` leaves them broken and `unresolved` will list them forever.
