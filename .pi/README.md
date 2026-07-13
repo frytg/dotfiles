@@ -40,3 +40,13 @@ Tavily is the recommended web search and content extraction provider. Install th
 ### Tidy Tools
 
 Reducing output clutter using [Tidy Tools](https://github.com/mikeyobrien/pi-tidy-tools/tree/main/packages/pi-tidy-tools).
+
+## Symlinking files
+
+Some references are already symlinked. If broken, run this again:
+
+```sh
+ln -sf .agents/AGENTS.md .pi/agent/AGENTS.md
+```
+
+The skills directory is linked into `~/.agents/skills`, which gets [picked up by pi](https://pi.dev/docs/latest/skills#locations).

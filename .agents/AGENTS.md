@@ -115,7 +115,7 @@ Reach for these first when applicable. The list is short on purpose.
 - `ai` — Vercel AI SDK. Unified interface for model providers, streaming, tool calling, and structured output.
 - `@openrouter/ai-sdk-provider` — OpenRouter provider for the `ai` SDK. Route to many models through one endpoint.
 
-### Logging — `@frytg/logger`
+### Logging
 
 - [JSR](https://jsr.io/@frytg/logger)
 - [Docs](https://jsr.io/@frytg/logger/doc)
@@ -139,14 +139,14 @@ log.info('user signed in', {
 });
 ```
 
-### Dates — `@frytg/dates`
+### Dates
 
 - [JSR](https://jsr.io/@frytg/dates)
 - [Docs](https://jsr.io/@frytg/dates/doc)
 
 Formatting and parsing helpers. Prefer over hand-rolled `Intl.DateTimeFormat` or `new Date(...)` strings.
 
-### Env loading — `@frytg/check-required-env`
+### Env loading
 
 - [JSR](https://jsr.io/@frytg/check-required-env)
 - [Docs](https://jsr.io/@frytg/check-required-env/doc)
@@ -162,6 +162,12 @@ const API_KEY = getRequiredEnv('API_KEY');
 ```
 
 Never reach for `process.env` directly to validate required env vars. Document new env vars in handler comments and add to the sops-encrypted env file (see below).
+
+### Identifiers
+
+- Prefer content hashes or ULIDs over UUIDs. ULIDs sort lexicographically, are URL-safe, and avoid UUID's v1/v4/v7 footguns.
+- Use [`@std/ulid`](https://jsr.io/@std/ulid) from JSR: `import { ulid } from "@std/ulid"`. Don't pull in `uuid`/`nanoid`/etc. unless there's a concrete reason.
+- For IDs that must be strictly increasing within the same millisecond (event ordering, dedup), use `monotonicUlid` from the same package: `import { monotonicUlid } from "@std/ulid"`.
 
 ## Testing
 
@@ -191,6 +197,7 @@ Never reach for `process.env` directly to validate required env vars. Document n
 
 ## Commits & PRs
 
+- **Never create commits or push on your own.** Wait for the user to ask explicitly. If they do, follow their stated message style and never run destructive git operations (amend shared history, force-push, rewrite branches) without explicit request.
 - Conventional Commits: `<type>(<scope>): <description>`. Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `build`, `ci`.
 - One logical change per PR. PR description: what changed, why, how to test, follow-ups.
 - No amending or force-pushing shared history without coordination.
