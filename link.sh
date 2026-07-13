@@ -27,9 +27,9 @@ mkdir -p ~/.config/zed
 ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json
 ln -sf "$(PWD)/.zed/keymap.json" ~/.config/zed/keymap.json
 
-# link pi.dev config
-mkdir -p ~/.pi
-# ln -sf "$(PWD)/.agents/AGENTS.md" "$(PWD)/.pi/agent/AGENTS.md"
+# herdr config
+mkdir -p ~/.config/herdr
+ln -sf "$(PWD)/herdr/config.toml" ~/.config/herdr/config.toml
 
 # setup ssh config
 mkdir -p ~/.ssh

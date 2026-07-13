@@ -1,0 +1,41 @@
+# https://herdr.dev/docs/configuration/
+#
+# Herdr works without a config file. Add only non-default settings here.
+# Run `herdr --default-config` to see every key with its type and default.
+
+[keys]
+# Default is ctrl+b; ctrl+a matches GNU screen's prefix.
+prefix = "ctrl+a"
+
+# Custom "dashy" theme — palette lifted from frytg/dashy
+# (DESIGN.md, src/dashboard/style/index.css). Dark green base with a
+# vivid yellow accent. Overrides every color token, so the chosen
+# base theme is mostly cosmetic. Set [theme] name below to switch.
+#
+# Color names in comments are the dashy tokens; hex values were
+# converted from the source HSL/OKLCH values.
+
+[theme.custom]
+# Surface levels (darkest → lightest)
+panel_bg       = "#181D16"   # dark-greeny      — page background
+surface_dim    = "#181D16"   # dark-greeny      — deepest layer
+surface0       = "#293126"   # mid-dark-greeny  — first elevation
+surface1       = "#3E4939"   # greeny           — borders, hover bg
+overlay0       = "#3E4939"   # greeny
+overlay1       = "#141D2B"   # dark-blue        — deeper overlay
+
+# Text
+text           = "#ECEBE3"   # white            — primary text (off-white, warm)
+subtext0       = "#D7E2CC"   # gray             — muted text
+
+# Accent
+accent         = "#FFFF00"   # yellow           — primary interaction (hover/active/focus)
+
+# Accent palette
+yellow         = "#FFFF00"   # yellow (OKLCH gamut-mapped to sRGB)
+peach          = "#F09139"   # orange           — secondary action
+red            = "#FF003C"   # red              — error
+green          = "#55AA55"   # green            — success
+blue           = "#2AC2F1"   # light-blue       — info (dashy's `blue` is too dark for an accent)
+teal           = "#55AA55"   # green            — dashy has no distinct cyan
+mauve          = "#B443FA"   # purple           — secondary accent (e.g. pull requests)
