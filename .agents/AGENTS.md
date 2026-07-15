@@ -1,6 +1,6 @@
 # Global Agent Instructions
 
-Defaults that apply across all projects unless overridden by a project-level `AGENTS.md` (which takes precedence). Only follow a rule when it is applicable to the project.
+Defaults that apply across all projects unless overridden by a project-level `AGENTS.md` (which takes precedence). Only follow a rule when it is applicable to the project. These rules might be referred to as dotfiles-rules or AGENT-dotfiles-rules in other contexts.
 
 ## Languages & types
 
@@ -38,6 +38,8 @@ Direct technical prose, the way you'd answer in chat. Not docs, not a report.
 ## Skills
 
 When creating new skills, follow the [Agent Skills spec](https://agentskills.io/home) for the directory layout, frontmatter, and discovery rules. See the full [specification](https://agentskills.io/specification.md) for required fields, allowed properties, and validation.
+
+**Keep skills portable.** Examples and illustrations should be synthetic — placeholder names (`Acme`), generic roles, made-up IDs, abstract scenarios. Avoid identifiable information, identifiable details, and real IDs: no real names, locations, employer/customer/project names, ticket numbers, internal hostnames, real URLs, or anything that could identify a person or org. The exception is real public data when the skill's job is to work with that data (e.g. an Eventhub skill that needs real URNs to look things up) — use synthetic data everywhere else, especially in worked examples.
 
 ## Package manager & runtime
 

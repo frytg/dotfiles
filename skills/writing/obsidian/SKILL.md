@@ -38,6 +38,7 @@ VAULT=$(obsidian vault info=path)
 
 Use `$VAULT` for absolute paths to read/edit/write. The CLI requires the app to be running.
 
+- **Check `<vault>/AGENTS.md` first.** Vaults may carry a root-level `AGENTS.md` (or similarly named conventions file) with vault-specific guidance — folder structure, naming conventions, frontmatter rules, what's off-limits. Read it before assuming defaults; treat it as a higher-priority overlay on the rules below.
 - **Multiple vaults.** Run `obsidian vaults` to see registered names. The `vault=<name>` flag on any CLI command targets a specific vault by name. For a non-active vault's path: `obsidian vault info=path vault=<name>`. With file tools there is no ambiguity — the path is the path.
 - **Vault info fields.** `obsidian vault` prints the full info (name, path, file count, folder count, size). Use `info=<field>` to pull a single one — `path`, `name`, `files`, `folders`, `size`.
 - **Vault layout on disk:**
@@ -45,6 +46,7 @@ Use `$VAULT` for absolute paths to read/edit/write. The CLI requires the app to 
   - Config: `.obsidian/`. **Don't edit** unless asked — it's plugin state, app settings, workspace layout, and gets silently overwritten.
   - Canvases: `*.canvas` (JSON).
   - Attachments: vault-configured folder (often `_Assets/`).
+- **Filenames may include emoji and other non-ASCII characters.** Quote paths in shell and don't split on whitespace; modern tools (`rg`, `find`, the file tools) handle UTF-8 by default.
 - **Frontmatter, tags, wikilinks** are just Markdown — a `tags: [foo]` line in YAML, `#tag` inline, `[[Note Name]]` square-bracket links. Treat them as text unless the CLI offers a structured command.
 
 ## Tool selection
