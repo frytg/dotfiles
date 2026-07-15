@@ -56,6 +56,8 @@ clear:
 	-npm cache clean --force
 	-npm cache verify
 	-docker system prune -a --volumes
+	-cargo clean
+alias clean := clear
 
 # setup symlinks
 [group('SYSTEM')]
@@ -80,14 +82,15 @@ macos-reload:
 [group('SYSTEM')]
 run:
 	git pull
+	just brew
+	brew update
+	brew upgrade --yes
 	just link
+	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	pi update
 	pi update --extensions
 	bun upgrade
 	deno upgrade
-	brew update
-	brew upgrade --yes
-	just brew
 	rustup update
 	gcloud components update --quiet
 	just macos

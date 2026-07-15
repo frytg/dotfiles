@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.6",
+  "lastChangelogVersion": "0.80.7",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
