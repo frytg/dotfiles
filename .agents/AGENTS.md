@@ -91,6 +91,33 @@ Reach for these first when applicable. The list is short on purpose.
 
 - `redis` — TCP client. Wire-compatible with both Redis and Valkey; the backend is often Valkey on modern Linux distros and managed platforms.
 
+### Storage
+
+- [`@storagesdk/core`](https://storagesdk.dev) — unified object storage across S3, Google Cloud Storage, filesystem, and others. Switch providers by changing the import; the call site doesn't move. Snapshot and fork primitives are built-in — branch a bucket per run, mutate freely, merge or throw away the fork.
+
+```ts
+import { Storage } from '@storagesdk/core';
+import { s3 } from '@storagesdk/adapters/s3';
+
+// Scaleway Object Storage — or any S3-compatible backend; swap endpoint + creds
+const storage = new Storage({
+  adapter: s3({
+    bucket: 'agents',
+    endpoint: process.env.S3_ENDPOINT,
+    region: process.env.S3_REGION,
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+    },
+  }),
+});
+
+await storage.upload('docs/readme.md', body);
+const fork = storage.forks.get('agent-run-42');
+```
+
+Adapters expose `storage.raw` for provider-specific features without casts. Forks and snapshots are native on Tigris and GitHub, emulated as sibling buckets on other backends. See the project's [AGENTS.md](https://github.com/storagesdk/storagesdk/blob/main/AGENTS.md) for adapter design rules.
+
 ### Frontend
 
 - `vue` — UI framework.
