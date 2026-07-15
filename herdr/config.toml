@@ -13,7 +13,9 @@ prefix = "ctrl+a"
 # base theme is mostly cosmetic. Set [theme] name below to switch.
 #
 # Color names in comments are the dashy tokens; hex values were
-# converted from the source HSL/OKLCH values.
+# converted from the source HSL/OKLCH values. A few tokens are nudged
+# off the strict mapping for legibility on the dark-greeny bg —
+# rationale on each line below.
 
 [theme.custom]
 # Surface levels (darkest → lightest)
@@ -22,21 +24,21 @@ surface_dim    = "#181D16"   # dark-greeny      — deepest layer
 surface0       = "#293126"   # mid-dark-greeny  — first elevation
 surface1       = "#3E4939"   # greeny           — borders, hover bg
 overlay0       = "#3E4939"   # greeny
-overlay1       = "#141D2B"   # dark-blue        — deeper overlay
+overlay1       = "#1F2A3D"   # dark-blue        — deeper overlay (slightly lighter than panel_bg so it actually shows)
 
 # Text
 text           = "#ECEBE3"   # white            — primary text (off-white, warm)
-subtext0       = "#D7E2CC"   # gray             — muted text
+subtext0       = "#E2E2DA"   # gray             — muted text (neutral; dashy's greenish gray read as dingy on the bg)
 
 # Accent
-accent         = "#FFFF00"   # yellow           — primary interaction (hover/active/focus)
+accent         = "#FFE94A"   # yellow           — primary interaction (hover/active/focus; pure #FFFF00 vibrated on green)
 
 # Accent palette
-yellow         = "#FFFF00"   # yellow (OKLCH gamut-mapped to sRGB)
+yellow         = "#FFFF11"   # yellow
 peach          = "#F09139"   # orange           — secondary action
 red            = "#FF003C"   # red              — error
-green          = "#55AA55"   # green            — success
+green          = "#80D080"   # green            — success (brighter; #55AA55 sat in the same hue as the bg)
 blue           = "#2AC2F1"   # light-blue       — info (dashy's `blue` is too dark for an accent)
-teal           = "#55AA55"   # green            — dashy has no distinct cyan
+teal           = "#80D080"   # green            — dashy has no distinct cyan
 mauve          = "#2AC2F1"   # light-blue       — secondary accent (branches, labels)
                                             # dashy's purple (#B443FA) was too punchy for repeating labels

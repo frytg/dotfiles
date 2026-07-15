@@ -26,6 +26,10 @@ ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/s
 mkdir -p ~/.config/zed
 ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json
 ln -sf "$(PWD)/.zed/keymap.json" ~/.config/zed/keymap.json
+# ~/.config/zed/themes is often pre-created as an empty dir; remove it first
+# so the symlink to .zed/themes replaces it instead of nesting inside.
+rm -rf ~/.config/zed/themes
+ln -sfn "$(PWD)/.zed/themes" ~/.config/zed/themes
 
 # herdr config
 mkdir -p ~/.config/herdr
