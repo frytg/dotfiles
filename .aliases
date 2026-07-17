@@ -7,10 +7,10 @@ alias nubo="nub install && nub outdated"
 alias ports="lsof -i -P | grep LISTEN"
 alias j="just"
 
-# start pi with secrets from .pi/.env.sops.yaml injected via sops
+# start pi with secrets injected via dotenvxZ
 pi() {
-	SOPS_ENV_FILE=~/.dotfiles/.pi/.env.sops.yaml just --global-justfile _env "pi" "$@"
+	 dotenvx run -f ~/.dotfiles/.pi/.env.personal -- pi "$@"
 }
 piw() {
-	SOPS_ENV_FILE=~/.dotfiles/.pi/.env-work.sops.yaml just --global-justfile _env "pi" "$@"
+	 dotenvx run -f ~/.dotfiles/.pi/.env.work -- pi "$@"
 }

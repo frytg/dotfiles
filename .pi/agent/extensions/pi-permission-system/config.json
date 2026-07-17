@@ -1,0 +1,23 @@
+{
+	"$schema": "https://raw.githubusercontent.com/gotgenes/pi-packages/refs/heads/main/packages/pi-permission-system/schemas/permissions.schema.json",
+	"permission": {
+		"*": "allow",
+		"path": {
+			"*": "allow",
+			"*.env": "deny",
+			"*.env.*": "deny",
+			"*.env.example": "ask"
+		},
+		"bash": {
+			"*": "allow",
+			"git *": "ask",
+			"rm -rf *": "deny",
+			"kubectl exec *": "ask",
+			"kubectl patch *": "ask",
+			"kubectl get secrets *": "ask",
+			"sops *": "ask",
+			"sudo *": "ask"
+		},
+		"external_directory": "ask"
+	}
+}

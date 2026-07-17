@@ -100,6 +100,8 @@ run:
 	gcloud components update --quiet
 	herdr server reload-config
 	-just macos
+	just decrypt-env .pi/.env.sops.yaml
+	just decrypt-env .pi/.env-work.sops.yaml
 alias up := run
 alias install := run
 
@@ -204,3 +206,9 @@ edit-key file:
 [group('ENCRYPTION')]
 decrypt-key file:
 	sops --output $(echo {{ file }} | sed 's/\.sops//g') --decrypt {{ file }}
+
+# decrypt a secret file
+[confirm('This will overwrite any previously decrypted files, are you sure? (type `yes` to continue)')]
+[group('ENCRYPTION')]
+decrypt-env file:
+	sops --output-type dotenv --output $(echo {{ file }} | sed 's/\.sops.yaml//g') --decrypt {{ file }}

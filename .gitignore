@@ -3,10 +3,25 @@ logs
 .DS_Store
 coverage/
 keys/*
-.env
+.env*
+!.env*.sops
+!.env*.sops.*
 node_modules/
 vendor/
 tmp
 .dev/
 .age*.txt
 ~/
+
+# .pi specific
+.pi/**/bin/
+.pi/**/datadog/
+.pi/**/extensions/*.ts
+.pi/**/extensions/*.jsonl
+.pi/**/mcp-oauth/
+.pi/**/npm/
+.pi/**/sessions/
+.pi/**/mcp-cache.json
+.pi/**/mcp-onboarding.json
+.pi/**/trust.json
+.pi/**/models-store.json

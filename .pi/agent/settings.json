@@ -15,7 +15,8 @@
     "npm:@mobrienv/pi-tidy-tools",
     "npm:@datadog/pi-plugin",
     "npm:pi-mcp-adapter",
-    "npm:@ogulcancelik/pi-minimal-footer"
+    "npm:@ogulcancelik/pi-minimal-footer",
+    "npm:@gotgenes/pi-permission-system"
   ],
   "compaction": {
     "enabled": true,
