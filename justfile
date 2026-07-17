@@ -99,7 +99,7 @@ run:
 	rustup update
 	gcloud components update --quiet
 	herdr server reload-config
-	just macos
+	-just macos
 alias up := run
 alias install := run
 

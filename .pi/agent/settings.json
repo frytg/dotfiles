@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.7",
+  "lastChangelogVersion": "0.80.10",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
@@ -14,7 +14,8 @@
     "npm:@tmustier/pi-usage-extension",
     "npm:@mobrienv/pi-tidy-tools",
     "npm:@datadog/pi-plugin",
-    "npm:pi-mcp-adapter"
+    "npm:pi-mcp-adapter",
+    "npm:@ogulcancelik/pi-minimal-footer"
   ],
   "compaction": {
     "enabled": true,

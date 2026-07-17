@@ -11,3 +11,6 @@ alias j="just"
 pi() {
 	SOPS_ENV_FILE=~/.dotfiles/.pi/.env.sops.yaml just --global-justfile _env "pi" "$@"
 }
+piw() {
+	SOPS_ENV_FILE=~/.dotfiles/.pi/.env-work.sops.yaml just --global-justfile _env "pi" "$@"
+}

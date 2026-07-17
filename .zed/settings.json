@@ -24,7 +24,8 @@
 		"nix": true,
 		"terraform": true,
 		"toml": true,
-		"vue": true
+		"vue": true,
+		"pkl": true
 	},
 	"base_keymap": "VSCode",
 	"buffer_font_family": "IBM Plex Mono",
