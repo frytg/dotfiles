@@ -26,8 +26,6 @@ obsidian help
 obsidian vaults
 ```
 
-> The first two lines of stderr from every command are a banner (`Loading updated app package ...` and `Your Obsidian installer is out of date ...` on 1.12.7). Noise, not errors — parse the real output below.
-
 ## The vault
 
 Resolve the active vault's path with the CLI — it's the source of truth for file tools:
@@ -115,7 +113,7 @@ TEMPLATE_BODY=$(obsidian template:read name="Daily Standup")
 # write the body into "$VAULT/Meetings/2026-07-13.md" with the file tool
 ```
 
-edit "$VAULT/$DAILY"  oldText="...last line"  newText="...last line\n\n## Reflection"
+edit "$VAULT/$DAILY" oldText="...last line" newText="...last line\n\n## Reflection"
 
 ```
 edit "$VAULT/Projects/Foo.md"  oldText="status: active"  newText="status: done"
@@ -164,11 +162,11 @@ Obsidian extends CommonMark. A handful of patterns come up constantly when writi
 The headline feature. No paths — the vault resolves by name, case-insensitive, and rewrites links on rename.
 
 ```markdown
-[[Recipe]]                          basic link
-[[Recipe|Lasagna]]                  alias display text
-[[Recipe#Ingredients]]              link to a heading
-[[Recipe#^step-3]]                  link to a block
-[[#Method]]                         same-note heading link
+[[Recipe]] basic link
+[[Recipe|Lasagna]] alias display text
+[[Recipe#Ingredients]] link to a heading
+[[Recipe#^step-3]] link to a block
+[[#Method]] same-note heading link
 ```
 
 Block IDs are the one bit of new syntax: append `^block-id` to a paragraph to make it linkable. For lists and quotes, put the ID on its own line directly after the block.

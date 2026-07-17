@@ -12,7 +12,7 @@ State the answer in the first sentence, then provide only the context the reader
 - Summarizing notes, meeting notes, weekly reviews, status updates, incident reports, threads, articles.
 - Producing a decision brief — "should we do X?"
 - Recap emails to a manager or team.
-- Anytime the user says *summarize*, *brief me*, *BLUF*, *bottom line*, *status*, *recap*.
+- Anytime the user says _summarize_, _brief me_, _BLUF_, _bottom line_, _status_, _recap_.
 
 ## Not for
 
