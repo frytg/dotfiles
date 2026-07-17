@@ -4,6 +4,7 @@ default:
 # use a default sops file, or allow to be overridden by SOPS_ENV_FILE environment variable
 DEFAULT_SOPS_FILE := '.env.sops.yaml'
 SELECTED_SOPS_FILE := env('SOPS_ENV_FILE', DEFAULT_SOPS_FILE)
+CURRENT_NODE_VERSION := '26'
 
 # run a command with the selected sops file (injecting environment variables)
 _env *args:
@@ -77,6 +78,7 @@ macos-reload:
 	killall Finder
 	killall Dock
 	killall SystemUIServer
+	herdr server stop
 
 # run all updates and link symlinks
 [group('SYSTEM')]
@@ -86,6 +88,9 @@ run:
 	brew update
 	brew upgrade --yes
 	just link
+	nub node install {{ CURRENT_NODE_VERSION }}
+	nub node pin {{ CURRENT_NODE_VERSION }}
+	nub node shim
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	pi update
 	pi update --extensions
@@ -93,8 +98,8 @@ run:
 	deno upgrade
 	rustup update
 	gcloud components update --quiet
-	just macos
 	herdr server reload-config
+	just macos
 alias up := run
 alias install := run
 

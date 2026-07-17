@@ -1,3 +1,4 @@
+onboarding = false
 # https://herdr.dev/docs/configuration/
 #
 # Herdr works without a config file. Add only non-default settings here.

@@ -105,3 +105,6 @@ scw() {
 # ---- aliases / user functions ----------------------------------------------
 
 source ~/.aliases
+
+# nub node shim
+export PATH="$HOME/.nub/node-shim:$PATH"
