@@ -1,0 +1,14 @@
+{
+	"planner": {
+		"provider": "openrouter",
+		"model": "deepseek/deepseek-v4-flash"
+	},
+	"executor": {
+		"provider": "openrouter",
+		"model": "minimax/minimax-m3"
+	},
+	"reviewer": {
+		"provider": "openrouter",
+		"model": "moonshotai/kimi-k3"
+	}
+}

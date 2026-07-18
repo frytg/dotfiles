@@ -18,6 +18,7 @@ tmp
 .pi/**/datadog/
 .pi/**/extensions/*.ts
 .pi/**/extensions/*.jsonl
+.pi/**/git/
 .pi/**/mcp-oauth/
 .pi/**/npm/
 .pi/**/sessions/
@@ -25,3 +26,4 @@ tmp
 .pi/**/mcp-onboarding.json
 .pi/**/trust.json
 .pi/**/models-store.json
+.pi/**/pi-atlas-cache.json

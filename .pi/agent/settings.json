@@ -3,20 +3,20 @@
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
-  "defaultModel": "x-ai/grok-4.5",
-  "defaultThinkingLevel": "high",
+  "defaultModel": "minimax/minimax-m3",
+  "defaultThinkingLevel": "medium",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,
   "defaultProjectTrust": "ask",
   "externalEditor": "zed",
   "packages": [
     "npm:@tavily/pi-extension",
-    "npm:@tmustier/pi-usage-extension",
     "npm:@mobrienv/pi-tidy-tools",
     "npm:@datadog/pi-plugin",
     "npm:pi-mcp-adapter",
-    "npm:@ogulcancelik/pi-minimal-footer",
-    "npm:@gotgenes/pi-permission-system"
+    "npm:@gotgenes/pi-permission-system",
+    "https://github.com/frytg/pi-atlas",
+    "git:github.com/jnsahaj/trio"
   ],
   "compaction": {
     "enabled": true,

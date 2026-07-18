@@ -13,3 +13,4 @@
 ## Skills
 
 - [`mattpocock/skills`](https://github.com/mattpocock/skills)
+- [`warpdotdev-demos/cloud-factory-demo`](https://github.com/warpdotdev-demos/cloud-factory-demo)

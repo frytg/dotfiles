@@ -18,6 +18,7 @@ just install
 
 - `pi list` — list installed packages
 - `pi config` — enable or disable package resources
+- `/atlas` to see token usage
 
 ## Plugins
 
@@ -50,3 +51,10 @@ ln -sf .agents/AGENTS.md .pi/agent/AGENTS.md
 ```
 
 The skills directory is linked into `~/.agents/skills`, which gets [picked up by pi](https://pi.dev/docs/latest/skills#locations).
+
+## Trio
+
+Setup [trio](https://github.com/jnsahaj/trio) with `/trio`, after which it can execute `planner -> executor -> reviewer` on its own with one model each.
+Also see [@iamsahaj_xyz](https://x.com/iamsahaj_xyz/status/2077842986806001746).
+
+Config gets saved to [`trio.json`](./agent/trio.json)
