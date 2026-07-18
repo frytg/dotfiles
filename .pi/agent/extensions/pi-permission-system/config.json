@@ -10,7 +10,12 @@
 		},
 		"bash": {
 			"*": "allow",
+			"git diff *": "allow",
+			"git status *": "allow",
+			"git log *": "allow",
 			"git *": "ask",
+			"gh *": "ask",
+			"gh issue *": "allow",
 			"rm -rf *": "deny",
 			"kubectl exec *": "ask",
 			"kubectl patch *": "ask",

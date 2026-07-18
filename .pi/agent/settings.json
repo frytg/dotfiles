@@ -3,8 +3,8 @@
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
-  "defaultModel": "minimax/minimax-m3",
-  "defaultThinkingLevel": "medium",
+  "defaultModel": "x-ai/grok-4.5",
+  "defaultThinkingLevel": "high",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,
   "defaultProjectTrust": "ask",
@@ -22,5 +22,17 @@
     "enabled": true,
     "reserveTokens": 16384,
     "keepRecentTokens": 20000
-  }
+  },
+  "enabledModels": [
+    "openrouter/x-ai/grok-4.5",
+    "openrouter/minimax/minimax-m3",
+    "openrouter/moonshotai/kimi-k3",
+    "openrouter/~google/gemini-flash-latest",
+    "openrouter/~google/gemini-pro-latest",
+    "openrouter/deepseek/deepseek-v4-pro",
+    "openrouter/deepseek/deepseek-v4-flash",
+    "openrouter/~anthropic/claude-haiku-latest",
+    "openrouter/~anthropic/claude-opus-latest",
+    "openrouter/~anthropic/claude-sonnet-latest"
+  ]
 }

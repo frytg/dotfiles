@@ -100,8 +100,8 @@ run:
 	gcloud components update --quiet
 	herdr server reload-config
 	-just macos
-	just decrypt-env .pi/.env.sops.yaml
-	just decrypt-env .pi/.env-work.sops.yaml
+	just decrypt-env .pi/.env.personal.sops.yaml
+	just decrypt-env .pi/.env.work.sops.yaml
 alias up := run
 alias install := run
 
