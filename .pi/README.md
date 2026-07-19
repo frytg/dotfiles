@@ -49,7 +49,7 @@ Adding sub-agents to pi using [`pi-tidy-subagents`](https://github.com/mikeyobri
 Some references are already symlinked. If broken, run this again:
 
 ```sh
-ln -sf .agents/AGENTS.md .pi/agent/AGENTS.md
+ln -sf ../../.agents/AGENTS.md .pi/agent/AGENTS.md
 ```
 
 The skills directory is linked into `~/.agents/skills`, which gets [picked up by pi](https://pi.dev/docs/latest/skills#locations).

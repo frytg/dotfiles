@@ -23,6 +23,9 @@
 			"sops *": "ask",
 			"sudo *": "ask"
 		},
-		"external_directory": "ask"
+		"external_directory": {
+			"*": "ask",
+			"~/Downloads/_DEV/frytg-note-vault": "allow"
+		}
 	}
 }
