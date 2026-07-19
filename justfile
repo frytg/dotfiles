@@ -47,6 +47,16 @@ refresh-completions:
 	fi
 	@echo "ok: removed ~/.zcompdump — compinit will rebuild it on next shell"
 
+# one-time moshi-hook setup: pair with the Moshi iOS app, install agent hooks,
+# start the daemon. Get the pairing token from Moshi app → Settings → Hooks.
+# No tmux needed: moshi-hook auto-detects herdr sessions via $HERDR_ENV.
+[group('SYSTEM')]
+moshi-setup token:
+	moshi-hook pair --token {{ token }}
+	moshi-hook install
+	brew services start moshi-hook
+	moshi-hook status
+
 [group('SYSTEM')]
 clear:
 	brew cleanup --prune-prefix
@@ -88,6 +98,7 @@ run:
 	brew update
 	brew upgrade --yes
 	just link
+	@if command -v moshi-hook >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^moshi-hook .*started'; then brew services restart moshi-hook; fi
 	nub node install {{ CURRENT_NODE_VERSION }}
 	nub node pin {{ CURRENT_NODE_VERSION }}
 	nub node shim

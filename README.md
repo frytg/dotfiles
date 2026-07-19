@@ -21,8 +21,19 @@ This repo uses [just](https://github.com/casey/just) as a task runner. Run `just
 | `just link`    | Symlink dotfiles via `link.sh`            |
 | `just brew`    | Install Homebrew packages from `Brewfile` |
 | `just install` | Pull, link, and upgrade toolchains        |
+| `just moshi-setup <token>` | Pair and start moshi-hook (one-time) |
 
 ## Tools
+
+### Moshi
+
+[moshi-hook](https://getmoshi.app/docs/hooks) bridges local coding agents to the Moshi iOS app (inbox events, approvals, Live Activity). It's installed via the `Brewfile`; finish the one-time setup per machine with:
+
+```bash
+just moshi-setup <pairing-token> # token from Moshi app → Settings → Hooks
+```
+
+No tmux here — sessions run in [herdr](https://herdr.dev), which moshi-hook detects automatically via `$HERDR_ENV`. (Don't call `moshi <dir>`; that alias launches a tmux session.)
 
 ### Crane
 

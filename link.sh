@@ -22,6 +22,9 @@ ln -sf "$(PWD)/justfile" ~/.config/just/justfile
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
 
+# link .pi for some extensions
+ln -sf "$(PWD)/.pi" ~/.pi
+
 # link zed config
 mkdir -p ~/.config/zed
 ln -sf "$(PWD)/.zed/settings.json" ~/.config/zed/settings.json

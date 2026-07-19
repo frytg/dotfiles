@@ -2,6 +2,10 @@
 
 ## Yubikey
 
+Background: this guide was created/ used to setup a Yubikey for SSH authentication. This way I can login to my mac or servers in the [Moshi app](https://getmoshi.app/docs) on iOS without adding a fixed key.
+
+To proceed, download `yubico-piv-tool` from [developers.yubico.com/yubico-piv-tool/Releases](https://developers.yubico.com/yubico-piv-tool/Releases/). Also see the [PIV walkthrough](https://developers.yubico.com/PIV/Guides/PIV_Walk-Through.html).
+
 To setup SSH keys for the Yubikey, run this:
 
 Generate a new key in slot 9a and write the public key
