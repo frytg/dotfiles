@@ -37,7 +37,11 @@ ln -sf "$(PWD)/herdr/config.toml" ~/.config/herdr/config.toml
 
 # setup ssh config
 mkdir -p ~/.ssh
+chmod 700 ~/.ssh
 ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
+# authorized_keys for incoming ssh connections (remote login)
+ln -sf "$(PWD)/.ssh-authorized_keys" ~/.ssh/authorized_keys
+chmod 600 "$(PWD)/.ssh-authorized_keys"
 
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents

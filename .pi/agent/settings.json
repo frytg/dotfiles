@@ -3,8 +3,8 @@
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
-  "defaultModel": "minimax/minimax-m3",
-  "defaultThinkingLevel": "medium",
+  "defaultModel": "moonshotai/kimi-k3",
+  "defaultThinkingLevel": "high",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,
   "defaultProjectTrust": "ask",
@@ -16,7 +16,8 @@
     "npm:pi-mcp-adapter",
     "npm:@gotgenes/pi-permission-system",
     "https://github.com/frytg/pi-atlas",
-    "git:github.com/jnsahaj/trio"
+    "git:github.com/jnsahaj/trio",
+    "npm:@mobrienv/pi-tidy-subagents"
   ],
   "compaction": {
     "enabled": true,

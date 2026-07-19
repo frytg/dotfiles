@@ -111,6 +111,14 @@ defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # ----------------------------------------------------------------------------
+# Sharing
+# ----------------------------------------------------------------------------
+
+# enable Remote Login (sshd) for incoming ssh connections
+# note: requires Full Disk Access for the terminal running this script
+sudo systemsetup -setremotelogin on || echo "warning: could not enable Remote Login (grant Full Disk Access or toggle it in System Settings -> General -> Sharing)"
+
+# ----------------------------------------------------------------------------
 # Apply changes
 # ----------------------------------------------------------------------------
 

@@ -38,9 +38,11 @@ Then run `/mcp-auth` in pi to authenticate with the MCP server.
 
 Tavily is the recommended web search and content extraction provider. Install the [pi extension](https://docs.tavily.com/documentation/integrations/pi#step-3-install-the-tavily-pi-extension) and grab an API key from the [Tavily dashboard](https://app.tavily.com/home).
 
-### Tidy Tools
+### Tidy Tools & Sub-Agents
 
 Reducing output clutter using [Tidy Tools](https://github.com/mikeyobrien/pi-tidy-tools/tree/main/packages/pi-tidy-tools).
+
+Adding sub-agents to pi using [`pi-tidy-subagents`](https://github.com/mikeyobrien/pi-tidy-tools/tree/main/packages/pi-tidy-subagents). See docs or [reference.md](https://github.com/mikeyobrien/pi-tidy-tools/blob/main/packages/pi-tidy-subagents/docs/reference.md) for setup and usage.
 
 ## Symlinking files
 
