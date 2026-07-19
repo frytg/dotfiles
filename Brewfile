@@ -59,6 +59,7 @@ brew "restic"
 brew "rsync"
 brew "ruby"
 brew "scw"
+brew "skyhook-io/tap/radar" # https://radarhq.io/docs/install
 brew "sops"
 brew "terraform" # hashicorp/tap
 brew "tinygo"
