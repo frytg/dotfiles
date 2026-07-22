@@ -43,3 +43,6 @@ blue           = "#2AC2F1"   # light-blue       — info (dashy's `blue` is too 
 teal           = "#80D080"   # green            — dashy has no distinct cyan
 mauve          = "#2AC2F1"   # light-blue       — secondary accent (branches, labels)
                                             # dashy's purple (#B443FA) was too punchy for repeating labels
+
+[ui]
+agent_panel_sort = "priority"
