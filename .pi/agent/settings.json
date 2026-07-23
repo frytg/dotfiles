@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.10",
+  "lastChangelogVersion": "0.81.1",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
@@ -34,6 +34,9 @@
     "openrouter/deepseek/deepseek-v4-flash",
     "openrouter/~anthropic/claude-haiku-latest",
     "openrouter/~anthropic/claude-opus-latest",
-    "openrouter/~anthropic/claude-sonnet-latest"
-  ]
+    "openrouter/~anthropic/claude-sonnet-latest",
+    "openrouter/google/gemini-3.6-flash",
+    "openrouter/google/gemini-3.5-flash-lite"
+  ],
+  "hideThinkingBlock": true
 }
