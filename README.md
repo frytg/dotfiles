@@ -35,6 +35,8 @@ just moshi-setup <pairing-token> # token from Moshi app → Settings → Hooks
 
 No tmux here — sessions run in [herdr](https://herdr.dev), which moshi-hook detects automatically via `$HERDR_ENV`. (Don't call `moshi <dir>`; that alias launches a tmux session.)
 
+The [moshi/](./moshi) directory holds the Dark Greeny custom app theme and its import docs.
+
 ### Crane
 
 Useful tool for managing containers.

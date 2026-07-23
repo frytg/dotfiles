@@ -1,0 +1,27 @@
+{
+	"v": 1,
+	"name": "Dark Greeny",
+	"mode": "dark",
+	"colors": {
+		"background": "#181D16",
+		"foreground": "#ECEBE3",
+		"cursor": "#FFFF11",
+		"black": "#181D16",
+		"red": "#FF003C",
+		"green": "#80D080",
+		"yellow": "#FFE94A",
+		"blue": "#2AC2F1",
+		"magenta": "#F09139",
+		"cyan": "#80D080",
+		"white": "#ECEBE3",
+		"brightBlack": "#3E4939",
+		"brightRed": "#FF6B85",
+		"brightGreen": "#B0E0B0",
+		"brightYellow": "#FFFF7F",
+		"brightBlue": "#7BD8F1",
+		"brightMagenta": "#FFB070",
+		"brightCyan": "#B0E0B0",
+		"brightWhite": "#FFFFFF",
+		"selectionBackground": "#3E4939"
+	}
+}
