@@ -40,7 +40,11 @@
   ],
   "hideThinkingBlock": true,
   "npmCommand": [
-    "bun"
+    "mise",
+    "exec",
+    "node@26",
+    "--",
+    "npm"
   ],
   "terminal": {
     "showImages": true,

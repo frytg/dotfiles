@@ -54,19 +54,30 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 
 ### Node version selection
 
-[Node is managed by nub](https://nubjs.com/docs/node) — not `nvm`, `fnm`, `mise`, or `Volta`. Do not install or wire up any of those in `.zshrc`, the `justfile`, or `Brewfile`. Nub provisions the right Node itself when you run a file with `nub` / `nubx` / `nub watch`.
+[Node is managed by mise](https://mise.jdx.dev/lang/node.html) — not `nvm`, `fnm`, `Volta`, or nub's node shim. Ambient `node`/`npm`/`npx` come from mise; nub remains the preferred *package manager* (`nub` / `nubx` / `nub install`) and uses whatever `node` is on `PATH`.
 
-**Pin files** (highest precedence first, walked up from CWD; `node_modules/` is skipped so a dependency's own pin never drives your project):
+**Dotfiles wiring**
 
-- `package.json` → `devEngines.runtime.node`
+- CLI: `brew "mise"` in `Brewfile`
+- Global pin + settings: `mise/config.toml` → `~/.config/mise/config.toml` (via `link.sh`)
+- Interactive shells: `eval "$(mise activate zsh)"` in `.zshrc`
+- Login shells / IDEs: `eval "$(mise activate zsh --shims)"` in `.zprofile`
+- Provision / refresh default: `just node` (also called from `just install`)
+
+**Pin files** (mise walks these when `idiomatic_version_file_enable_tools` includes `node`):
+
+- project `mise.toml` `[tools] node = "..."` (highest)
 - `.node-version` (tool-agnostic; wins over `.nvmrc` in the same directory)
 - `.nvmrc`
-- `package.json` → `engines.node` (range, not exact pin)
+- `package.json` → `devEngines.runtime.node`
+- global `~/.config/mise/config.toml` (default when nothing else matches)
 
-**Binary resolution** (once pinned): `PATH` node → nub's cache at `~/.cache/nub/node/<version>/` → nvm scan (read-only) → download from nodejs.org (SHA-256 verified, then cached). With no pin, nub just uses whatever `node` is on `PATH` — keep one there for ambient shell commands (e.g. via `brew install node`).
+**Common commands**
 
-**Hard override**: `NODE_EXECUTABLE=/abs/path/to/node` bypasses everything — useful in CI.
-**Pre-warming a cache** (offline CI): `nub node install` reads the project's pin. Aliases like `lts`, `latest`, `26`, or `22.13` all work.
+- `mise use --global node@26` — set ambient default
+- `mise use node@22` — pin current project (writes local `mise.toml`)
+- `mise install` / `just node` — install whatever the active config asks for
+- `mise ls` / `mise doctor` — inspect active toolset
 
 ## Hosting & CI
 

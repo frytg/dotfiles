@@ -1,0 +1,17 @@
+# Global mise config (linked to ~/.config/mise/config.toml by link.sh).
+# https://mise.jdx.dev/
+#
+# Node is the ambient runtime for shells, editors, and CLIs. Project package
+# installs stay on nub (`nub` / `nubx` / `nub install`) — only the node binary
+# itself is provisioned here.
+
+[tools]
+# Major pin: mise installs the newest 26.x and auto-switches when cd'ing into
+# a project that ships .node-version / .nvmrc / package.json#devEngines.
+node = "26"
+
+[settings]
+lockfile = true
+# Read .node-version, .nvmrc, and package.json devEngines so plain `node` in a
+# project directory matches the pin without a local mise.toml.
+idiomatic_version_file_enable_tools = ["node"]

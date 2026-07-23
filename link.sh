@@ -12,13 +12,20 @@ ln -sf "$(PWD)/.ghostty" ~/.config/ghostty/config
 ln -sf "$(PWD)/.aliases" ~
 ln -sf "$(PWD)/.bunfig.toml" ~
 ln -sf "$(PWD)/.gitconfig" ~
+ln -sf "$(PWD)/.zshenv" ~
+ln -sf "$(PWD)/.zprofile" ~
 ln -sf "$(PWD)/.zshrc" ~
+
+# mise global config — node version + idiomatic pin file support
+mkdir -p ~/.config/mise
+ln -sf "$(PWD)/mise/config.toml" ~/.config/mise/config.toml
 
 # link the justfile to the global justfile location so `just --global-justfile`
 mkdir -p ~/.config/just
 ln -sf "$(PWD)/justfile" ~/.config/just/justfile
 
 # link vscode config
+ln -sf "$(PWD)/.cursor/keybindings.json" ~/Library/Application\ Support/Cursor/User/keybindings.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
 

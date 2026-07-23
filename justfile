@@ -10,6 +10,26 @@ CURRENT_NODE_VERSION := '26'
 _env *args:
 	sops exec-env --same-process {{ SELECTED_SOPS_FILE }} "{{ args }}"
 
+# provision ambient node via mise (install + global pin + reshim).
+# peels off leftover nub node shims so `node` resolves through mise.
+# https://mise.jdx.dev/lang/node.html
+[group('SYSTEM')]
+node:
+	#!/usr/bin/env zsh
+	set -e
+	if ! command -v mise >/dev/null 2>&1; then
+		echo 'error: mise not on PATH — run `just brew` first' >&2
+		exit 1
+	fi
+	mise use --global node@{{ CURRENT_NODE_VERSION }}
+	mise install node@{{ CURRENT_NODE_VERSION }}
+	mise reshim
+	if [[ -d "$HOME/.nub/node-shim" ]]; then
+		rm -rf "$HOME/.nub/node-shim"
+		echo "ok: removed ~/.nub/node-shim"
+	fi
+	echo "ok: node $(mise exec -- node -v) via $(mise which node)"
+
 # run brew install and updates
 [group('SYSTEM')]
 brew:
@@ -98,9 +118,7 @@ run:
 	brew upgrade --yes
 	just link
 	@if command -v moshi-hook >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^moshi-hook .*started'; then brew services restart moshi-hook; fi
-	nub node install {{ CURRENT_NODE_VERSION }}
-	nub node pin {{ CURRENT_NODE_VERSION }}
-	nub node shim
+	just node
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	pi update
 	pi update --extensions

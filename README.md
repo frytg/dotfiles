@@ -16,14 +16,25 @@ just install
 
 This repo uses [just](https://github.com/casey/just) as a task runner. Run `just` or `just --list` to see all recipes.
 
-| Command        | What it does                              |
-| -------------- | ----------------------------------------- |
-| `just link`    | Symlink dotfiles via `link.sh`            |
-| `just brew`    | Install Homebrew packages from `Brewfile` |
-| `just install` | Pull, link, and upgrade toolchains        |
-| `just moshi-setup <token>` | Pair and start moshi-hook (one-time) |
+- `just link` — symlink dotfiles via `link.sh`
+- `just brew` — install Homebrew packages from `Brewfile`
+- `just node` — install/pin ambient Node via [mise](https://mise.jdx.dev/)
+- `just install` — brew, link, mise node, and upgrade toolchains
+- `just moshi-setup <token>` — pair and start moshi-hook (one-time)
 
 ## Tools
+
+### Node (mise)
+
+Ambient `node` is provisioned by [mise](https://mise.jdx.dev/lang/node.html), not nvm/fnm or nub's shim. Global pin and settings live in [`mise/config.toml`](./mise/config.toml) (linked to `~/.config/mise/config.toml`). Interactive shells activate mise from `.zshrc`; login shells / IDEs get shims from `.zprofile`.
+
+```bash
+just node                 # install + pin global node@26
+mise use node@22          # pin a project (writes mise.toml)
+mise doctor               # verify activate/shims
+```
+
+Project pins also come from `.node-version`, `.nvmrc`, or `package.json#devEngines` when those are present. Nub stays the package manager (`nub` / `nubx` / `nub install`) and uses the mise-provided `node` on `PATH`.
 
 ### Moshi
 

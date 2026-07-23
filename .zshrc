@@ -1,7 +1,9 @@
 # shell startup notes:
 #   - Heavy work (conda, pyenv, scw autocomplete) is lazy-loaded
 #     via wrapper functions. The real tool is loaded on first invocation.
-#   - Node is managed by nub, not nvm. See .agents/AGENTS.md → "Runtimes".
+#   - Node is managed by mise (not nvm/fnm/nub shim). See .agents/AGENTS.md
+#     → "Runtimes". Interactive shells use `mise activate`; login shells
+#     and IDEs get shims from .zprofile.
 #   - kubectl completion is precompiled to ~/.zsh_completions/_kubectl by
 #     link.sh, then picked up via fpath. Run `just refresh-completions`
 #     to rebuild after upgrading kubectl.
@@ -102,9 +104,16 @@ scw() {
   scw "$@"
 }
 
+# ---- mise (node + other tools) ---------------------------------------------
+
+# Activate after PATH is assembled so mise can prepend its tool dirs and re-
+# resolve on chpwd (.node-version / .nvmrc / package.json#devEngines). Login
+# shells already get shims from .zprofile for GUI/IDE contexts.
+# https://mise.jdx.dev/getting-started.html#activate-mise
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
 # ---- aliases / user functions ----------------------------------------------
 
 source ~/.aliases
-
-# nub node shim
-export PATH="$HOME/.nub/node-shim:$PATH"
