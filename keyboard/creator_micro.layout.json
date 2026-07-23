@@ -1,0 +1,93 @@
+{
+  "name": "Creator Micro",
+  "vendorProductId": 1464657635,
+  "macros": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  "layers": [
+    [
+      "KC_MUTE",
+      "KC_MPRV",
+      "KC_MNXT",
+      "KC_MPLY",
+      "HYPR(KC_M)",
+      "HYPR(KC_O)",
+      "LSG(KC_SPC)",
+      "HYPR(KC_F)",
+      "HYPR(KC_E)",
+      "G(KC_C)",
+      "G(KC_V)",
+      "HYPR(KC_N)",
+      "RGB_TOG",
+      "G(KC_SPC)",
+      "HYPR(KC_1)",
+      "TO(1)"
+    ],
+    [
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "RCS(KC_C)",
+      "LSG(KC_F)",
+      "RCS(KC_G)",
+      "LSG(KC_E)",
+      "LSA(KC_C)",
+      "G(KC_L)",
+      "KC_NO",
+      "G(KC_I)",
+      "TO(0)",
+      "G(KC_SPC)",
+      "HYPR(KC_1)",
+      "TO(2)"
+    ],
+    [
+      "KC_NO",
+      "RGB_TOG",
+      "KC_NO",
+      "KC_NO",
+      "RGB_VAI",
+      "RGB_MOD",
+      "RGB_HUI",
+      "RGB_SAI",
+      "RGB_VAD",
+      "RGB_RMOD",
+      "RGB_HUD",
+      "RGB_SAD",
+      "KC_NO",
+      "RGB_SPD",
+      "RGB_SPI",
+      "TO(3)"
+    ],
+    [
+      "KC_NO",
+      "CUSTOM(0)",
+      "RGB_TOG",
+      "KC_NO",
+      "CUSTOM(0)",
+      "CUSTOM(1)",
+      "CUSTOM(3)",
+      "CUSTOM(5)",
+      "KC_NO",
+      "CUSTOM(2)",
+      "CUSTOM(4)",
+      "CUSTOM(6)",
+      "KC_NO",
+      "KC_NO",
+      "CUSTOM(9)",
+      "TO(0)"
+    ]
+  ],
+  "encoders": [
+    [
+      ["KC_VOLD", "KC_VOLU"],
+      ["KC_TRNS", "KC_TRNS"],
+      ["KC_TRNS", "KC_TRNS"],
+      ["KC_TRNS", "KC_TRNS"]
+    ],
+    [
+      ["KC_PGUP", "KC_PGDN"],
+      ["KC_BRID", "KC_BRIU"],
+      ["KC_TRNS", "KC_TRNS"],
+      ["KC_TRNS", "KC_TRNS"]
+    ]
+  ]
+}
