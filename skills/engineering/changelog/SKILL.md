@@ -68,9 +68,17 @@ Group the commits into Keep a Changelog sections. Drop non-user-facing types unl
 - **Security** — `fix` commits whose body mentions `CVE-` or `security`.
 - _(omit)_ — `docs`, `test`, `chore`, `build`, `ci`.
 
-If a commit is breaking, add a `**BREAKING:**` line in the relevant section summarising the change. If nothing maps to a given section, omit the heading entirely.
+If a commit is breaking, prefix the bullet with `**BREAKING:**` in the relevant section. If nothing maps to a given section, omit the heading entirely.
 
-Format each entry as: `- <description> ([<short-sha>](<commit-url>))`. Strip the conventional-commit prefix from the description — the section heading already conveys the type. Build the commit URL from `git remote get-url origin` (strip `.git`, prepend `https://`, prefix the path with `/commit/`).
+Format each entry as: `- <conventional-commit-subject>`. Keep the full conventional-commit structure (`type`, optional `(scope)`, optional `!`, colon, subject) — do **not** strip the type/scope prefix. Do **not** append commit SHAs, short hashes, or remote commit URLs. The changelog lists the changes themselves, not git log links.
+
+Examples:
+
+- `- feat(api): add pagination cursors`
+- `- fix(auth): reject expired refresh tokens`
+- `- **BREAKING:** feat(cli)!: rename --out to --output`
+
+When several commits collapse into the same user-visible change, merge them into one bullet. Prefer the cleanest conventional-commit subject over listing every commit separately.
 
 ## 6. Write `CHANGELOG.md`
 
@@ -86,15 +94,15 @@ Template for the new section:
 
 ### Added
 
-- <description> ([<short-sha>](commit-url))
+- feat(scope): add something
 
 ### Changed
 
-- **BREAKING:** <description> ([<short-sha>](commit-url))
+- **BREAKING:** feat(scope)!: rename the flag
 
 ### Fixed
 
-- <description> ([<short-sha>](commit-url))
+- fix(scope): correct the edge case
 ```
 
 Use today's date in `YYYY-MM-DD` (local time). The date is the release date, not the commit date.
@@ -130,7 +138,7 @@ End with: "Run `git diff` to review. Stage and commit when you're ready."
 
 - **Never commit, tag, push, or merge.** This skill edits files only.
 - **Never edit a working tree with uncommitted changes** — stop and tell the user to commit or stash first.
-- **Never invent commit descriptions.** If a commit body is empty, fall back to the subject (with the conventional-commit prefix stripped). Never paraphrase beyond that.
+- **Never invent commit descriptions.** Prefer the commit subject exactly, including its conventional-commit type/scope/`!`. If you must fall back to a body line, keep the subject's conventional-commit prefix on the bullet. Never paraphrase beyond that.
 - **Never rewrite history.** The skill reads `git log`; it does not run `git rebase`, `reset`, or `commit --amend`.
 - **Single-package only.** Monorepos with multiple `package.json` files are out of scope — stop and tell the user to run the skill per package.
 - **No `npm`/`bun`/`nub` version commands.** Edit `package.json` directly so the bump works the same regardless of package manager.
