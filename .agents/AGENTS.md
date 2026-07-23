@@ -234,6 +234,10 @@ Never reach for `process.env` directly to validate required env vars. Document n
 - One logical change per PR. PR description: what changed, why, how to test, follow-ups.
 - No amending or force-pushing shared history without coordination.
 
+### Agent attribution
+
+When the user asks the agent to create or update a GitHub issue, post an issue comment, or open a pull request, append a line identifying the agent that performed the action — e.g. `(created by pi)` or `(updated by Cursor)`. This keeps it transparent that the action came from an AI agent, not the user directly.
+
 ## Avoid
 
 - `scripts` blocks in `package.json` for tasks.

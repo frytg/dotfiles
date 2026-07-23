@@ -83,15 +83,17 @@ defaults write com.apple.screencapture type -string "png"
 defaults write com.apple.screencapture disable-shadow -bool true
 
 # ----------------------------------------------------------------------------
-# Safari
+# Safari (requires Full Disk Access for the terminal app)
 # ----------------------------------------------------------------------------
 
 # show the full URL in the address bar
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
-
-# enable the Develop menu and Web Inspector
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+if defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true 2>/dev/null; then
+	# enable the Develop menu and Web Inspector
+	defaults write com.apple.Safari IncludeDevelopMenu -bool true
+	defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+else
+	echo "skipping Safari defaults (grant Full Disk Access to ${TERM_PROGRAM:-your terminal} and rerun)"
+fi
 
 # ----------------------------------------------------------------------------
 # Misc

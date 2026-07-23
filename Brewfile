@@ -47,6 +47,7 @@ brew "llama.cpp"
 brew "mactop"
 brew "mc" # MinIO client (minio/stable)
 brew "minijinja-cli"
+brew "mise"
 brew "moshi-hook" # https://getmoshi.app/docs/hooks
 brew "mqttx-cli" # EMQX
 brew "nub" # https://github.com/nubjs/nub
