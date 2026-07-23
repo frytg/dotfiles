@@ -93,7 +93,6 @@ macos-reload:
 # run all updates and link symlinks
 [group('SYSTEM')]
 run:
-	git pull
 	just brew
 	brew update
 	brew upgrade --yes
@@ -105,16 +104,21 @@ run:
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	pi update
 	pi update --extensions
-	bun upgrade
-	deno upgrade
-	rustup update
-	gcloud components update --quiet
+	-bun upgrade
+	-deno upgrade
+	-rustup update
+	-gcloud components update --quiet
 	herdr server reload-config
 	-just macos
 	just decrypt-env .pi/.env.personal.sops.yaml
 	just decrypt-env .pi/.env.work.sops.yaml
-alias up := run
 alias install := run
+
+# fetch, run all updates and link symlinks
+[group('SYSTEM')]
+up:
+	git pull
+	just run
 
 [group('LOCAL')]
 run-pi:

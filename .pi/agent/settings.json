@@ -38,5 +38,18 @@
     "openrouter/google/gemini-3.6-flash",
     "openrouter/google/gemini-3.5-flash-lite"
   ],
-  "hideThinkingBlock": true
+  "hideThinkingBlock": true,
+  "npmCommand": [
+    "bun"
+  ],
+  "terminal": {
+    "showImages": true,
+    "imageWidthCells": 60
+  },
+  "images": {
+    "autoResize": true,
+    "blockImages": false
+  },
+  "enableSkillCommands": true,
+  "showHardwareCursor": false
 }
