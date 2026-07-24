@@ -1,0 +1,27 @@
+{
+	"providers": {
+		"exo": {
+			"baseUrl": "http://127.0.0.1:52415/v1",
+			"api": "openai-completions",
+			"apiKey": "exo",
+			"compat": {
+				"supportsDeveloperRole": false,
+				"supportsReasoningEffort": false,
+				"thinkingFormat": "qwen"
+			},
+			"models": [
+				{
+					"id": "mlx-community/Qwen3.5-9B-8bit",
+					"input": ["text", "image"],
+					"reasoning": true,
+					"contextWindow": 262144
+				},
+				{
+					"id": "mlx-community/gemma-4-e4b-it-6bit",
+					"input": ["text", "image"],
+					"contextWindow": 131072
+				}
+			]
+		}
+	}
+}

@@ -1,6 +1,10 @@
 ---
 name: podcast-bluf-summary
 description: Summarize a podcast episode as a BLUF brief by downloading the audio and sending it to Gemini Pro via OpenRouter. Use when the user pastes a podcast link (especially podcasts.apple.com) and asks for a summary, brief, or recap. Resolves the audio URL with the podcast-audio-url skill and formats output per the bluf skill.
+license: MIT
+metadata:
+  author: frytg
+  agent: pi
 ---
 
 # Podcast BLUF summary

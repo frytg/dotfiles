@@ -1,6 +1,10 @@
 ---
 name: podcast-audio-url
 description: Resolve a podcast URL (Apple Podcasts episode/show page, or an already-direct audio link) to the direct audio file URL plus its normalized content type. Use when the user pastes a podcasts.apple.com link and the audio file is needed — e.g. before downloading, transcribing, or summarizing an episode (pairs with the podcast-bluf-summary skill).
+license: MIT
+metadata:
+  author: frytg
+  agent: pi
 ---
 
 # Podcast audio URL extraction
