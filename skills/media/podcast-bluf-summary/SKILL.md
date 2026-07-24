@@ -5,14 +5,13 @@ description: Summarize a podcast episode as a BLUF brief by downloading the audi
 
 # Podcast BLUF summary
 
-Produce a BLUF summary of a podcast episode from its URL. The heavy lifting is done by a bundled script that downloads the audio and sends it base64-encoded to OpenRouter (OpenRouter does not accept audio URLs — base64 `input_audio` only). No pi extension needed; the script is the tool.
+Produce a BLUF summary of a podcast episode from its URL. The heavy lifting is done by a bundled script that downloads the audio and sends it base64-encoded to OpenRouter (OpenRouter does not accept audio URLs — base64 `input_audio` only), with the BLUF format instructions (`prompt.md`) given directly to the model. No pi extension needed; the script is the tool.
 
 ## Prerequisites
 
 - `OPENROUTER_API_KEY` set in the environment (get one at https://openrouter.ai/keys). If unset, stop and tell the user — don't improvise another provider.
 - `bun` on PATH (falls back to `node` ≥ 20, it's plain TypeScript with no dependencies).
 - The `podcast-audio-url` skill for Apple Podcasts links.
-- The `bluf` skill for format rules — the model output should already follow it via `prompt.md`, but you are the final check.
 
 ## Workflow
 
@@ -29,7 +28,7 @@ Produce a BLUF summary of a podcast episode from its URL. The heavy lifting is d
 
    The script HEADs the file, downloads it, base64-encodes it, posts it to OpenRouter, and prints the summary markdown on stdout (progress and token usage on stderr). Default model is `google/gemini-2.5-pro`; pass `--model` to override (check openrouter.ai/models for current Gemini Pro IDs — the audio input modality is required).
 
-3. **Verify the format.** Check the output against the `bluf` skill rules: answer in the first sentence, sections by importance, no throat-clearing. Fix formatting deviations yourself; don't re-run the model for style.
+3. **Present the output as-is.** The BLUF rules go straight to the model via `prompt.md` — do not re-summarize, reformat, or "improve" the model's output with a second pass. If it's genuinely broken (empty, wrong language, truncated), re-run the script rather than patching the text yourself.
 
 4. **Append sources.** End the output with both links on their own lines (page URL first, then audio URL if different), so the summary is traceable:
 

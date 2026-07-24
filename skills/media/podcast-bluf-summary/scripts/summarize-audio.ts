@@ -21,9 +21,9 @@ import { fileURLToPath } from 'node:url'
 
 /** Minimal shape of the OpenRouter chat completions response we consume. */
 interface ChatCompletion {
-	choices?: { message?: { content?: string } }[]
+	choices?: { message?: { content?: string }; error?: { code?: number | string; message?: string } }[]
 	usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number }
-	error?: { message?: string }
+	error?: { code?: number | string; message?: string }
 }
 
 const DEFAULT_MODEL = 'google/gemini-2.5-pro'
@@ -110,8 +110,17 @@ const downloadBase64 = async (url: string, maxBytes: number): Promise<string> =>
 	return buf.toString('base64')
 }
 
+const MAX_ATTEMPTS = 3;
+
+/**
+ * Sleep for a given number of milliseconds.
+ * @param ms - duration to sleep
+ */
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
 /**
  * Send the audio to OpenRouter chat completions and return the assistant text.
+ * Retries on upstream 5xx timeouts — large audio payloads regularly hit idle timeouts on the first attempt.
  * @param apiKey - OpenRouter API key
  * @param model - OpenRouter model id
  * @param systemPrompt - system prompt steering the summary format
@@ -126,13 +135,40 @@ const summarize = async (
 	base64: string,
 	format: string,
 ): Promise<ChatCompletion> => {
+	let lastError = 'unknown error';
+	for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+		const result = await requestCompletion(apiKey, model, systemPrompt, base64, format);
+		const text = result.choices?.[0]?.message?.content;
+		if (text) return result;
+		const err = result.choices?.[0]?.error ?? result.error;
+		lastError = err ? `${err.code ?? ''} ${err.message}` : `empty response: ${JSON.stringify(result)}`;
+		console.error(`attempt ${attempt}/${MAX_ATTEMPTS} failed: ${lastError}`);
+		if (attempt < MAX_ATTEMPTS) await sleep(5000 * attempt);
+	}
+	return fail(`openrouter failed after ${MAX_ATTEMPTS} attempts — last: ${lastError}`);
+};
+
+/**
+ * Single OpenRouter chat completions request with the audio attached.
+ * @param apiKey - OpenRouter API key
+ * @param model - OpenRouter model id
+ * @param systemPrompt - system prompt steering the summary format
+ * @param base64 - base64-encoded audio
+ * @param format - input_audio format (mp3, m4a, ...)
+ * @returns parsed response body
+ */
+const requestCompletion = async (
+	apiKey: string,
+	model: string,
+	systemPrompt: string,
+	base64: string,
+	format: string,
+): Promise<ChatCompletion> => {
 	const res = await fetch(OPENROUTER_URL, {
 		method: 'POST',
 		headers: {
 			authorization: `Bearer ${apiKey}`,
 			'content-type': 'application/json',
-			'http-referer': 'https://github.com/frytg/skills',
-			'x-title': 'podcast-bluf-summary skill',
 		},
 		body: JSON.stringify({
 			model,
@@ -149,7 +185,9 @@ const summarize = async (
 		}),
 	})
 	const body = (await res.json()) as ChatCompletion
-	if (!res.ok) fail(`openrouter ${res.status}: ${body.error?.message ?? JSON.stringify(body)}`)
+	// 4xx is a caller problem (auth, modality) — fail fast; 5xx is upstream flakiness — let the retry loop handle it
+	if (!res.ok && res.status < 500) fail(`openrouter ${res.status}: ${body.error?.message ?? JSON.stringify(body)}`)
+	if (!res.ok) return { error: { code: res.status, message: body.error?.message ?? res.statusText } }
 	return body
 }
 
