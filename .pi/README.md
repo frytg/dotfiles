@@ -22,6 +22,15 @@ just install
 
 ## Plugins
 
+### Optimized footer
+
+Local directory extension: [`agent/extensions/optimized-footer/`](./agent/extensions/optimized-footer/).
+
+- entrypoint: `index.ts` (auto-discovered as `extensions/*/index.ts`)
+- docs: [`README.md`](./agent/extensions/optimized-footer/README.md) — goals, layout, MCP semantics, setup
+
+Loads via `PI_CODING_AGENT_DIR=~/.dotfiles/.pi/agent`. Toggle with `/opt-footer`. Use `/reload` after edits.
+
 ## Datadog
 
 Using Datadog [Pi Plugin](https://github.com/datadog-labs/pi-plugin) instead of pure MCP server.
