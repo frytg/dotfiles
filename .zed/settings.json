@@ -39,7 +39,7 @@
 	"collaboration_panel": {
 		"button": false
 	},
-	"diff_view_style": "unified",
+	"diff_view_style": "split",
 	"edit_predictions": {
 		"provider": "copilot"
 	},
