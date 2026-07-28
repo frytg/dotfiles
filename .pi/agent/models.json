@@ -22,6 +22,36 @@
 					"contextWindow": 131072
 				}
 			]
+		},
+		"baseten": {
+			"baseUrl": "https://inference.baseten.co/v1",
+			"api": "openai-completions",
+			"apiKey": "$BASETEN_API_KEY",
+			"compat": {
+				"supportsDeveloperRole": false,
+				"supportsReasoningEffort": false,
+				"thinkingFormat": "qwen"
+			},
+			"models": [
+				{
+					"id": "moonshotai/Kimi-K3",
+					"input": ["text"],
+					"reasoning": true,
+					"contextWindow": 262144
+				},
+				{
+					"id": "deepseek-ai/DeepSeek-V4-Pro",
+					"input": ["text"],
+					"reasoning": true,
+					"contextWindow": 262144
+				},
+				{
+					"id": "zai-org/GLM-5.2-Fast",
+					"input": ["text", "image"],
+					"reasoning": true,
+					"contextWindow": 524288
+				}
+			]
 		}
 	}
 }
