@@ -8,7 +8,8 @@
 			"*.env.*": "deny",
 			"*.env.example": "ask",
 			"~/.ssh/*": "deny",
-			"~/.age*": "deny",
+			"~/.age/*": "deny",
+			"~/.age-*": "deny",
 			"**/id_rsa*": "deny",
 			"**/id_ed25519*": "deny",
 			"**/*.pem": "deny",
@@ -16,7 +17,6 @@
 		},
 		"bash": {
 			"*": "allow",
-
 			"git *": "allow",
 			"git add *": "ask",
 			"git am *": "ask",
@@ -60,7 +60,6 @@
 			"git worktree remove *": "ask",
 			"git worktree prune *": "ask",
 			"git worktree move *": "ask",
-
 			"gh *": "ask",
 			"gh issue *": "allow",
 			"gh pr view *": "allow",
@@ -78,7 +77,6 @@
 			"gh run view *": "allow",
 			"gh workflow list *": "allow",
 			"gh workflow view *": "allow",
-
 			"kubectl *": "allow",
 			"kubectl exec *": "ask",
 			"kubectl patch *": "ask",
@@ -94,7 +92,6 @@
 			"kubectl drain *": "ask",
 			"kubectl taint *": "ask",
 			"kubectl get secrets *": "ask",
-
 			"rm -rf *": "deny",
 			"sops *": "ask",
 			"sudo *": "ask"
@@ -103,7 +100,12 @@
 			"*": "ask",
 			"~/Downloads/_DEV/frytg-note-vault/*": "allow",
 			"~/.agents/*": "allow",
+			"/Users/dan/.agents/skills/": "allow",
+			"/Users/frytg/.agents/skills/": "allow",
 			"~/.bun/install/global/node_modules/@earendil-works/*": "allow"
 		}
-	}
+	},
+	"debugLog": true,
+	"permissionReviewLog": true,
+	"yoloMode": false
 }

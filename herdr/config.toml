@@ -46,3 +46,10 @@ mauve          = "#2AC2F1"   # light-blue       — secondary accent (branches, 
 
 [ui]
 agent_panel_sort = "priority"
+
+[ui.toast]
+delivery = "system"
+
+[theme]
+name = "catppuccin"
+auto_switch = false

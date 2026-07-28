@@ -142,9 +142,9 @@ run:
 	-rustup update
 	-gcloud components update --quiet
 	herdr server reload-config
-	-just macos
 	just decrypt-env .pi/.env.personal.sops.yaml
 	just decrypt-env .pi/.env.work.sops.yaml
+	-just macos
 alias install := run
 
 # fetch, run all updates and link symlinks
