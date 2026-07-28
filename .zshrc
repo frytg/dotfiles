@@ -18,6 +18,7 @@
 export DO_NOT_TRACK=1
 export HOMEBREW_NO_ANALYTICS=1
 export GPG_TTY=$(tty)
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # ---- completion system ------------------------------------------------------
 
