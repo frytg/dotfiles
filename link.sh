@@ -55,9 +55,20 @@ chmod 600 "$(PWD)/.ssh-authorized_keys"
 
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents
-mkdir -p ~/.osaurus
 ln -sfh "$(PWD)/skills" ~/.agents/skills
-# ln -sfh "$(PWD)/skills" ~/.osaurus/skills
+
+# osaurus rejects skill symlinks and only discovers top-level skill dirs
+# (no nested category/ folders). flatten-copy each leaf skill into
+# ~/.osaurus/skills/<name>/ so edits land after re-running link.sh.
+# osaurus-native skills already in that folder are left alone.
+mkdir -p ~/.osaurus/skills
+for skill_dir in "$(PWD)"/skills/*/*(/N); do
+	[[ -f "$skill_dir/SKILL.md" ]] || continue
+	name="${skill_dir:t}"
+	dest="$HOME/.osaurus/skills/$name"
+	rm -rf "$dest"
+	cp -R "$skill_dir" "$dest"
+done
 # ln -sfh "$(PWD)/.osaurus/slash-commands" ~/.osaurus/slash-commands
 
 # link k9s config (macOS path only — symlink the config file, not the whole
