@@ -65,7 +65,7 @@ brew "skyhook-io/tap/radar" # https://radarhq.io/docs/install
 brew "sops"
 brew "terraform" # hashicorp/tap
 brew "tinygo"
-brew "upcloud-cli" # UpCloud CLI
+# brew "upcloud-cli" # UpCloud CLI
 brew "valkey"
 brew "yq"
 

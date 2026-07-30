@@ -144,7 +144,9 @@ Adapters expose `storage.raw` for provider-specific features without casts. Fork
 
 ### Tooling
 
-- `@biomejs/biome` — lint and format (JS/TS/JSON/JSONC).
+- `oxlint` — lint (JS/TS/JSX/TSX/Vue and related).
+- `oxfmt` — format (JS/TS/JSON/CSS/Vue/Markdown and related).
+- Prefer Oxc over Biome/Prettier/ESLint for new and migrated projects. Config: `.oxlintrc.json` + `.oxfmtrc.json`. Run via `just lint` / `just format`.
 
 ### Ease-of-use
 
