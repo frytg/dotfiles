@@ -10,7 +10,6 @@
   "defaultProjectTrust": "ask",
   "externalEditor": "zed",
   "packages": [
-    "npm:@tavily/pi-extension",
     "npm:@mobrienv/pi-tidy-tools",
     "npm:@datadog/pi-plugin",
     "npm:pi-mcp-adapter",

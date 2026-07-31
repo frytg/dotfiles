@@ -22,6 +22,17 @@
         "documentation"
       ]
     },
+    "exa": {
+      "type": "http",
+      "url": "https://mcp.exa.ai/mcp",
+      "headers": {
+        "x-api-key": "${EXA_API_KEY}"
+      },
+      "directTools": [
+        "web_search_exa",
+        "web_fetch_exa"
+      ]
+    },
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/",
