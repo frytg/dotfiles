@@ -20,7 +20,6 @@ tap "skyhook-io/tap", trusted: true
 
 # --- Formulas ---
 brew "age"
-brew "biome"
 brew "brotli"
 brew "colima"
 brew "cosign"

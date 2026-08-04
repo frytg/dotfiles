@@ -21,16 +21,16 @@ The Eventhub OpenAPI spec is the canonical schema for what publishers post. When
 - Key schemas: `eventV1PostBody` (radio track), `eventV1PostRadioTextBody` (encoder text), `services`, `reference`, `topicResponse`
 - All event types are namespaced: `de.ard.eventhub.v1.radio.track.playing`, `de.ard.eventhub.v1.radio.track.next`, `de.ard.eventhub.v1.radio.text`
 
-The `swr-radiohub-ingest` service may add or restructure fields on top of the Eventhub payload when it writes the log. The fields we observe in `data.data.message` are a wrapped form of `eventV1PostBody`; the spec describes the *input* shape, not the *logged* shape.
+The `swr-radiohub-ingest` service may add or restructure fields on top of the Eventhub payload when it writes the log. The fields we observe in `data.data.message` are a wrapped form of `eventV1PostBody`; the spec describes the _input_ shape, not the _logged_ shape.
 
 ## Identifier forms
 
-| Concept                    | Human-readable form                                  | Hash form in logs                                          |
-| -------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
-| Station/publisher (Core ID) | numeric `publisherId` string (e.g. `'248000'`)       | `urn:ard:publisher:<16-hex>` (radiohub wraps the Core ID into a URN) |
-| Topic / livestream channel | `crid://<host>/Beitrag-<uuid>` (the contribution `externalId`) | `urn:ard:permanent-livestream:<16-hex>`                    |
-| Institution (sender)       | institution name                                     | `urn:ard:institution:<32-hex>-<26-char base32>`            |
-| Individual track           | 8-hex `externalId`                                   | only present as `externalId` on the message                |
+| Concept                     | Human-readable form                                            | Hash form in logs                                                    |
+| --------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Station/publisher (Core ID) | numeric `publisherId` string (e.g. `'248000'`)                 | `urn:ard:publisher:<16-hex>` (radiohub wraps the Core ID into a URN) |
+| Topic / livestream channel  | `crid://<host>/Beitrag-<uuid>` (the contribution `externalId`) | `urn:ard:permanent-livestream:<16-hex>`                              |
+| Institution (sender)        | institution name                                               | `urn:ard:institution:<32-hex>-<26-char base32>`                      |
+| Individual track            | 8-hex `externalId`                                             | only present as `externalId` on the message                          |
 
 CRID hostnames are per-publisher and follow the `crid://<host>/<id>` pattern, where `<host>` is the publisher's domain (e.g. one of the public broadcasters' `.de` domains). The full set of valid hosts isn't published in the spec — they're whatever the publisher chose when registering the contribution.
 
@@ -130,30 +130,30 @@ Until the bug is fixed, the practical workaround is to page through the search r
 
 ### Core fields (read these)
 
-| Field             | Type                | Notes                                                                            |
-| ----------------- | ------------------- | -------------------------------------------------------------------------------- |
-| `event`           | enum                | `de.ard.eventhub.v1.radio.track.playing` \| `.track.next` \| `.text`. |
-| `type`            | enum                | `audio` \| `commercial` \| `jingle` \| `live` \| `music` \| `news` \| `traffic` \| `weather`. |
-| `start`           | ISO 8601 string     | When the track starts.                                                            |
-| `length`          | float (seconds)     | Scheduled length. Nullable.                                                       |
-| `title`           | string              | Representative title.                                                            |
-| `artist`          | string              | Pre-formatted artist info. Nullable.                                              |
-| `playlistItemId`  | string              | `<station-slug>-<digits>-<8hex>` — connects `next` and `playing` items within a publisher. |
-| `id`              | string              | Eventhub-assigned numeric/string id for the event.                                |
-| `creator`         | string              | **Added by the radiohub ingest** (not in the spec). Per-station value, often an email-shaped string. |
-| `created`         | ISO 8601 string     | **Added by the radiohub ingest** (not in the spec). When the Eventhub message was sent. |
+| Field            | Type            | Notes                                                                                                |
+| ---------------- | --------------- | ---------------------------------------------------------------------------------------------------- |
+| `event`          | enum            | `de.ard.eventhub.v1.radio.track.playing` \| `.track.next` \| `.text`.                                |
+| `type`           | enum            | `audio` \| `commercial` \| `jingle` \| `live` \| `music` \| `news` \| `traffic` \| `weather`.        |
+| `start`          | ISO 8601 string | When the track starts.                                                                               |
+| `length`         | float (seconds) | Scheduled length. Nullable.                                                                          |
+| `title`          | string          | Representative title.                                                                                |
+| `artist`         | string          | Pre-formatted artist info. Nullable.                                                                 |
+| `playlistItemId` | string          | `<station-slug>-<digits>-<8hex>` — connects `next` and `playing` items within a publisher.           |
+| `id`             | string          | Eventhub-assigned numeric/string id for the event.                                                   |
+| `creator`        | string          | **Added by the radiohub ingest** (not in the spec). Per-station value, often an email-shaped string. |
+| `created`        | ISO 8601 string | **Added by the radiohub ingest** (not in the spec). When the Eventhub message was sent.              |
 
 ### `services[]` (query target — read this carefully)
 
 Each `data.data.message` carries a `services[]` array. This is what we filter on and what holds the ID mapping.
 
-| Field         | Required? | Type   | Notes |
-| ------------- | --------- | ------ | ----- |
-| `type`        | yes       | enum   | `EventLivestream` \| `PermanentLivestream`. |
-| `externalId`  | yes       | string | `crid://<host>/<id>` or `brid://…` (spec regex: `^(c\|b)rid://.+$`). The contribution this delivery is for. |
-| `publisherId` | yes       | string | Numeric Core ID in the spec (e.g. `'248000'`); the radiohub wraps it into `urn:ard:publisher:<hex>` in the log. |
-| `id`          | no        | string | Eventhub-assigned URN. In the radiohub log this is the **topic** URN and is nested under `services[].topic.id` instead of being on `services[].id` directly. |
-| `topic.id`    | (log only) | string | `urn:ard:permanent-livestream:<16-hex>` — the value we filter on with the canonical query. |
+| Field         | Required?  | Type   | Notes                                                                                                                                                        |
+| ------------- | ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`        | yes        | enum   | `EventLivestream` \| `PermanentLivestream`.                                                                                                                  |
+| `externalId`  | yes        | string | `crid://<host>/<id>` or `brid://…` (spec regex: `^(c\|b)rid://.+$`). The contribution this delivery is for.                                                  |
+| `publisherId` | yes        | string | Numeric Core ID in the spec (e.g. `'248000'`); the radiohub wraps it into `urn:ard:publisher:<hex>` in the log.                                              |
+| `id`          | no         | string | Eventhub-assigned URN. In the radiohub log this is the **topic** URN and is nested under `services[].topic.id` instead of being on `services[].id` directly. |
+| `topic.id`    | (log only) | string | `urn:ard:permanent-livestream:<16-hex>` — the value we filter on with the canonical query.                                                                   |
 
 `@data.data.message.services[0]` is usually the only entry, but in principle there can be several (one per delivery target). The first one is the canonical "this is what station X contributed" record.
 

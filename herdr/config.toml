@@ -20,29 +20,29 @@ prefix = "ctrl+a"
 
 [theme.custom]
 # Surface levels (darkest → lightest)
-panel_bg       = "#181D16"   # dark-greeny      — page background
-surface_dim    = "#181D16"   # dark-greeny      — deepest layer
-surface0       = "#293126"   # mid-dark-greeny  — first elevation
-surface1       = "#3E4939"   # greeny           — borders, hover bg
-overlay0       = "#3E4939"   # greeny
-overlay1       = "#1F2A3D"   # dark-blue        — deeper overlay (slightly lighter than panel_bg so it actually shows)
+panel_bg = "#181D16" # dark-greeny      — page background
+surface_dim = "#181D16" # dark-greeny      — deepest layer
+surface0 = "#293126" # mid-dark-greeny  — first elevation
+surface1 = "#3E4939" # greeny           — borders, hover bg
+overlay0 = "#3E4939" # greeny
+overlay1 = "#1F2A3D" # dark-blue        — deeper overlay (slightly lighter than panel_bg so it actually shows)
 
 # Text
-text           = "#ECEBE3"   # white            — primary text (off-white, warm)
-subtext0       = "#E2E2DA"   # gray             — muted text (neutral; dashy's greenish gray read as dingy on the bg)
+text = "#ECEBE3" # white            — primary text (off-white, warm)
+subtext0 = "#E2E2DA" # gray             — muted text (neutral; dashy's greenish gray read as dingy on the bg)
 
 # Accent
-accent         = "#FFE94A"   # yellow           — primary interaction (hover/active/focus; pure #FFFF00 vibrated on green)
+accent = "#FFE94A" # yellow           — primary interaction (hover/active/focus; pure #FFFF00 vibrated on green)
 
 # Accent palette
-yellow         = "#FFFF11"   # yellow
-peach          = "#F09139"   # orange           — secondary action
-red            = "#FF003C"   # red              — error
-green          = "#80D080"   # green            — success (brighter; #55AA55 sat in the same hue as the bg)
-blue           = "#2AC2F1"   # light-blue       — info (dashy's `blue` is too dark for an accent)
-teal           = "#80D080"   # green            — dashy has no distinct cyan
-mauve          = "#2AC2F1"   # light-blue       — secondary accent (branches, labels)
-                                            # dashy's purple (#B443FA) was too punchy for repeating labels
+yellow = "#FFFF11" # yellow
+peach = "#F09139" # orange           — secondary action
+red = "#FF003C" # red              — error
+green = "#80D080" # green            — success (brighter; #55AA55 sat in the same hue as the bg)
+blue = "#2AC2F1" # light-blue       — info (dashy's `blue` is too dark for an accent)
+teal = "#80D080" # green            — dashy has no distinct cyan
+mauve = "#2AC2F1" # light-blue       — secondary accent (branches, labels)
+# dashy's purple (#B443FA) was too punchy for repeating labels
 
 [ui]
 agent_panel_sort = "priority"

@@ -1,0 +1,21 @@
+# Toolchain pins for repo-root work (lint, format, install, secrets).
+# Package runtimes live in packages/*/mise.toml (Docker + package local/CI).
+# Tasks stay in Just; secrets stay on sops exec-env — see SECRETS.md.
+# Install: https://mise.jdx.dev → `mise install`
+# Activate (optional): eval "$(mise activate zsh)"
+#
+# Plain [tools] pins only — no monorepo/env/hooks — so this file loads
+# without `mise trust` (avoids needing a writable ~/.local/state).
+
+[settings]
+# monorepo_root = true
+minimum_release_age = "3d" # override the default 24h delay
+lockfile = true
+
+[tools]
+# Node for root aube/oxc (just lint / just format / just install).
+node = "26.5.1"
+# Package manager — https://aube.jdx.dev
+aube = "1.37.0"
+"npm:oxlint" = { version = "latest" }
+"npm:oxfmt" = { version = "latest" }

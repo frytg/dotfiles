@@ -45,35 +45,35 @@ The `data` block for the acted-on events looks like:
 
 ```json
 {
-  "data": {
-    "id": "23",
-    "type": "incident",
-    "attributes": {
-      "name": "uptime homepage",
-      "url": "https://example.com/",
-      "http_method": "get",
-      "cause": "Status 404",
-      "started_at": "2025-03-09T17:37:56.662Z",
-      "acknowledged_at": null,
-      "resolved_at": null,
-      "status": "Started",
-      "team_name": "Testing team",
-      "response_content": "404 Not Found\n...",
-      "regions": ["us", "eu", "as", "au"],
-      "escalation_policy_id": null,
-      "call": true,
-      "sms": true,
-      "email": true,
-      "push": true,
-      "metadata": {
-        "Request duration": [{ "type": "String", "value": "0.04" }],
-        "Response code": [{ "type": "String", "value": "404" }]
-      }
-    },
-    "relationships": {
-      "monitor": { "data": { "id": "2", "type": "monitor" } }
-    }
-  }
+	"data": {
+		"id": "23",
+		"type": "incident",
+		"attributes": {
+			"name": "uptime homepage",
+			"url": "https://example.com/",
+			"http_method": "get",
+			"cause": "Status 404",
+			"started_at": "2025-03-09T17:37:56.662Z",
+			"acknowledged_at": null,
+			"resolved_at": null,
+			"status": "Started",
+			"team_name": "Testing team",
+			"response_content": "404 Not Found\n...",
+			"regions": ["us", "eu", "as", "au"],
+			"escalation_policy_id": null,
+			"call": true,
+			"sms": true,
+			"email": true,
+			"push": true,
+			"metadata": {
+				"Request duration": [{ "type": "String", "value": "0.04" }],
+				"Response code": [{ "type": "String", "value": "404" }]
+			}
+		},
+		"relationships": {
+			"monitor": { "data": { "id": "2", "type": "monitor" } }
+		}
+	}
 }
 ```
 

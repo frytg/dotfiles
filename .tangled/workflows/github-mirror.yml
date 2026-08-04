@@ -3,8 +3,8 @@
 # Add GITHUB_DEPLOY_KEY under Settings → Secrets and assign a spindle.
 
 when:
-  - event: ["push", "manual"]
-    branch: ["main"]
+  - event: ['push', 'manual']
+    branch: ['main']
 
 engine: microvm
 image: nixos
@@ -20,10 +20,10 @@ registry:
   nixpkgs: github:nixos/nixpkgs/nixos-unstable
 
 environment:
-  GIT_REMOTE_REPO: "git@github.com:frytg/dotfiles.git"
+  GIT_REMOTE_REPO: 'git@github.com:frytg/dotfiles.git'
 
 steps:
-  - name: "Mirror to GitHub"
+  - name: 'Mirror to GitHub'
     command: |
       set -euo pipefail
 

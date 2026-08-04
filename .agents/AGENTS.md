@@ -54,7 +54,7 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 
 ### Node version selection
 
-[Node is managed by mise](https://mise.jdx.dev/lang/node.html) — not `nvm`, `fnm`, `Volta`, or nub's node shim. Ambient `node`/`npm`/`npx` come from mise; nub remains the preferred *package manager* (`nub` / `nubx` / `nub install`) and uses whatever `node` is on `PATH`.
+[Node is managed by mise](https://mise.jdx.dev/lang/node.html) — not `nvm`, `fnm`, `Volta`, or nub's node shim. Ambient `node`/`npm`/`npx` come from mise; nub remains the preferred _package manager_ (`nub` / `nubx` / `nub install`) and uses whatever `node` is on `PATH`.
 
 **Dotfiles wiring**
 
@@ -110,24 +110,24 @@ Reach for these first when applicable. The list is short on purpose.
 - [`@storagesdk/core`](https://storagesdk.dev) — unified object storage across S3, Google Cloud Storage, filesystem, and others. Switch providers by changing the import; the call site doesn't move. Snapshot and fork primitives are built-in — branch a bucket per run, mutate freely, merge or throw away the fork.
 
 ```ts
-import { Storage } from '@storagesdk/core';
-import { s3 } from '@storagesdk/adapters/s3';
+import { Storage } from '@storagesdk/core'
+import { s3 } from '@storagesdk/adapters/s3'
 
 // Scaleway Object Storage — or any S3-compatible backend; swap endpoint + creds
 const storage = new Storage({
-  adapter: s3({
-    bucket: 'agents',
-    endpoint: process.env.S3_ENDPOINT,
-    region: process.env.S3_REGION,
-    credentials: {
-      accessKeyId: process.env.S3_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
-    },
-  }),
-});
+	adapter: s3({
+		bucket: 'agents',
+		endpoint: process.env.S3_ENDPOINT,
+		region: process.env.S3_REGION,
+		credentials: {
+			accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+			secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+		},
+	}),
+})
 
-await storage.upload('docs/readme.md', body);
-const fork = storage.forks.get('agent-run-42');
+await storage.upload('docs/readme.md', body)
+const fork = storage.forks.get('agent-run-42')
 ```
 
 Adapters expose `storage.raw` for provider-specific features without casts. Forks and snapshots are native on Tigris and GitHub, emulated as sibling buckets on other backends. See the project's [AGENTS.md](https://github.com/storagesdk/storagesdk/blob/main/AGENTS.md) for adapter design rules.
@@ -166,22 +166,22 @@ Adapters expose `storage.raw` for provider-specific features without casts. Fork
 - [Docs](https://jsr.io/@frytg/logger/doc)
 
 ```ts
-import { logger } from '@frytg/logger';
+import { logger } from '@frytg/logger'
 
-const log = logger({ source: 'api/posts' });
+const log = logger({ source: 'api/posts' })
 
-log.info('starting post');
-log.warn('rate limited', { retryAfter });
-log.error({ message: 'post failed', error });
+log.info('starting post')
+log.warn('rate limited', { retryAfter })
+log.error({ message: 'post failed', error })
 
 // Data object is always the second argument. Use it for structured fields,
 // never concatenate into the message string.
 log.info('user signed in', {
-  userId: user.id,
-  method: 'oauth',
-  scopes: ['read', 'write'],
-  durationMs: 142,
-});
+	userId: user.id,
+	method: 'oauth',
+	scopes: ['read', 'write'],
+	durationMs: 142,
+})
 ```
 
 ### Dates
@@ -197,13 +197,13 @@ Formatting and parsing helpers. Prefer over hand-rolled `Intl.DateTimeFormat` or
 - [Docs](https://jsr.io/@frytg/check-required-env/doc)
 
 ```ts
-import { checkRequiredEnv, getRequiredEnv } from '@frytg/check-required-env';
+import { checkRequiredEnv, getRequiredEnv } from '@frytg/check-required-env'
 
 // Fails fast at import if unset. Use for integrations always required.
-checkRequiredEnv('API_BASE_URL');
+checkRequiredEnv('API_BASE_URL')
 
 // Read into a top-level const. No separate constants util.
-const API_KEY = getRequiredEnv('API_KEY');
+const API_KEY = getRequiredEnv('API_KEY')
 ```
 
 Never reach for `process.env` directly to validate required env vars. Document new env vars in handler comments and add to the sops-encrypted env file (see below).

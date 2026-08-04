@@ -110,13 +110,13 @@ const downloadBase64 = async (url: string, maxBytes: number): Promise<string> =>
 	return buf.toString('base64')
 }
 
-const MAX_ATTEMPTS = 3;
+const MAX_ATTEMPTS = 3
 
 /**
  * Sleep for a given number of milliseconds.
  * @param ms - duration to sleep
  */
-const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * Send the audio to OpenRouter chat completions and return the assistant text.
@@ -133,20 +133,20 @@ const summarize = async (
 	model: string,
 	systemPrompt: string,
 	base64: string,
-	format: string,
+	format: string
 ): Promise<ChatCompletion> => {
-	let lastError = 'unknown error';
+	let lastError = 'unknown error'
 	for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-		const result = await requestCompletion(apiKey, model, systemPrompt, base64, format);
-		const text = result.choices?.[0]?.message?.content;
-		if (text) return result;
-		const err = result.choices?.[0]?.error ?? result.error;
-		lastError = err ? `${err.code ?? ''} ${err.message}` : `empty response: ${JSON.stringify(result)}`;
-		console.error(`attempt ${attempt}/${MAX_ATTEMPTS} failed: ${lastError}`);
-		if (attempt < MAX_ATTEMPTS) await sleep(5000 * attempt);
+		const result = await requestCompletion(apiKey, model, systemPrompt, base64, format)
+		const text = result.choices?.[0]?.message?.content
+		if (text) return result
+		const err = result.choices?.[0]?.error ?? result.error
+		lastError = err ? `${err.code ?? ''} ${err.message}` : `empty response: ${JSON.stringify(result)}`
+		console.error(`attempt ${attempt}/${MAX_ATTEMPTS} failed: ${lastError}`)
+		if (attempt < MAX_ATTEMPTS) await sleep(5000 * attempt)
 	}
-	return fail(`openrouter failed after ${MAX_ATTEMPTS} attempts — last: ${lastError}`);
-};
+	return fail(`openrouter failed after ${MAX_ATTEMPTS} attempts — last: ${lastError}`)
+}
 
 /**
  * Single OpenRouter chat completions request with the audio attached.
@@ -162,7 +162,7 @@ const requestCompletion = async (
 	model: string,
 	systemPrompt: string,
 	base64: string,
-	format: string,
+	format: string
 ): Promise<ChatCompletion> => {
 	const res = await fetch(OPENROUTER_URL, {
 		method: 'POST',

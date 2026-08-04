@@ -137,6 +137,7 @@ run:
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	pi update
 	pi update --extensions
+	mise install 
 	-bun upgrade
 	-deno upgrade
 	-rustup update
@@ -170,13 +171,11 @@ install-pi:
 
 [group('LINT')]
 lint:
-	biome check --fix
+	oxlint
 
 [group('LINT')]
 format:
-	tmp=$(mktemp) && cat .zed/settings.json | jq -S > "$tmp" && mv "$tmp" .zed/settings.json
-	biome lint --write
-	biome format --write
+	oxfmt
 
 # sometimes colima needs to be reinstalled after clearing out old docker artifacts
 [group('DOCKER')]
