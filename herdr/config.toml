@@ -45,9 +45,10 @@ mauve = "#F09139" # light-blue          — secondary accent (branches, labels)
 
 [ui]
 agent_panel_sort = "priority"
+show_agent_labels_on_pane_borders = true
 
 [ui.toast]
-delivery = "herdr"
+delivery = "terminal"
 
 [ui.sidebar.agents]
 row_gap = 1

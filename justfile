@@ -136,15 +136,15 @@ run:
 	just node
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	pi update
-	pi update --extensions
 	mise install 
+	pi update --extensions
 	-bun upgrade
 	-deno upgrade
 	-rustup update
 	-gcloud components update --quiet
 	herdr server reload-config
-	just decrypt-env .pi/.env.personal.sops.yaml
-	just decrypt-env .pi/.env.work.sops.yaml
+	just --yes decrypt-env .pi/.env.personal.sops.yaml
+	just --yes decrypt-env .pi/.env.work.sops.yaml
 	-just macos
 alias install := run
 

@@ -27,6 +27,7 @@ tmp
 .pi/**/trust.json
 .pi/**/models-store.json
 .pi/**/pi-atlas-cache.json
+!.pi/**/herdr-agent-state.ts
 !.pi/**/moshi-hooks.ts
 # optimized-footer is a directory extension (index.ts + README)
 !.pi/**/extensions/optimized-footer/
