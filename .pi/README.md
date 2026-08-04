@@ -45,7 +45,7 @@ Then run `/mcp-auth` in pi to authenticate with the MCP server.
 
 ### Web search
 
-Tavily is the recommended web search and content extraction provider. Install the [pi extension](https://docs.tavily.com/documentation/integrations/pi#step-3-install-the-tavily-pi-extension) and grab an API key from the [Tavily dashboard](https://app.tavily.com/home).
+Using [Exa](https://dashboard.exa.ai/home) through their [MCP server](https://exa.ai/docs/reference/exa-mcp) for search and web extraction (not agents).
 
 ### Tidy Tools & Sub-Agents
 

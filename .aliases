@@ -6,6 +6,7 @@ alias bunu="buno"
 alias nubo="nub install && nub outdated"
 alias ports="lsof -i -P | grep LISTEN"
 alias j="just"
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 # start pi with secrets injected via dotenvxZ
 pi() {

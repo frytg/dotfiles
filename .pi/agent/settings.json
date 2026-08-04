@@ -1,9 +1,9 @@
 {
-  "lastChangelogVersion": "0.82.1",
+  "lastChangelogVersion": "0.83.0",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
-  "defaultProvider": "baseten",
-  "defaultModel": "zai-org/GLM-5.2-Fast",
+  "defaultProvider": "openrouter",
+  "defaultModel": "x-ai/grok-4.5",
   "defaultThinkingLevel": "high",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,

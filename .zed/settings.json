@@ -64,11 +64,6 @@
 			},
 			"formatter": [
 				{
-					"language_server": {
-						"name": "oxfmt"
-					}
-				},
-				{
 					"code_action": "source.fixAll.oxc"
 				}
 			]
@@ -109,7 +104,31 @@
 				}
 			]
 		},
+		"Handlebars": {
+			"prettier": {
+				"allowed": false
+			},
+			"formatter": [
+				{
+					"language_server": {
+						"name": "oxfmt"
+					}
+				}
+			]
+		},
 		"JSON": {
+			"prettier": {
+				"allowed": false
+			},
+			"formatter": [
+				{
+					"language_server": {
+						"name": "oxfmt"
+					}
+				}
+			]
+		},
+		"JSON5": {
 			"prettier": {
 				"allowed": false
 			},
@@ -163,6 +182,30 @@
 				}
 			]
 		},
+		"Less": {
+			"prettier": {
+				"allowed": false
+			},
+			"formatter": [
+				{
+					"language_server": {
+						"name": "oxfmt"
+					}
+				}
+			]
+		},
+		"MDX": {
+			"prettier": {
+				"allowed": false
+			},
+			"formatter": [
+				{
+					"language_server": {
+						"name": "oxfmt"
+					}
+				}
+			]
+		},
 		"Markdown": {
 			"prettier": {
 				"allowed": false
@@ -199,6 +242,18 @@
 				},
 				{
 					"code_action": "source.fixAll.oxc"
+				}
+			]
+		},
+		"TOML": {
+			"prettier": {
+				"allowed": false
+			},
+			"formatter": [
+				{
+					"language_server": {
+						"name": "oxfmt"
+					}
 				}
 			]
 		},

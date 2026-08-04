@@ -5,7 +5,7 @@
 # --- Taps ---
 # Homebrew 6+ requires explicit trust for non-official taps before loading their Ruby.
 tap "514-labs/tap", trusted: true
-tap "UpCloudLtd/tap", trusted: true
+#tap "UpCloudLtd/tap", trusted: true
 tap "derailed/k9s", trusted: true
 tap "dotenvx/brew", trusted: true
 tap "emqx/mqttx", trusted: true
