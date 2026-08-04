@@ -7,49 +7,52 @@ onboarding = false
 [keys]
 # Default is ctrl+b; ctrl+a matches GNU screen's prefix.
 prefix = "ctrl+a"
+switch_tab = ["ctrl+1..9"]
+switch_workspace = ["prefix+1..9"]
+focus_agent = ["prefix+ctrl+1..9"]
+previous_workspace = ["prefix+up", "shift+up"]
+next_workspace = ["prefix+down", "shift+down"]
+previous_tab = ["prefix+left", "shift+left"]
+next_tab = ["prefix+right", "shift+right"]
 
-# Custom "dashy" theme — palette lifted from frytg/dashy
-# (DESIGN.md, src/dashboard/style/index.css). Dark green base with a
-# vivid yellow accent. Overrides every color token, so the chosen
-# base theme is mostly cosmetic. Set [theme] name below to switch.
-#
-# Color names in comments are the dashy tokens; hex values were
-# converted from the source HSL/OKLCH values. A few tokens are nudged
-# off the strict mapping for legibility on the dark-greeny bg —
-# rationale on each line below.
+[theme]
+name = "gruvbox"
+auto_switch = false
 
 [theme.custom]
-# Surface levels (darkest → lightest)
-panel_bg = "#181D16" # dark-greeny      — page background
-surface_dim = "#181D16" # dark-greeny      — deepest layer
-surface0 = "#293126" # mid-dark-greeny  — first elevation
-surface1 = "#3E4939" # greeny           — borders, hover bg
-overlay0 = "#3E4939" # greeny
-overlay1 = "#1F2A3D" # dark-blue        — deeper overlay (slightly lighter than panel_bg so it actually shows)
+panel_bg = "transparent" # dark-greeny  — tab background, toast bg
+surface_dim = "#293126" # dark-greeny   — selected space and borders
+surface0 = "reset" # mid-dark-greeny    — inactive tabs
+surface1 = "#3E4939" # greeny           — ?
+overlay0 = "#8A9C81" # green grey       — text (spaces, headlines, branches)
+overlay1 = "#D7E2CC" # dark-blue        — named tab text, tab plus icon
 
 # Text
-text = "#ECEBE3" # white            — primary text (off-white, warm)
-subtext0 = "#E2E2DA" # gray             — muted text (neutral; dashy's greenish gray read as dingy on the bg)
+text = "#ECEBE3" # off-white            — active space text, toast headline text
+subtext0 = "#D7E2CC" # gray             — inactive space text
 
 # Accent
-accent = "#FFE94A" # yellow           — primary interaction (hover/active/focus; pure #FFFF00 vibrated on green)
+accent = "#FFFF11" # yellow             — active tab bg
 
 # Accent palette
 yellow = "#FFFF11" # yellow
-peach = "#F09139" # orange           — secondary action
-red = "#FF003C" # red              — error
-green = "#80D080" # green            — success (brighter; #55AA55 sat in the same hue as the bg)
-blue = "#2AC2F1" # light-blue       — info (dashy's `blue` is too dark for an accent)
-teal = "#80D080" # green            — dashy has no distinct cyan
-mauve = "#2AC2F1" # light-blue       — secondary accent (branches, labels)
-# dashy's purple (#B443FA) was too punchy for repeating labels
+peach = "#F09139" # orange              — secondary action
+red = "#FF003C" # red                   — error
+green = "#80D080" # green               — success (brighter; #55AA55 sat in the same hue as the bg)
+blue = "#6BC2FD" # light-blue           — info (dashy's `blue` is too dark for an accent)
+teal = "#80D080" # green                — dashy has no distinct cyan
+mauve = "#F09139" # light-blue          — secondary accent (branches, labels)
 
 [ui]
 agent_panel_sort = "priority"
 
 [ui.toast]
-delivery = "system"
+delivery = "herdr"
 
-[theme]
-name = "catppuccin"
-auto_switch = false
+[ui.sidebar.agents]
+row_gap = 1
+rows = [["state_icon", "workspace", "tab"], ["agent"]]
+
+[ui.sidebar.spaces]
+row_gap = 1
+rows = [["state_icon", "workspace"], ["branch", "git_status"]]

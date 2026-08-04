@@ -7,8 +7,8 @@ foreground = ECEBE3
 cursor-color = FFFF11
 
 # window styling
-window-padding-x = 13
-window-padding-y = 13
+window-padding-x = 5
+window-padding-y = 5
 window-colorspace = display-p3
 window-height = 42
 window-width = 140
