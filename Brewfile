@@ -24,6 +24,8 @@ brew "brotli"
 brew "colima"
 brew "cosign"
 brew "crane"
+brew "depot/tap/depot"
+brew "namespacelabs/namespace/nsc"
 brew "dnsglobe" # https://github.com/514-labs/dnsglobe
 brew "dotenvx"
 brew "ffmpeg"

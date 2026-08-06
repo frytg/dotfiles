@@ -15,3 +15,4 @@ lockfile = true
 # Read .node-version, .nvmrc, and package.json devEngines so plain `node` in a
 # project directory matches the pin without a local mise.toml.
 idiomatic_version_file_enable_tools = ["node"]
+experimental = true
