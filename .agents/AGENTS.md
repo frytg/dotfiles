@@ -79,6 +79,10 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 - `mise install` / `just node` — install whatever the active config asks for
 - `mise ls` / `mise doctor` — inspect active toolset
 
+### Containers
+
+- Local docker/container builds can be run and tested with the Apple [`container` CLI](https://github.com/apple/container) (see the [start-here tutorial](https://github.com/apple/container/blob/main/docs/tutorials/start-here.md)) — not the `docker` CLI.
+
 ## Hosting & CI
 
 - Code lives on **github.com** or **tangled.org**. Pick one per project; stay consistent.

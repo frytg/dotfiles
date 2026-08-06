@@ -24,6 +24,7 @@ brew "brotli"
 brew "colima"
 brew "cosign"
 brew "crane"
+brew "container" # https://github.com/apple/container
 brew "depot/tap/depot"
 brew "namespacelabs/namespace/nsc"
 brew "dnsglobe" # https://github.com/514-labs/dnsglobe
