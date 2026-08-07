@@ -1,9 +1,9 @@
 {
-  "lastChangelogVersion": "0.84.0",
+  "lastChangelogVersion": "0.84.1",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
-  "defaultModel": "~deepseek/deepseek-v4-flash-latest",
+  "defaultModel": "minimax/minimax-m3",
   "defaultThinkingLevel": "high",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,

@@ -29,8 +29,10 @@ ln -sf "$(PWD)/.cursor/keybindings.json" ~/Library/Application\ Support/Cursor/U
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
 
-# link .pi for some extensions
-ln -sf "$(PWD)/.pi" ~/.pi
+# link .pi for some extensions; clear any stale real dir first so `ln -sf`
+# replaces it instead of nesting a .pi/.pi self-loop inside it
+# [[ -d ~/.pi && ! -L ~/.pi ]] && rm -rf ~/.pi
+ln -sfh "$(PWD)/.pi" ~/.pi
 
 # link zed config
 mkdir -p ~/.config/zed

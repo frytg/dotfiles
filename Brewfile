@@ -6,12 +6,14 @@
 # Homebrew 6+ requires explicit trust for non-official taps before loading their Ruby.
 tap "514-labs/tap", trusted: true
 #tap "UpCloudLtd/tap", trusted: true
+tap "depot/tap", trusted: true
 tap "derailed/k9s", trusted: true
 tap "dotenvx/brew", trusted: true
 tap "emqx/mqttx", trusted: true
 tap "entireio/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "minio/stable", trusted: true
+tap "namespacelabs/namespace", trusted: true
 tap "nubjs/tap", trusted: true
 tap "probe-rs/probe-rs", trusted: true
 tap "rjyo/moshi", trusted: true
@@ -52,7 +54,6 @@ brew "minijinja-cli"
 brew "mise"
 brew "moshi-hook" # https://getmoshi.app/docs/hooks
 brew "mqttx-cli" # EMQX
-brew "nub" # https://github.com/nubjs/nub
 brew "opentofu"
 brew "ouch"
 brew "pkl"
