@@ -1,3 +1,6 @@
+# load encryption recipes (sops / age / pgp / 1password)
+import 'just/encryption.just'
+
 default:
 	just --list
 
@@ -136,7 +139,7 @@ run:
 	just node
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	pi update
-	mise install 
+	mise install
 	pi update --extensions
 	-bun upgrade
 	-deno upgrade
@@ -147,6 +150,25 @@ run:
 	just --yes decrypt-env .pi/.env.work.sops.yaml
 	-just macos
 alias install := run
+
+# like `just run` but without homebrew: provision a server from a fresh clone.
+# skips `just brew`, `brew update/upgrade`, moshi-hook (brew services), and
+# `just macos`. keeps mise, pi, bun, deno, rustup, gcloud, herdr, and sops
+# env decryption. assumes mise + `just` are already installed.
+[group('SYSTEM')]
+run-server:
+	just node
+	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
+	pi update
+	mise install
+	pi update --extensions
+	-bun upgrade
+	-deno upgrade
+	-rustup update
+	-gcloud components update --quiet
+	herdr server reload-config
+	just --yes decrypt-env .pi/.env.personal.sops.yaml
+	just --yes decrypt-env .pi/.env.work.sops.yaml
 
 # fetch, run all updates and link symlinks
 [group('SYSTEM')]
@@ -195,67 +217,3 @@ alias sshhosts := ssh-hosts
 [group('SSH')]
 ssh-hosts:
 	nano ~/.ssh/known_hosts
-
-# list PGP keys and their fingerprints
-[group('ENCRYPTION')]
-list-pgp:
-	gpg --list-keys
-
-alias list-gpg := list-pgp
-alias lpgp := list-pgp
-alias lgpg := list-pgp
-
-# create a new age encryption key into a given filename
-[group('ENCRYPTION')]
-create-age-key name="key":
-	age-keygen -o "{{ name }}.txt"
-	just create-public-key "{{ name }}"
-	just age-key-to-1password "{{ name }}"
-
-# create a public key from a given age key
-[confirm]
-[group('ENCRYPTION')]
-create-public-key name="key":
-	age-keygen -y "{{ name }}.txt" > "{{ name }}pub.txt"
-
-# create a 1password key from a given age key
-[confirm]
-[group('ENCRYPTION')]
-age-key-to-1password name:
-	op document create "./{{ name }}.txt" --title "Age key > {{ name }}" --tags "age" --file-name "{{ name }}.txt"
-
-## ---------------------------------
-## ENCRYPTION shortcuts
-
-# add/ remove keys (if .sops.yaml setup was changed)
-[group('ENCRYPTION')]
-update-keys:
-	just _update-key .pi/.env.sops.yaml
-
-_update-key file:
-	sops updatekeys {{ file }}
-
-# rotate keys (refreshed internal encryption keys)
-[group('ENCRYPTION')]
-rotate-keys:
-	just _rotate-key .pi/.env.sops.yaml
-
-_rotate-key file:
-	sops rotate --in-place {{ file }}
-
-# make changes to a secret file
-[group('ENCRYPTION')]
-edit-key file:
-	EDITOR=nano sops edit {{ file }}
-
-# decrypt a secret file
-[confirm('This will overwrite any previously decrypted files, are you sure? (type `yes` to continue)')]
-[group('ENCRYPTION')]
-decrypt-key file:
-	sops --output $(echo {{ file }} | sed 's/\.sops//g') --decrypt {{ file }}
-
-# decrypt a secret file
-[confirm('This will overwrite any previously decrypted files, are you sure? (type `yes` to continue)')]
-[group('ENCRYPTION')]
-decrypt-env file:
-	sops --output-type dotenv --output $(echo {{ file }} | sed 's/\.sops.yaml//g') --decrypt {{ file }}

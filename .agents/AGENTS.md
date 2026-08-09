@@ -165,6 +165,15 @@ Adapters expose `storage.raw` for provider-specific features without casts. Fork
 - [`nixery.dev`](https://nixery.dev) — Container registry that builds ad-hoc images from a URL path (e.g. `nixery.dev/shell/curl` gives a shell with curl pre-installed). Useful for one-off containers.
 - [`atproto.md`](https://atproto.md) - retrieving AT Proto content via Markdown
 
+### Web search & extraction
+
+For live content from external sites, reach for [Exa](https://exa.ai/docs/) or [Firecrawl](https://docs.firecrawl.dev/introduction) instead of hand-rolling scrapers. Both expose hosted MCP servers, so if the reading agent is pi they're wired in already. Use the linked docs for direct API/SDK work outside an MCP host.
+
+- **Exa** — semantic web search with token-efficient result extraction. Pick a `type` (`auto`, `fast`, `instant`, `deep-lite`, `deep`, `deep-reasoning`) and request `contents.text` (markdown), `contents.highlights` (query-relevant excerpts, the default for agent loops), or `contents.summary` (per-result LLM summaries). Supports `includeDomains`/`excludeDomains`, freshness windows via `startPublishedDate`/`endPublishedDate` and `contents.maxAgeHours`, category-specific indexes (`company`, `people`, `news`, `research paper`, `personal site`, `financial report`), and `outputSchema` for structured output with optional SSE streaming. Use `/search` for retrieval; use `/contents` when URLs are known and only extraction is needed.
+- **Firecrawl** — turn any URL into clean markdown, HTML, or structured JSON, with proxies, anti-bot, and JS rendering built in. Covers scrape, crawl, map, search, batch, and browser-sandbox workflows. Use [Interact](https://docs.firecrawl.dev/features/interact) for live-browser sessions: scrape once to obtain a `scrapeId`, then drive clicks, form fills, or dynamic-content extraction with natural-language prompts (or executable code) and stop the session when done. Persists state per session and exposes `liveViewUrl` for inspection.
+
+Reach for **Exa** when the task starts with a question and needs relevant sources discovered across the web. Reach for **Firecrawl** when the task starts with a URL (or a known site to crawl) and needs the rendered page, structured data, or a real browser interaction. Both can extract markdown; Firecrawl is the better default for page fidelity and JS-heavy sites, Exa is the better default for search relevance and token-efficient highlights.
+
 ### AI
 
 - `ai` — Vercel AI SDK. Unified interface for model providers, streaming, tool calling, and structured output.
