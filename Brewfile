@@ -6,6 +6,7 @@
 # Homebrew 6+ requires explicit trust for non-official taps before loading their Ruby.
 tap "514-labs/tap", trusted: true
 #tap "UpCloudLtd/tap", trusted: true
+tap "daytonaio/cli", trusted: true
 tap "depot/tap", trusted: true
 tap "derailed/k9s", trusted: true
 tap "dotenvx/brew", trusted: true
@@ -27,6 +28,7 @@ brew "colima"
 brew "cosign"
 brew "crane"
 brew "container" # https://github.com/apple/container
+brew "daytonaio/cli/daytona" # https://www.daytona.io/docs/en/tools/cli/
 brew "depot/tap/depot"
 brew "namespacelabs/namespace/nsc"
 brew "dnsglobe" # https://github.com/514-labs/dnsglobe

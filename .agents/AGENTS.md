@@ -38,6 +38,12 @@ Direct technical prose, the way you'd answer in chat. Not docs, not a report.
 
 - All task definitions live in a `justfile`. Run with `just <recipe>`.
 
+## Sandboxes
+
+For ephemeral isolated execution — untrusted commands, package experiments, `/tmp`-style probes, fresh-Linux checks — use the [daytona-sandbox skill](../skills/engineering/daytona-sandbox/SKILL.md) instead of running on the host. The skill wraps the `daytona` CLI's create/exec/delete cycle on a throwaway Linux sandbox; default snapshot is `daytona-medium` (2 vCPU, 4 GiB RAM, 8 GiB disk) in `eu` with `--auto-stop 30` and `--auto-delete 60` so a forgotten sandbox can't bill forever.
+
+Reach for it when the task would otherwise run on the host but you don't trust the side effects (`curl | sh`, deleting unknown paths, network probes). Skip it when the task needs the local repo — sandboxes start from a snapshot, the working tree is not auto-synced — or when the workflow needs long-lived state across many turns. The CLI is assumed installed and logged in; if `daytona` is missing or `DAYTONA_API_KEY` isn't set, exit with a warning rather than installing it for the user.
+
 ## Skills
 
 When creating new skills, follow the [Agent Skills spec](https://agentskills.io/home) for the directory layout, frontmatter, and discovery rules. See the full [specification](https://agentskills.io/specification.md) for required fields, allowed properties, and validation.
