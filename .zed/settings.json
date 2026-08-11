@@ -316,7 +316,22 @@
 		}
 	},
 	"lsp": {
-		"json-language-server": {
+		"vtsls": {
+   "settings": {
+    "typescript": {
+     "updateImportsOnFileMove": {
+      "enabled": "always"
+     }
+    },
+    "javascript": {
+     "updateImportsOnFileMove": {
+      "enabled": "always"
+     }
+    }
+   },
+   "enable_lsp_tasks": true
+  },
+  "json-language-server": {
 			"settings": {}
 		},
 		"just-lsp": {

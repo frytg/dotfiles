@@ -3,7 +3,7 @@
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
-  "defaultModel": "minimax/minimax-m3",
+  "defaultModel": "~deepseek/deepseek-v4-flash-latest",
   "defaultThinkingLevel": "high",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,

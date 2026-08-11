@@ -184,22 +184,18 @@ Reach for **Exa** when the task starts with a question and needs relevant source
 - [JSR](https://jsr.io/@frytg/logger)
 - [Docs](https://jsr.io/@frytg/logger/doc)
 
+Syslog levels (most → least severe): `emerg`, `alert`, `crit`, `error`, `warning`, `notice`, `info`, `debug`.
+
 ```ts
 import { logger } from '@frytg/logger'
 
-const log = logger({ source: 'api/posts' })
-
-log.info('starting post')
-log.warn('rate limited', { retryAfter })
-log.error({ message: 'post failed', error })
-
-// Data object is always the second argument. Use it for structured fields,
-// never concatenate into the message string.
-log.info('user signed in', {
-	userId: user.id,
-	method: 'oauth',
-	scopes: ['read', 'write'],
-	durationMs: 142,
+// Structured fields go in `data`; pass `error` as its own field.
+logger.log({
+	level: 'error',
+	message: 'post failed',
+	source: 'api/posts',
+	data: { postId },
+	error,
 })
 ```
 
