@@ -28,9 +28,9 @@
 		"vue": true
 	},
 	"base_keymap": "VSCode",
-	"buffer_font_family": "IBM Plex Mono",
+	"buffer_font_family": "Geist Mono",
 	"buffer_font_size": 13.0,
-	"buffer_font_weight": 350.0,
+	"buffer_font_weight": 300.0,
 	"buffer_line_height": "comfortable",
 	"code_actions_on_format": {
 		"source.fixAll.oxc": true
@@ -317,21 +317,21 @@
 	},
 	"lsp": {
 		"vtsls": {
-   "settings": {
-    "typescript": {
-     "updateImportsOnFileMove": {
-      "enabled": "always"
-     }
-    },
-    "javascript": {
-     "updateImportsOnFileMove": {
-      "enabled": "always"
-     }
-    }
-   },
-   "enable_lsp_tasks": true
-  },
-  "json-language-server": {
+			"settings": {
+				"typescript": {
+					"updateImportsOnFileMove": {
+						"enabled": "always"
+					}
+				},
+				"javascript": {
+					"updateImportsOnFileMove": {
+						"enabled": "always"
+					}
+				}
+			},
+			"enable_lsp_tasks": true
+		},
+		"json-language-server": {
 			"settings": {}
 		},
 		"just-lsp": {
@@ -375,8 +375,8 @@
 		"metrics": false
 	},
 	"theme": "Dark Greeny",
-	"ui_font_family": "IBM Plex Mono",
+	"ui_font_family": "Geist Mono",
 	"ui_font_size": 12.0,
-	"ui_font_weight": 350.0,
+	"ui_font_weight": 300.0,
 	"vim_mode": false
 }

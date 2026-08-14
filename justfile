@@ -191,6 +191,10 @@ install-nix:
 install-pi:
 	bun add -g --ignore-scripts @earendil-works/pi-coding-agent
 
+# install cursor agent cli
+install-cursor:
+	curl https://cursor.com/install -fsS | bash
+
 [group('LINT')]
 lint:
 	oxlint
