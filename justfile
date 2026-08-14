@@ -1,5 +1,9 @@
-# load encryption recipes (sops / age / pgp / 1password)
+# age key recipes (create, derive pubkey, push to 1password)
+import 'just/age.just'
+# pgp + sops helpers (decrypt, rotate, edit secret files)
 import 'just/encryption.just'
+# nostr key recipes (nsec/npub generation, push to 1password)
+import 'just/nostr.just'
 
 default:
 	just --list

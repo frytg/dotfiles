@@ -7,25 +7,6 @@ alias list-gpg := list-pgp
 alias lpgp := list-pgp
 alias lgpg := list-pgp
 
-# create a new age encryption key into a given filename
-[group('ENCRYPTION')]
-create-age-key name="key":
-	age-keygen -o "{{ name }}.txt"
-	just create-public-key "{{ name }}"
-	just age-key-to-1password "{{ name }}"
-
-# create a public key from a given age key
-[confirm]
-[group('ENCRYPTION')]
-create-public-key name="key":
-	age-keygen -y "{{ name }}.txt" > "{{ name }}pub.txt"
-
-# create a 1password key from a given age key
-[confirm]
-[group('ENCRYPTION')]
-age-key-to-1password name:
-	op document create "./{{ name }}.txt" --title "Age key > {{ name }}" --tags "age" --file-name "{{ name }}.txt"
-
 ## ---------------------------------
 ## ENCRYPTION shortcuts
 

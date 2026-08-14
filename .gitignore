@@ -11,9 +11,12 @@ vendor/
 tmp
 .dev/
 .age*.txt
+*.nsec*
+*.npub*
 ~/
 
 # .pi specific
+.pi/pi-acp/**
 .pi/**/bin/
 .pi/**/datadog/
 .pi/**/extensions/*.ts
