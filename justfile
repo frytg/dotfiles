@@ -142,12 +142,10 @@ run:
 	@if command -v moshi-hook >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^moshi-hook .*started'; then brew services restart moshi-hook; fi
 	just node
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
-	pi update
+	just update-pi
 	mise install
-	pi update --extensions
 	-bun upgrade
 	-deno upgrade
-	-rustup update
 	-gcloud components update --quiet
 	herdr server reload-config
 	just --yes decrypt-env .pi/.env.personal.sops.yaml
@@ -180,9 +178,17 @@ up:
 	git pull
 	just run
 
-[group('LOCAL')]
-run-pi:
-	just _env "pi"
+# update rust packages
+[group('RUST')]
+update-rust:
+	-rustup update
+
+# update pi and extensions
+[group('PI')]
+update-pi:
+	pi update
+	sleep 2
+	dotenvx run -f ~/.dotfiles/.pi/.env.personal -- pi update --extensions
 
 # install NixOS
 [group('SYSTEM')]
@@ -191,11 +197,12 @@ install-nix:
 	sh <(curl -L https://nixos.org/nix/install)
 
 # install PI.dev
-[group('SYSTEM')]
+[group('PI')]
 install-pi:
 	bun add -g --ignore-scripts @earendil-works/pi-coding-agent
 
 # install cursor agent cli
+[group('CURSOR')]
 install-cursor:
 	curl https://cursor.com/install -fsS | bash
 
