@@ -214,13 +214,6 @@ lint:
 format:
 	oxfmt
 
-# sometimes colima needs to be reinstalled after clearing out old docker artifacts
-[group('DOCKER')]
-fix-colima:
-	rm -rf ~/.colima/
-	brew reinstall colima
-	colima start
-
 # login to UpCloud using a token
 [group('UPCLOUD')]
 upcloud-login token:

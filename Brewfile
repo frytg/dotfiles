@@ -24,7 +24,6 @@ tap "skyhook-io/tap", trusted: true
 # --- Formulas ---
 brew "age"
 brew "brotli"
-brew "colima"
 brew "cosign"
 brew "crane"
 brew "container" # https://github.com/apple/container
