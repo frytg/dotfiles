@@ -118,3 +118,6 @@ fi
 # ---- aliases / user functions ----------------------------------------------
 
 source ~/.aliases
+
+# bun completions
+[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"

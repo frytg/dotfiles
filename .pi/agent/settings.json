@@ -14,7 +14,6 @@
     "npm:@datadog/pi-plugin",
     "npm:pi-mcp-adapter",
     "npm:@gotgenes/pi-permission-system",
-    "https://github.com/frytg/pi-atlas",
     "git:github.com/jnsahaj/trio",
     "npm:@mobrienv/pi-tidy-subagents"
   ],
