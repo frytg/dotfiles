@@ -55,6 +55,33 @@ Useful tool for managing containers.
 - [Docs](https://github.com/google/go-containerregistry/blob/main/cmd/crane/doc/crane.md)
 - [Common Commands](https://github.com/google/go-containerregistry/blob/main/cmd/crane/recipes.md)
 
+### fx
+
+[fx](https://fx.sh) is an experimental native coding agent CLI (~6.4 MB Zig binary, currently `v0.0.4`). State stays in `~/.fx` — fx manages that folder itself; **do not symlink it into a repo**, fx deliberately refuses to write durable state into git-tracked paths.
+
+```bash
+just install-fx                    # install/upgrade to FX_VERSION (default v0.0.4)
+FX_VERSION=v0.0.5 just install-fx  # pin a different release
+fx                                 # start an interactive session in the cwd
+fx ask "explain this error"        # one noninteractive request, then exit
+fx doctor                          # post-install health check (auth, state, git)
+fx status                          # resolved model / permission mode / workspace
+fx upgrade                         # binary upgrade on selected release channel
+```
+
+Auth once per host (`fx login` for Vercel, or `fx setup` for an AI Gateway API key) and `~/.fx/settings.json` persists model, permission mode, MCP servers, and prompt history.
+
+Resume sessions, record transcripts, and add per-process directories with global flags:
+
+```bash
+fx --resume last                   # resume the last session in this workspace
+fx -c                              # alias for --continue / --resume-last
+fx --record                        # save terminal output under ~/.fx/
+fx --add-dir ../shared             # grant the session access to another dir
+```
+
+Slash commands inside the interactive shell: `/help`, `/settings`, `/permissions`, `/sandbox`, `/workspace`, `/status`, `/usage`. Repo-safe config (sandbox hints, additional directories, permission overrides) goes in the workspace's own `.fx.json`, not `~/.fx`.
+
 ## Author
 
 Created by [frytg.digital](https://www.frytg.digital)

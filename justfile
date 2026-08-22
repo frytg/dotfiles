@@ -204,7 +204,12 @@ install-pi:
 # install cursor agent cli
 [group('CURSOR')]
 install-cursor:
-	curl https://cursor.com/install -fsS | bash
+	curl -fsS https://cursor.com/install | bash
+
+# install Vercel fx CLI
+[group('AI')]
+install-fx:
+	curl -fsSL https://fx.sh/setup.sh | bash
 
 [group('LINT')]
 lint:
