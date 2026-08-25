@@ -55,6 +55,10 @@ ln -sf "$(PWD)/.sshconfig" ~/.ssh/config
 ln -sf "$(PWD)/.ssh-authorized_keys" ~/.ssh/authorized_keys
 chmod 600 "$(PWD)/.ssh-authorized_keys"
 
+# fx global agent rules
+mkdir -p ~/.fx
+ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.fx/AGENTS.md
+
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents
 ln -sfh "$(PWD)/skills" ~/.agents/skills
@@ -63,13 +67,19 @@ ln -sfh "$(PWD)/skills" ~/.agents/skills
 # (no nested category/ folders). flatten-copy each leaf skill into
 # ~/.osaurus/skills/<name>/ so edits land after re-running link.sh.
 # osaurus-native skills already in that folder are left alone.
+mkdir -p ~/.fx/skills
 mkdir -p ~/.osaurus/skills
 for skill_dir in "$(PWD)"/skills/*/*(/N); do
 	[[ -f "$skill_dir/SKILL.md" ]] || continue
+	
 	name="${skill_dir:t}"
-	dest="$HOME/.osaurus/skills/$name"
-	rm -rf "$dest"
-	cp -R "$skill_dir" "$dest"
+	dest1="$HOME/.fx/skills/$name"
+	rm -rf "$dest1"
+	cp -R "$skill_dir" "$dest1"
+	
+	dest2="$HOME/.osaurus/skills/$name"
+	rm -rf "$dest2"
+	cp -R "$skill_dir" "$dest2"
 done
 # ln -sfh "$(PWD)/.osaurus/slash-commands" ~/.osaurus/slash-commands
 
