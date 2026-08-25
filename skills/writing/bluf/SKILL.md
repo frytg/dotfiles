@@ -36,7 +36,7 @@ State the answer in the first sentence, then provide only the context the reader
 
 ## Rules
 
-1. **The headline is the answer.** Not a topic, not "Summary of X" — the conclusion.
+1. **The headline is the answer.** Not a topic, not "Summary of X" — the conclusion. If the answer is genuinely unknown or the user asked an open question, frame the headline as the question — don't force a one-sided statement.
 2. **Lead with the dominant risk or decision.** If there's a yes/no question, answer it. If there's a tradeoff, name the dominant side.
 3. **No throat-clearing.** No "In this document…", no restating the prompt. Start with the substance.
 4. **Cut anything that doesn't change a decision.** If a detail doesn't affect what the reader will do next, omit it.
@@ -44,6 +44,7 @@ State the answer in the first sentence, then provide only the context the reader
 6. **Use the writer's voice when it's good.** When summarizing someone else's note, preserve their terms and framing — don't re-paraphrase into corporate mush.
 7. **Mark uncertainty.** "Appears to", "unclear", or list the interpretations — don't pick one and pretend.
 8. **One BLUF per output.** Depth comes from sections, not nested conclusions.
+9. **Bullets: format by context.** Under `## Status` / `## Risks` / etc., skip emoji — the section header carries the topic. When bullets stand alone (chat, IM, status-quickie with no sections), prefix each line with the topic and one matching emoji — pick by content, not decoration. Cap at seven bullets per output; switch to sections if more is needed. Skip emoji in formal reports regardless.
 
 ## Length
 
