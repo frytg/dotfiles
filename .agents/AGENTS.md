@@ -17,6 +17,7 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 - Tabs for JS/TS/JSON. 2-space indent for Markdown. 120-column wrap. Single quotes, semicolons as needed, ES5 trailing commas.
 - Linting via `just lint` must pass on every commit/PR.
 - Prefer lists over tables in Markdown. Tables add visual weight, don't render in plain-text tools, and force row-by-row scanning. Use a table only when a true two-axis comparison is the point.
+- Markdown files must not need an index or table of contents. If a reader needs navigation, the sections aren't titled sharply enough or the file should be split.
 - No drive-by refactors, magic numbers, commented-out code, or unrelated changes in a diff.
 
 ## Writing style

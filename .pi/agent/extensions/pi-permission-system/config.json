@@ -95,6 +95,8 @@
 			"kubectl drain *": "ask",
 			"kubectl taint *": "ask",
 			"kubectl get secrets *": "ask",
+			"python *": "deny",
+			"python3 *": "deny",
 			"rm -rf *": "deny",
 			"sops *": "ask",
 			"sudo *": "ask"
