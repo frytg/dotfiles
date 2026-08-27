@@ -102,6 +102,11 @@ alias clean := clear
 link:
 	zsh ./link.sh
 
+# push local skills/ to an open webui instance via its REST API. --prune to delete remote skills, --dry-run to plan
+[group('SKILLS')]
+sync-skills *args:
+	SOPS_ENV_FILE=.env.owui.sops.yaml just _env bun run bin/sync-skills.ts {{ args }}
+
 # setup macos defaults
 [group('SYSTEM')]
 macos:
