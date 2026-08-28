@@ -1,3 +1,9 @@
+# machine bootstrap recipes (link, run, up — symlinks + sync the dotfiles)
+import 'just/bootstrap.just'
+
+# one-shot installer recipes for cli tools (nix, pi, cursor, fx)
+import 'just/install.just'
+
 # age key recipes (create, derive pubkey, push to 1password)
 import 'just/age.just'
 # pgp + sops helpers (decrypt, rotate, edit secret files)
@@ -37,10 +43,15 @@ node:
 	fi
 	echo "ok: node $(mise exec -- node -v) via $(mise which node)"
 
-# run brew install and updates
+# run brew install and updates. installs Homebrew if missing, then applies the Brewfile.
 [group('SYSTEM')]
 brew:
-	zsh ./install-brew.sh
+	#!/usr/bin/env zsh
+	set -e
+	if ! command -v brew >/dev/null 2>&1; then
+		echo 'Installing Homebrew for you.'
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	fi
 	brew bundle
 
 # fix zsh compinit "insecure directories" prompt
@@ -97,11 +108,6 @@ clear:
 	-cargo clean
 alias clean := clear
 
-# setup symlinks
-[group('SYSTEM')]
-link:
-	zsh ./link.sh
-
 # push local skills/ to an open webui instance via its REST API. --prune to delete remote skills, --dry-run to plan
 [group('SKILLS')]
 sync-skills *args:
@@ -110,7 +116,7 @@ sync-skills *args:
 # setup macos defaults
 [group('SYSTEM')]
 macos:
-	zsh ./macos.sh
+	zsh ./bin/macos.sh
 	just macos-reload
 
 # reload macos defaults
@@ -137,27 +143,6 @@ mac-nosleep:
 	echo 'ok: pmset configured'
 	pmset -g | grep -E 'sleep|displaysleep|tcpkeepalive|ttyskeepawake|womp'
 
-# run all updates and link symlinks
-[group('SYSTEM')]
-run:
-	just brew
-	brew update
-	brew upgrade --yes
-	just link
-	@if command -v moshi-hook >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^moshi-hook .*started'; then brew services restart moshi-hook; fi
-	just node
-	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
-	just update-pi
-	mise install
-	-bun upgrade
-	-deno upgrade
-	-gcloud components update --quiet
-	herdr server reload-config
-	just --yes decrypt-env .pi/.env.personal.sops.yaml
-	just --yes decrypt-env .pi/.env.work.sops.yaml
-	-just macos
-alias install := run
-
 # like `just run` but without homebrew: provision a server from a fresh clone.
 # skips `just brew`, `brew update/upgrade`, moshi-hook (brew services), and
 # `just macos`. keeps mise, pi, bun, deno, rustup, gcloud, herdr, and sops
@@ -177,12 +162,6 @@ run-server:
 	just --yes decrypt-env .pi/.env.personal.sops.yaml
 	just --yes decrypt-env .pi/.env.work.sops.yaml
 
-# fetch, run all updates and link symlinks
-[group('SYSTEM')]
-up:
-	git pull
-	just run
-
 # update rust packages
 [group('RUST')]
 update-rust:
@@ -194,27 +173,6 @@ update-pi:
 	pi update
 	sleep 2
 	dotenvx run -f ~/.dotfiles/.pi/.env.personal -- pi update --extensions
-
-# install NixOS
-[group('SYSTEM')]
-install-nix:
-	# see https://nixos.org/download/
-	sh <(curl -L https://nixos.org/nix/install)
-
-# install PI.dev
-[group('PI')]
-install-pi:
-	bun add -g --ignore-scripts @earendil-works/pi-coding-agent
-
-# install cursor agent cli
-[group('CURSOR')]
-install-cursor:
-	curl -fsS https://cursor.com/install | bash
-
-# install Vercel fx CLI
-[group('AI')]
-install-fx:
-	curl -fsSL https://fx.sh/setup.sh | bash
 
 [group('LINT')]
 lint:

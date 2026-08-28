@@ -8,7 +8,7 @@ Each AI harness reads its available skills from the following sources:
 - **cursor** (via the Cursor AI harness, reads from `~/.cursor/skills-cursor/`)
 - **osaurus** (reads from `~/.osaurus/skills/`; no symlinks, no nested category folders — `link.sh` flatten-copies each leaf skill)
 
-For more information on how these skills are managed and linked across the environment, please see [`link.sh`](link.sh).
+For more information on how these skills are managed and linked across the environment, please see [`link.sh`](../bin/link.sh).
 
 ## Syncing to an Open WebUI instance
 
