@@ -27,8 +27,8 @@ SOPS_ENV_FILE=.pi/.env.personal.sops.yaml just sync-skills --prune
 Required sops entries:
 
 ```yaml
-OPEN_WEBUI_URL: https://chat.example.com   # base url, no trailing slash
-OPEN_WEBUI_API_KEY: sk-...                 # bearer token, admin or workspace.skills permission
+OPEN_WEBUI_URL: https://chat.example.com # base url, no trailing slash
+OPEN_WEBUI_API_KEY: sk-... # bearer token, admin or workspace.skills permission
 ```
 
 Runtime: [bun](https://bun.sh) (handles TS natively, no build step). No third-party dependencies.

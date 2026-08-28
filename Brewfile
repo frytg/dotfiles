@@ -5,8 +5,7 @@
 # --- Taps ---
 # Homebrew 6+ requires explicit trust for non-official taps before loading their Ruby.
 tap "514-labs/tap", trusted: true
-#tap "UpCloudLtd/tap", trusted: true
-tap "cloudflare/cloudflare/cloudflared", trusted: true
+tap "cloudflare/cloudflare", trusted: true
 tap "daytonaio/cli", trusted: true
 tap "depot/tap", trusted: true
 tap "derailed/k9s", trusted: true
@@ -69,7 +68,6 @@ brew "skyhook-io/tap/radar" # https://radarhq.io/docs/install
 brew "sops"
 brew "terraform" # hashicorp/tap
 brew "tinygo"
-# brew "upcloud-cli" # UpCloud CLI
 brew "valkey"
 brew "yq"
 

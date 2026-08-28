@@ -2,7 +2,7 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent"
 import { spawn } from "node:child_process"
 
-const helperBinary = "/opt/homebrew/bin/moshi-hook"
+const helperBinary = "/opt/homebrew/opt/moshi-hook/bin/moshi-hook"
 
 function firstString(...values: unknown[]): string {
   for (const value of values) {
@@ -119,6 +119,8 @@ export default function moshiPiHook(pi: ExtensionAPI): void {
   pi.on("session_start", (event, ctx) => {
     send("SessionStart", event, ctx)
   })
+
+
 
   pi.on("before_agent_start", (event, ctx) => {
     send("UserPromptSubmit", event, ctx, { prompt: event.prompt })

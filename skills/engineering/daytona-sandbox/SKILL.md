@@ -77,13 +77,13 @@ Names are unique within your org. If you re-run a create with a name that alread
 
 These are the snapshots Daytona ships with. Pick by resource need; the medium is the workhorse.
 
-| Snapshot           | vCPU | Memory | Disk    | Class       |
-| ------------------ | ---- | ------ | ------- | ----------- |
-| `daytona-small`    | 1    | 1 GiB  | 3 GiB   | Container   |
-| `daytona-medium`   | 2    | 4 GiB  | 8 GiB   | Container   |
-| `daytona-large`    | 4    | 8 GiB  | 10 GiB  | Container   |
-| `daytona-vm-medium`| 2    | 4 GiB  | 8 GiB   | Linux VM    |
-| `windows-medium`   | 2    | 8 GiB  | 50 GiB  | Windows     |
+| Snapshot            | vCPU | Memory | Disk   | Class     |
+| ------------------- | ---- | ------ | ------ | --------- |
+| `daytona-small`     | 1    | 1 GiB  | 3 GiB  | Container |
+| `daytona-medium`    | 2    | 4 GiB  | 8 GiB  | Container |
+| `daytona-large`     | 4    | 8 GiB  | 10 GiB | Container |
+| `daytona-vm-medium` | 2    | 4 GiB  | 8 GiB  | Linux VM  |
+| `windows-medium`    | 2    | 8 GiB  | 50 GiB | Windows   |
 
 Default snapshots include pre-installed Python (anthropic, openai, pandas, pydantic, transformers, etc.) and Node (bun, typescript, opencode-ai). Useful if you're testing an LLM-driven workflow — the sandbox already has the SDKs.
 
