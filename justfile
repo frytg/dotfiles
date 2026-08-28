@@ -4,6 +4,12 @@ import 'just/bootstrap.just'
 # one-shot installer recipes for cli tools (nix, pi, cursor, fx)
 import 'just/install.just'
 
+# macos-specific tweaks (defaults, reload, pmset)
+import 'just/mac.just'
+
+# headless server provisioning from a fresh clone (no homebrew, no macos)
+import 'just/server.just'
+
 # age key recipes (create, derive pubkey, push to 1password)
 import 'just/age.just'
 # pgp + sops helpers (decrypt, rotate, edit secret files)
@@ -112,55 +118,6 @@ alias clean := clear
 [group('SKILLS')]
 sync-skills *args:
 	SOPS_ENV_FILE=.env.owui.sops.yaml just _env bun run bin/sync-skills.ts {{ args }}
-
-# setup macos defaults
-[group('SYSTEM')]
-macos:
-	zsh ./bin/macos.sh
-	just macos-reload
-
-# reload macos defaults
-[confirm('This will reload macOS defaults, are you sure? (type `yes` to continue)')]
-[group('SYSTEM')]
-macos-reload:
-	killall Finder
-	killall Dock
-	killall SystemUIServer
-	herdr server stop
-
-# keep the mac awake but lockable: never system-sleep, display may sleep,
-# ssh sessions stay reachable. persists across reboots (pmset writes to nvram-backed prefs).
-# lock with ctrl+cmd+q — locking does not sleep the machine.
-[group('SYSTEM')]
-mac-nosleep:
-	#!/usr/bin/env zsh
-	set -e
-	sudo pmset -a sleep 0          # never system-sleep
-	sudo pmset -a displaysleep 10  # display off after 10 min (ssh unaffected)
-	sudo pmset -a tcpkeepalive 1   # keep network connections alive
-	sudo pmset -a ttyskeepawake 1  # active ssh sessions prevent idle sleep
-	sudo pmset -a womp 1           # wake on network access
-	echo 'ok: pmset configured'
-	pmset -g | grep -E 'sleep|displaysleep|tcpkeepalive|ttyskeepawake|womp'
-
-# like `just run` but without homebrew: provision a server from a fresh clone.
-# skips `just brew`, `brew update/upgrade`, moshi-hook (brew services), and
-# `just macos`. keeps mise, pi, bun, deno, rustup, gcloud, herdr, and sops
-# env decryption. assumes mise + `just` are already installed.
-[group('SYSTEM')]
-run-server:
-	just node
-	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
-	pi update
-	mise install
-	pi update --extensions
-	-bun upgrade
-	-deno upgrade
-	-rustup update
-	-gcloud components update --quiet
-	herdr server reload-config
-	just --yes decrypt-env .pi/.env.personal.sops.yaml
-	just --yes decrypt-env .pi/.env.work.sops.yaml
 
 # update rust packages
 [group('RUST')]
