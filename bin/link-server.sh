@@ -8,23 +8,27 @@ set -x
 #
 # assumes the working directory is the dotfiles repo root (just sets it
 # automatically when invoked via `just link-server`).
+#
+# uses ${PWD} (parameter expansion) and `ln -sfn` (GNU) so this works on
+# Linux. the macOS bin/link.sh uses `$(PWD)` and `ln -sfh` (zsh-only) but
+# those don't work on NixOS where zsh has no `PWD` builtin and GNU ln has
+# no `-h` flag.
 
 # herdr config
 mkdir -p ~/.config/herdr
-ln -sf "$(PWD)/herdr/config.toml" ~/.config/herdr/config.toml
+ln -sfn "${PWD}/herdr/config.toml" ~/.config/herdr/config.toml
 
 # link the justfile to the global justfile location so `just --global-justfile`
 mkdir -p ~/.config/just
-ln -sf "$(PWD)/justfile" ~/.config/just/justfile
+ln -sfn "${PWD}/justfile" ~/.config/just/justfile
 
 # setup skills link
 mkdir -p ~/.agents
-ln -sfh "$(PWD)/skills" ~/.agents/skills
+ln -sfn "${PWD}/skills" ~/.agents/skills
 
-# link .pi for some extensions; clear any stale real dir first so `ln -sf`
-# replaces it instead of nesting a .pi/.pi self-loop inside it
-# [[ -d ~/.pi && ! -L ~/.pi ]] && rm -rf ~/.pi
-ln -sfh "$(PWD)/.pi" ~/.pi
+# link .pi for some extensions; -n keeps `ln` from following an existing
+# symlink at the target (would otherwise nest .pi/.pi inside the old symlink)
+ln -sfn "${PWD}/.pi" ~/.pi
 
 # link entire folder to ~/.dotfiles (handy for absolute-path references)
-ln -sfh "$(PWD)" ~/.dotfiles
+ln -sfn "${PWD}" ~/.dotfiles

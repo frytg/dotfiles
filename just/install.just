@@ -1,17 +1,17 @@
 # install NixOS
-[group('SYSTEM')]
+[group('INSTALL')]
 install-nix:
 	# see https://nixos.org/download/
 	sh <(curl -L https://nixos.org/nix/install)
 
 # install PI.dev
-[group('PI')]
+[group('INSTALL')]
 install-pi:
 	bun add -g --ignore-scripts @earendil-works/pi-coding-agent
 
 # install deno via mise. pins the resolved version into ~/.config/mise/config.toml
 # (which link.sh symlinks to mise/config.toml in this repo — committed).
-[group('SYSTEM')]
+[group('INSTALL')]
 install-deno:
 	#!/usr/bin/env zsh
 	set -e
@@ -24,11 +24,11 @@ install-deno:
 	mise reshim
 
 # install cursor agent cli
-[group('CURSOR')]
+[group('INSTALL')]
 install-cursor:
 	curl -fsS https://cursor.com/install | bash
 
 # install Vercel fx CLI
-[group('AI')]
+[group('INSTALL')]
 install-fx:
 	curl -fsSL https://fx.sh/setup.sh | bash
