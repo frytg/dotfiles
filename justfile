@@ -1,21 +1,11 @@
-# machine bootstrap recipes (link, run, up — symlinks + sync the dotfiles)
-import 'just/bootstrap.just'
-
-# one-shot installer recipes for cli tools (nix, pi, cursor, fx)
-import 'just/install.just'
-
-# macos-specific tweaks (defaults, reload, pmset)
-import 'just/mac.just'
-
-# headless server provisioning from a fresh clone (no homebrew, no macos)
-import 'just/server.just'
-
-# age key recipes (create, derive pubkey, push to 1password)
-import 'just/age.just'
-# pgp + sops helpers (decrypt, rotate, edit secret files)
-import 'just/encryption.just'
-# nostr key recipes (nsec/npub generation, push to 1password)
-import 'just/nostr.just'
+import 'just/bootstrap.just' # machine bootstrap recipes (link, run, up — symlinks + sync the dotfiles)
+import 'just/install.just' # one-shot installer recipes for cli tools (nix, pi, cursor, fx)
+import 'just/mac.just' # macos-specific tweaks (defaults, reload, pmset)
+import 'just/mise.just' # mise tooling
+import 'just/server.just' # headless server provisioning from a fresh clone (no homebrew, no macos)
+import 'just/age.just' # age key recipes (create, derive pubkey, push to 1password)
+import 'just/encryption.just' # pgp + sops helpers (decrypt, rotate, edit secret files)
+import 'just/nostr.just' # nostr key recipes (nsec/npub generation, push to 1password)
 
 default:
 	just --list

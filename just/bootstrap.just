@@ -15,6 +15,7 @@ run:
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	just update-pi
 	mise install
+	just mise-update
 	-bun upgrade
 	-deno upgrade
 	-gcloud components update --quiet

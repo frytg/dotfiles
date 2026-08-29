@@ -9,6 +9,20 @@ install-nix:
 install-pi:
 	bun add -g --ignore-scripts @earendil-works/pi-coding-agent
 
+# install deno via mise. pins the resolved version into ~/.config/mise/config.toml
+# (which link.sh symlinks to mise/config.toml in this repo — committed).
+[group('SYSTEM')]
+install-deno:
+	#!/usr/bin/env zsh
+	set -e
+	if ! command -v mise >/dev/null 2>&1; then
+		echo 'error: mise not on PATH' >&2
+		exit 1
+	fi
+	mise use --global deno@latest
+	mise install deno@latest
+	mise reshim
+
 # install cursor agent cli
 [group('CURSOR')]
 install-cursor:
