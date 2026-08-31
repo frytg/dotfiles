@@ -18,6 +18,7 @@ tmp
 # .pi specific
 .pi/pi-acp/**
 .pi/**/bin/
+.pi/skills
 .pi/**/datadog/
 .pi/**/extensions/*.ts
 .pi/**/extensions/*.jsonl
