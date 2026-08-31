@@ -71,6 +71,12 @@ else
 	( cd "$DOTFILES_DIR" && git pull --ff-only )
 fi
 
+# --- everything below runs through just recipes from the dotfiles repo ---
+cd "$DOTFILES_DIR"
+
+# remove pi moshi hook (unavailable in sandboxes)
+rm .pi/agent/extensions/moshi-hooks.ts
+
 # trust the cloned repo's mise.toml — otherwise every mise invocation from
 # inside the repo errors with "config file not trusted".
 echo '==> trusting dotfiles mise.toml'
@@ -82,8 +88,6 @@ mise trust "$DOTFILES_DIR/mise.toml" 2>/dev/null || true
 echo '==> installing all pinned tools (catches node from mise.toml)'
 mise install
 
-# --- everything below runs through just recipes from the dotfiles repo ---
-cd "$DOTFILES_DIR"
 
 # link server configs (herdr, justfile, agents skills, .pi)
 echo '==> linking server configs'
