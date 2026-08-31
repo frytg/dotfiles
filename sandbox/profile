@@ -1,6 +1,11 @@
 # sandbox-specific POSIX login config. written to /etc/profile.d/zz-dotfiles.sh by
 # sandbox/provision.sh so every login shell (sh, dash, zsh -l, bash -l) inherits
-# mise shims + bun bin on PATH, regardless of whether ~/.zshrc or ~/.bashrc get sourced.
+# mise + bun + fx on PATH, regardless of whether ~/.zshrc or ~/.bashrc get sourced.
+#
+# path order (left = highest priority):
+#   ~/.local/bin           — mise binary, fx binary (default install dir)
+#   ~/.local/share/mise/shims — mise-managed tool shims (just, bun, deno)
+#   ~/.bun/bin             — bun CLI itself (when installed standalone)
+#   ~/.bun/install/global/node_modules/.bin — bun-installed global packages (pi)
 
-# mise + bun on PATH for all login shells
-export PATH="$HOME/.local/share/mise/shims:$HOME/.bun/install/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.bun/bin:$HOME/.bun/install/global/node_modules/.bin:$PATH"

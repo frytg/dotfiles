@@ -1,9 +1,11 @@
 # sandbox-specific bash config. applied by sandbox/provision.sh (symlinked to ~/.bashrc).
 # mirrors sandbox/zshrc — kept in sync manually for now (rare to edit both).
 
-export PATH="$HOME/.local/share/mise/shims:$PATH"
-eval "$(mise activate bash)"
-export PATH="$HOME/.bun/install/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.bun/bin:$HOME/.bun/install/global/node_modules/.bin:$PATH"
+
+if command -v mise >/dev/null 2>&1; then
+	eval "$(mise activate bash)"
+fi
 
 alias j='just'
 alias m='mise'

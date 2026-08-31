@@ -95,11 +95,19 @@ just install-pi
 just install-fx
 
 # --- default shell ---
-# best-effort chsh; if /etc/shells doesn't list zsh yet, just exec zsh manually.
+# chsh refuses to set a shell that isn't listed in /etc/shells. add zsh first,
+# then call chsh. on minimal sandboxes (busybox chsh, no PAM) this can still
+# fail — in that case the user just needs to `exec zsh` once after SSH'ing in.
 echo '==> setting zsh as default shell'
-if [[ "$SHELL" != "$(command -v zsh)" ]] && command -v zsh >/dev/null 2>&1; then
-	chsh -s "$(command -v zsh)" 2>/dev/null \
-		|| echo '    (chsh failed — run `exec zsh` once you shell in)'
+if command -v zsh >/dev/null 2>&1; then
+	zsh_path="$(command -v zsh)"
+	if [[ ! -f /etc/shells ]] || ! grep -qx "$zsh_path" /etc/shells; then
+		echo "$zsh_path" | $SUDO tee -a /etc/shells >/dev/null
+	fi
+	if [[ "$SHELL" != "$zsh_path" ]]; then
+		$SUDO chsh -s "$zsh_path" 2>/dev/null \
+			|| echo '    (chsh failed — run `exec zsh` once you shell in)'
+	fi
 fi
 
 # --- apply sandbox-specific rc files (zshrc, bashrc, profile) ---
