@@ -77,13 +77,13 @@ daytona-down name=DEFAULT_SANDBOX_NAME:
 	daytona delete "{{ name }}"
 
 # provision the dotfiles environment inside a daytona sandbox.
-# pipes bin/provision-sandbox.sh to `bash -s` on the sandbox. idempotent.
+# pipes sandbox/provision.sh to `bash -s` on the sandbox. idempotent.
 # DOTFILES_REPO is interpolated by just (literal text, not shell var), and
 # DOTFILES_DIR is left unset so the script defaults to its own $HOME/.dotfiles.
 [group('SANDBOX')]
 daytona-provision name=DEFAULT_SANDBOX_NAME:
 	daytona exec "{{ name }}" -- env DOTFILES_REPO="{{ DOTFILES_REPO }}" bash -s \
-		< ./bin/provision-sandbox.sh
+		< ./sandbox/provision.sh
 
 # ============================================================
 # Namespace (nsc)
@@ -166,10 +166,10 @@ nsc-down name=DEFAULT_SANDBOX_NAME:
 	echo "ok: destroyed '{{ name }}' (id=$id) and removed $cidfile"
 
 # provision the dotfiles environment inside a namespace instance.
-# pipes bin/provision-sandbox.sh to `bash -s` on the sandbox. idempotent.
+# pipes sandbox/provision.sh to `bash -s` on the sandbox. idempotent.
 # DOTFILES_REPO is interpolated by just (literal text, not shell var), and
 # DOTFILES_DIR is left unset so the script defaults to its own $HOME/.dotfiles.
 [group('SANDBOX')]
 nsc-provision name=DEFAULT_SANDBOX_NAME:
 	nsc ssh "$(just _nsc-id {{ name }})" -- env DOTFILES_REPO="{{ DOTFILES_REPO }}" bash -s \
-		< ./bin/provision-sandbox.sh
+		< ./sandbox/provision.sh

@@ -102,6 +102,17 @@ if [[ "$SHELL" != "$(command -v zsh)" ]] && command -v zsh >/dev/null 2>&1; then
 		|| echo '    (chsh failed — run `exec zsh` once you shell in)'
 fi
 
+# --- apply sandbox-specific rc files (zshrc, bashrc, profile) ---
+# the rc files live alongside this script in sandbox/. they're designed for
+# ephemeral sandboxes — minimal, opinionated, point at dotfiles-managed tools.
+echo '==> applying sandbox rc files'
+mkdir -p /etc/profile.d
+# profile snippet is sourced by every login shell (sh, dash, bash -l, zsh -l)
+install -m 0644 "$DOTFILES_DIR/sandbox/profile" /etc/profile.d/zz-dotfiles.sh
+# zshrc + bashrc are symlinked so SSH sessions pick up aliases + mise activation
+ln -sfn "$DOTFILES_DIR/sandbox/zshrc" "$HOME/.zshrc"
+ln -sfn "$DOTFILES_DIR/sandbox/bashrc" "$HOME/.bashrc"
+
 echo
 echo "ok: sandbox provisioned. shell in with one of:"
 echo "    just daytona-shell NAME"

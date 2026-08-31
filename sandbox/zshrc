@@ -1,0 +1,16 @@
+# sandbox-specific zsh config. applied by sandbox/provision.sh (symlinked to ~/.zshrc).
+# designed for ephemeral sandboxes — minimal, opinionated, points at dotfiles-managed tools.
+
+# mise (provides just, bun, deno via shims)
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+eval "$(mise activate zsh)"
+
+# bun global bin (provides pi)
+export PATH="$HOME/.bun/install/global/node_modules/.bin:$PATH"
+
+# in-sandbox shortcuts
+alias j='just'
+alias m='mise'
+
+# prompt: show the sandbox hostname so you don't forget you're not on your laptop
+PROMPT='%F{cyan}[${HOST%%.*}]%f %F{yellow}%~%f %# '
