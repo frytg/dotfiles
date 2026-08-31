@@ -19,6 +19,7 @@ tap "probe-rs/probe-rs", trusted: true
 tap "rjyo/moshi", trusted: true
 tap "tinygo-org/tools", trusted: true
 tap "skyhook-io/tap", trusted: true
+tap "hashicorp/tap", trusted: true
 
 # --- Formulas ---
 brew "age"

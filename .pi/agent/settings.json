@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.84.3",
+  "lastChangelogVersion": "0.84.4",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "minimax",
@@ -13,9 +13,7 @@
     "npm:@mobrienv/pi-tidy-tools",
     "npm:@datadog/pi-plugin",
     "npm:pi-mcp-adapter",
-    "npm:@gotgenes/pi-permission-system",
-    "git:github.com/jnsahaj/trio",
-    "npm:@mobrienv/pi-tidy-subagents"
+    "npm:@gotgenes/pi-permission-system"
   ],
   "compaction": {
     "enabled": true,

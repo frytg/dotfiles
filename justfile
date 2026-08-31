@@ -3,6 +3,7 @@ import 'just/install.just' # one-shot installer recipes for cli tools (nix, pi, 
 import 'just/mac.just' # macos-specific tweaks (defaults, reload, pmset)
 import 'just/mise.just' # mise tooling
 import 'just/server.just' # headless server provisioning from a fresh clone (no homebrew, no macos)
+import 'just/sandbox.just' # ephemeral sandbox management (daytona + namespace/nsc)
 import 'just/age.just' # age key recipes (create, derive pubkey, push to 1password)
 import 'just/encryption.just' # pgp + sops helpers (decrypt, rotate, edit secret files)
 import 'just/nostr.just' # nostr key recipes (nsec/npub generation, push to 1password)

@@ -23,6 +23,19 @@ install-deno:
 	mise install deno@latest
 	mise reshim
 
+# install bun via mise. pins the resolved version into ~/.config/mise/config.toml
+[group('INSTALL')]
+install-bun:
+	#!/usr/bin/env zsh
+	set -e
+	if ! command -v mise >/dev/null 2>&1; then
+		echo 'error: mise not on PATH' >&2
+		exit 1
+	fi
+	mise use --global bun@latest
+	mise install bun@latest
+	mise reshim
+
 # install cursor agent cli
 [group('INSTALL')]
 install-cursor:
