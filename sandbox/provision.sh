@@ -32,7 +32,8 @@ if command -v apt-get >/dev/null 2>&1; then
 	$SUDO apt-get update -qq
 	$SUDO apt-get install -y -qq zsh git curl
 elif command -v apk >/dev/null 2>&1; then
-	$SUDO apk add --no-cache zsh git curl bash
+	# libatomic is required by node's musl binary (and absent from alpine-minirootfs)
+	$SUDO apk add --no-cache zsh git curl bash libatomic
 elif command -v dnf >/dev/null 2>&1; then
 	$SUDO dnf install -y -q zsh git curl
 else
@@ -74,6 +75,12 @@ fi
 # inside the repo errors with "config file not trusted".
 echo '==> trusting dotfiles mise.toml'
 mise trust "$DOTFILES_DIR/mise.toml" 2>/dev/null || true
+
+# install every tool pinned in the active configs (global + repo-local).
+# this catches node (pinned in both mise/config.toml and mise.toml) which the
+# per-tool `just install-bun` / `install-deno` recipes don't install explicitly.
+echo '==> installing all pinned tools (catches node from mise.toml)'
+mise install
 
 # --- everything below runs through just recipes from the dotfiles repo ---
 cd "$DOTFILES_DIR"
