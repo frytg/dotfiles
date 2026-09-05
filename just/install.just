@@ -45,3 +45,8 @@ install-cursor:
 [group('INSTALL')]
 install-fx:
 	curl -fsSL https://fx.sh/setup.sh | bash
+
+# install hermes agent
+[group('INSTALL')]
+install-hermes:
+	curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
