@@ -14,6 +14,7 @@ tmp
 *.nsec*
 *.npub*
 ~/
+skills/personal/
 
 # .pi specific
 .pi/pi-acp/**

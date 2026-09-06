@@ -1,17 +1,21 @@
 ---
 name: k8s-images
-description: Finds Kubernetes manifests (Deployment, StatefulSet, DaemonSet, Job, CronJob, Pod) in a project, extracts hardcoded container images, skips templated ones, and uses `crane` to check each image for newer upstream tags. Reports out-of-date images with the latest compatible version. Use when the user asks to check K8s image versions, audit container image freshness, find outdated images, or look for Kubernetes upgrade opportunities.
+description: Walks Kubernetes manifests in a project, uses `crane ls` to find the latest tag for each pinned container image, presents proposed bumps with file path + current/new tag + bump type, asks the user to confirm each one, then updates the YAML on approval. Use when the user asks to check, bump, update, or upgrade container image versions in k8s/ArgoCD/Helm-rendered manifests. Nothing is applied to a cluster — the user reviews the diff and deploys manually.
 license: MIT
 metadata:
   author: frytg
   agent: pi
 ---
 
-# K8s Image Versions
+# K8s Images
 
-Find Kubernetes manifests in the project, extract hardcoded container images, and check each one for newer upstream tags using [`crane`](https://github.com/google/go-containerregistry/tree/main/cmd/crane). Templated images (Helm `{{ }}`, shell `${VAR}`) and digest-pinned images are skipped.
+Walk every Kubernetes manifest in the project, look up the latest upstream tag for each pinned container image via [`crane`](https://github.com/google/go-containerregistry/tree/main/cmd/crane) `ls`, present proposed bumps, ask the user to confirm each one, then write the approved tags back into the YAML.
 
 **Prerequisites:** `rg` (ripgrep), `yq` (mikefarah ≥ v4), `crane` (go-containerregistry). Run from the project root.
+
+## Hard boundary: never deploy
+
+This skill edits YAML files. **It does not run `kubectl apply`, `argocd app sync`, Helm upgrades, `nixos-rebuild`, `terraform apply`, or any command that mutates live clusters or hosts.** The user deploys manually after reviewing the diff. If the workflow seems to need a deploy, stop and surface the exact command + blast radius for explicit confirmation. Some host repos encode this as a formal deploy policy (e.g. an `AGENTS.md` rule); respect any local wording when running there.
 
 ## 1. Find manifests
 
@@ -26,11 +30,11 @@ rg -l --type yaml -e '^kind: (Deployment|StatefulSet|DaemonSet|Job|CronJob|Pod)\
 # Confirm at least one document in the file has a matching kind
 for f in $(rg -l --type yaml -e '^kind: (Deployment|StatefulSet|DaemonSet|Job|CronJob|Pod)\b' .); do
   kinds=$(yq -N 'select(.kind == "Deployment" or .kind == "StatefulSet" or .kind == "DaemonSet" or .kind == "Job" or .kind == "CronJob" or .kind == "Pod") | .kind' "$f")
-  if [ -n "$kinds" ]; then echo "$f"; fi
+  [ -n "$kinds" ] && echo "$f"
 done
 ```
 
-Skip vendored or generated content: drop paths under `node_modules/`, `vendor/`, `dist/`, `target/`, `.git/`, `helm-charts/`. A manifest file downloaded from a third party (e.g. the Tailscale operator bundle) often has no fixed pin, so handle it like any other file — but treat templated images there the same way as everywhere else.
+Skip vendored or generated content: drop paths under `node_modules/`, `vendor/`, `dist/`, `target/`, `.git/`, `helm-charts/`. A manifest file downloaded from a third party (e.g. an operator bundle) often has no fixed pin, so handle it like any other file — but treat templated images there the same way as everywhere else.
 
 ## 2. Extract images
 
@@ -121,33 +125,33 @@ Use a small `awk`/shell normaliser, or have `yq` emit the value and resolve befo
 For each hardcoded, non-floating, non-digest image, call `crane ls` on the **repository** (not the full image) and parse out the latest version compatible with the pinned one.
 
 ```bash
-# List tags for a repo
-crane ls docker.io/persesdev/perses
+crane ls docker.io/example-org/api-service
 ```
 
-`crane ls` can be slow and verbose. Use timeouts and accept that a flaky registry yields a "registry error" line in the report rather than aborting the run.
+`crane ls` can be slow and verbose. Cap each call with a timeout (e.g. `timeout 30s crane ls …`) and treat failures as registry errors — surface them in the report, do not abort the run.
 
 ### Classify the pinned version
 
 The bump you suggest depends on the **shape** of the pinned tag. Match by prefix:
 
-| Pinned example      | Prefix style                    | Suggest                                                                |
-| ------------------- | ------------------------------- | ---------------------------------------------------------------------- |
-| `v0.53.1`           | `v` + semver                    | highest `vX.Y.Z` where `X.Y.Z` ≥ pinned (project decides major policy) |
-| `0.4.5009`          | semver, no `v`                  | highest `X.Y.Z` ≥ pinned                                               |
-| `1.2.3-alpine`      | semver + suffix                 | highest `X.Y.Z-<suffix>` matching the pinned suffix                    |
-| `4.2-alpine`        | major.minor + suffix            | highest `X.Y-<suffix>` ≥ pinned (treat as semver)                      |
-| `4.2`               | major.minor                     | highest `X.Y` ≥ pinned                                                 |
-| `2026.7.1` (calver) | `YYYY.MM.DD` or `YYYY.MM.patch` | highest matching format ≥ pinned                                       |
-| `postgres-16`       | name-version                    | highest `<name>-X` ≥ pinned                                            |
+| Pinned example                        | Prefix style                    | Default suggestion                                              |
+| ------------------------------------- | ------------------------------- | --------------------------------------------------------------- |
+| `v0.53.1`                             | `v` + semver                    | highest `vX.Y.Z` **within the same major** (skip `v1.0.0` etc.) |
+| `0.4.5009`                            | semver, no `v`                  | highest `X.Y.Z` within the same major                           |
+| `1.2.3-alpine`                        | semver + suffix                 | highest `X.Y.Z-<same suffix>` within the same major             |
+| `4.2-alpine`                          | major.minor + suffix            | highest `X.Y-<same suffix>` within the same major               |
+| `4.2`                                 | major.minor                     | highest `X.Y` within the same major                             |
+| `2026.7.4` (calver)                   | `YYYY.MM.DD` or `YYYY.MM.patch` | highest matching format ≥ pinned                                |
+| `2026-08-24-11-26-59--v0.1.0` (dated) | `<date>--<semver>`              | look behind the `--` for the inner semver and bump within major |
+| `app-16`                              | name-version                    | highest `<name>-X` ≥ pinned                                     |
 
 Heuristic: if the tag is a dotted numeric string with an optional leading `v` and an optional trailing `-suffix`, parse it as semver; if it's a `YYYY.MM...` string, parse it as calver; otherwise treat it as opaque and look for tags that share the longest common prefix with the pinned one.
 
-For `0.x.y` projects (the dominant pattern in this repo — Perses, Mastodon, PDS, etc.) the **convention is to track the latest `0.x` series**, not jump straight to `1.0.0`. Default to the highest tag within the same `X` (major version). If the highest `X` differs from the pinned one, list it as a **major** entry separately and let the user decide.
+For `0.x.y` projects the convention is to track the latest `0.x` series, not jump straight to `1.0.0`. If the highest `X` differs from the pinned one, list it as a **major** entry separately and let the user opt in.
 
 ### Suggest the latest
 
-Implementation: pipe `crane ls <repo>` through `sort -V` and pick the highest entry that matches the prefix pattern and is `>=` the pinned one. Then optionally confirm with `crane manifest` to make sure the tag still exists and is pullable:
+Implementation: pipe `crane ls <repo>` through `sort -V` and pick the highest entry that matches the prefix pattern and is `>=` the pinned one, **bounded by the pinned major**. Then optionally confirm with `crane manifest` to make sure the tag still exists and is pullable:
 
 ```bash
 crane manifest <repo>:<suggested-tag>
@@ -157,15 +161,15 @@ Skip the `crane manifest` call when you have a long list of images — `crane ls
 
 ## 4. Report
 
-Produce a tight, scannable report. Group entries by category.
+Produce a tight, scannable report. Group entries by category. Don't trigger edits yet — the per-image confirmation in step 5 owns that.
 
 ### Out of date (hardcoded tag, newer upstream available)
 
 One bullet per image. Include the file path, container name, pinned tag, latest tag, and a one-line note (e.g. "patch only", "new minor in same 0.x series", "major available — see release notes").
 
 ```
-- leno0/services/perses/deployment.yaml  [perses]  v0.53.1 → v0.55.0  (new minor)
-- upc0/services/pds/pds-deployment.yaml  [pds]  0.4.5009 → 0.4.5100  (patch)
+- clusters/cluster-a/apps/observability/deployment.yaml  [api-service]  v0.53.1 → v0.55.0  (new minor)
+- clusters/cluster-c/apps/indexer/deployment.yaml        [indexer]       0.4.5009 → 0.4.5100  (patch)
 ```
 
 ### Major version available
@@ -173,15 +177,15 @@ One bullet per image. Include the file path, container name, pinned tag, latest 
 Call out anything where the latest tag has a different major than the pinned one, and link to the upstream release notes. **Do not silently bump these** — breaking changes need review.
 
 ```
-- leno0/services/foo/deployment.yaml  [foo]  v1.4.2 → v2.0.0  (major)
-  Release notes: https://github.com/<owner>/<foo>/releases/tag/v2.0.0
+- clusters/cluster-a/apps/api-service/deployment.yaml  [api-service]  v1.4.2 → v2.0.0  (major)
+  Release notes: https://github.com/<owner>/<api-service>/releases/tag/v2.0.0
 ```
 
 ### Floating tags (should be pinned)
 
 ```
-- common/services/vector/vector.yaml  [vector]  tag: latest  (pin to a version)
-- locally0/services/dashy/cronjobs.yaml  [cronjobs]  tag: nixery.dev/shell/curl  (rolling image — pin a digest or specific build)
+- shared/services/collector/deployment.yaml    [collector]   tag: latest            (pin to a version)
+- clusters/cluster-b/apps/notify/cronjobs.yaml [notify-cron] tag: nixery.dev/shell/curl  (rolling — pin a digest or specific build)
 ```
 
 ### Templated or digest-pinned (skipped)
@@ -189,8 +193,8 @@ Call out anything where the latest tag has a different major than the pinned one
 One line per file with a templated image, so the user can see what was _not_ checked.
 
 ```
-- common/services/foo/deployment.yaml  [foo]  image is templated ({{ .Values.image }}) — skipped
-- upc0/services/bar/deployment.yaml  [bar]  pinned to sha256:abc123… — skipped
+- shared/charts/api-service/values.yaml  [api-service]  image is templated ({{ .Values.image }}) — skipped
+- clusters/cluster-c/apps/indexer/deployment.yaml  [indexer]  pinned to sha256:abc123… — skipped
 ```
 
 ### Registry errors
@@ -198,7 +202,7 @@ One line per file with a templated image, so the user can see what was _not_ che
 If `crane ls` failed (auth, network, rate limit, missing repo), report the image and the error. Don't silently drop it.
 
 ```
-- leno0/services/hermes-agent/deployment.yaml  [hermes-agent]  registry error: unauthorized
+- clusters/cluster-a/apps/agent/deployment.yaml  [agent]  registry error: unauthorized
 ```
 
 ### Summary footer
@@ -211,13 +215,85 @@ Templated / digest-pinned: 15
 Registry errors: 0
 ```
 
-## 5. Safety and boundaries
+## 5. Confirm one at a time
 
-- **Read-only.** This skill reports; it never edits manifests, runs `kubectl apply`, or calls `crane push`/`crane copy`.
-- **Respect auth.** `crane` will reuse the host's Docker config or ambient credentials. Do not bake credentials into the skill. A failed lookup is a registry error, not a bug.
-- **Do not recommend a major bump by default.** For `0.x` series and projects that follow semver strictly, surface the major as a separate "Major version available" entry so the user can opt in. For `1.x` and up, still surface majors separately.
-- **Do not auto-suggest "latest".** If `latest` exists alongside pinned tags, mention that `latest` is ahead, but never recommend switching to it as a strategy — pinning is the goal.
-- **No network calls beyond `crane`.** Don't fetch GitHub release notes in bulk — link them and let the user check.
+For each out-of-date or major-available entry, present one bullet at a time and wait for a direct yes/no. **Never batch-confirm.** The prompt is a plain question that names the file, the line, the pinned tag, the proposed tag, and the bump type — the user should answer with the file path or image name to make the intent unambiguous:
+
+```
+Bump clusters/cluster-a/apps/observability/deployment.yaml  api-service: v0.53.1 → v0.55.0  (new minor, same 0.x)
+  [y/n] _
+```
+
+On **yes**, queue the bump. On **no**, leave the file untouched and move on. On a major, require both `yes` and an acknowledgement that release notes were reviewed before queuing.
+
+Choices per image:
+
+- `y` — apply this bump in step 6
+- `n` — leave it untouched
+- `m` — show the full `crane ls` output for this repo so the user can inspect other tags before deciding
+- `q` — stop the run entirely (apply what's queued so far, then exit)
+
+Anything else is treated as `n`. Each image is its own prompt — when the same image appears in multiple files (e.g. one app pinned across several manifests), confirm each file separately; the user may want different versions per cluster.
+
+## 6. Apply the confirmed bumps
+
+For each queued bump, edit the YAML to replace **only the tag** in the existing `image:` line. Preserve everything else byte-for-byte: leading whitespace, surrounding comments (e.g. a `# Repo:` / `# Registry:` block), the rest of the manifest, document separators. The lines above and below the image line stay put.
+
+Implementation rules:
+
+1. Use the smallest unique `oldText` that includes the line with the old tag plus enough surrounding context (a couple of lines above and below) to be unique. Do not rewrite the file with `write`; do not pipe through `sed -i` if a tool-managed edit is available.
+2. After every edit, re-grep the file to confirm the new tag is present and the old tag is gone. If both show up, the line was non-unique — pick more context and re-apply.
+3. After each edit, re-parse the file with `yq` (or `ruby -ryaml`) to confirm it still parses. A bad edit that breaks YAML is the worst-case outcome; a parse check after every change catches it before the user sees a broken diff.
+4. When the same image appears in multiple files, confirm each file separately (covered in step 5) and edit each one with file-scoped context.
+
+### What the edit looks like
+
+```diff
+       - name: api-service
+         # Repo: https://github.com/<owner>/api-service
+         # Registry: https://ghcr.io/<owner>/api-service
+-        image: ghcr.io/<owner>/api-service:v0.53.1
++        image: ghcr.io/<owner>/api-service:v0.55.0
+```
+
+That's the only line that should change.
+
+## 7. Summary
+
+After all edits, show:
+
+- Count applied, skipped, declined.
+- `git diff --stat` for the changed files (read-only, no commit).
+- Any registry errors that surfaced so the user can retry later.
+- A reminder that **nothing was applied to any cluster**. The diff is on disk; the user runs `kubectl apply`, `argocd app sync`, or the cluster's reconciler at their discretion.
+
+```
+Applied 7 bumps across 6 files:
+  clusters/cluster-a/apps/observability/deployment.yaml  api-service v0.53.1 → v0.55.0
+  clusters/cluster-b/apps/metrics/deployment.yaml       metrics     12.3.1   → 12.5.4
+  …
+
+Skipped (user declined): 2
+Registry errors: 1  (clusters/cluster-a/apps/agent/deployment.yaml: timeout)
+
+Diff summary:
+  .../observability/deployment.yaml | 2 +-
+  .../metrics/deployment.yaml       | 2 +-
+  ...                               | 10 files changed, 10 insertions(+), 10 deletions(-)
+
+Nothing was applied to any cluster. You decide when to deploy.
+```
+
+## Safety
+
+- **Never deploy.** Edits stay in the working tree. No `kubectl apply`, `argocd app sync`, Helm upgrade, NixOS rebuild, Terraform apply, or sops re-encrypt. The deploy gate is a hard rule, not a default.
+- **Confirm before editing.** One image at a time. Never apply a bump the user didn't explicitly approve.
+- **Never bump across a major without a separate `yes` and acknowledgement of release notes.** Majors are surfaced, never silently applied.
+- **Never propose `latest` as an upgrade target.** If the user is on a pinned tag and `latest` exists, mention that `latest` is ahead, but never recommend switching to it as a strategy — pinning is the goal.
+- **Refuse to edit non-unique lines.** If two `image:` lines in a file have the same value, ask the user to disambiguate before editing — silently picking one is a corruption risk.
+- **Re-parse after every edit.** A bad edit that breaks YAML is the worst-case outcome; `yq -e '.' "$file"` after each change catches it before the user sees a broken diff.
+- **Don't bake credentials.** `crane` reuses the host's Docker config or ambient credentials. A failed lookup is a registry error, not a bug.
+- **Don't fetch release notes in bulk.** Link them in the report; let the user check.
 
 ## Quick reference
 
@@ -229,14 +305,17 @@ rg -l --type yaml -e '^kind: (Deployment|StatefulSet|DaemonSet|Job|CronJob|Pod)\
 yq -N eval-all '
   select(.kind == "Deployment" or .kind == "StatefulSet" or .kind == "DaemonSet" or .kind == "Job" or .kind == "Pod")
   | .spec.template.spec.containers[]?.image
-' services/foo/deployment.yaml
+' path/to/deployment.yaml
 
 # 3. List tags for a repo
-crane ls docker.io/persesdev/perses
+crane ls docker.io/example-org/api-service
 
-# 4. Highest semver tag matching a prefix, ≥ pinned
+# 4. Highest semver tag matching a prefix, ≥ pinned, within major
 crane ls <repo> | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1
 
 # 5. Confirm a tag exists
 crane manifest <repo>:<tag>
+
+# 6. Verify the YAML still parses after edits
+yq -e '.' path/to/deployment.yaml >/dev/null && echo OK
 ```

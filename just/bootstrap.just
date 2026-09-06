@@ -11,7 +11,8 @@ run:
 	brew upgrade --yes
 	just link
 	@if command -v moshi-hook >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^moshi-hook .*started'; then brew services restart moshi-hook; fi
-	mashi-hook install
+	sleep 6
+	moshi-hook install
 	just node
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	just update-pi
