@@ -102,6 +102,7 @@
 
 	"cursor.cpp.disabledLanguages": ["plaintext", "scminput"],
 	"cursor.composer.shouldChimeAfterChatFinishes": true,
+	"cursor.general.glassShowWarningNotifications": true,
 
 	"search.exclude": {
 		"**/node_modules": true

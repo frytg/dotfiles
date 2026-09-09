@@ -19,3 +19,9 @@
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 [advice]
 	detachedHead = false
+[credential "https://origin.cursor.com/git"]
+	helper = 
+	helper = !/Users/dan/.local/bin/origin credential-helper
+[credential "https://origin.cursor.com"]
+	helper = 
+	helper = !/Users/dan/.local/bin/origin credential-helper

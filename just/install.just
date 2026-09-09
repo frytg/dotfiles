@@ -41,6 +41,12 @@ install-bun:
 install-cursor:
 	curl -fsS https://cursor.com/install | bash
 
+# instal cursor origin (git) cli
+[group('INSTALL')]
+install-origin:
+	curl -fsSL https://downloads.cursor.com/origin/install.sh | sh
+	origin auth login
+
 # install Vercel fx CLI
 [group('INSTALL')]
 install-fx:

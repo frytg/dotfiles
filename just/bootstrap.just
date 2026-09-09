@@ -16,6 +16,7 @@ run:
 	just node
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	just update-pi
+	-agent update
 	mise install
 	just mise-update
 	-bun upgrade

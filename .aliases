@@ -1,4 +1,5 @@
 alias ..="cd .."
+alias cursor="agent"
 alias down="cd ~/Downloads"
 alias lsa="ls -al"
 alias buno="bun update && bun outdated"
