@@ -2,8 +2,8 @@
   "lastChangelogVersion": "0.85.1",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
-  "defaultProvider": "minimax",
-  "defaultModel": "MiniMax-M3",
+  "defaultProvider": "openrouter",
+  "defaultModel": "minimax/minimax-m3",
   "defaultThinkingLevel": "high",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,
@@ -21,17 +21,7 @@
     "keepRecentTokens": 20000
   },
   "enabledModels": [
-    "minimax/MiniMax-M3",
-    "openrouter/minimax/minimax-m3",
-    "openrouter/moonshotai/kimi-k3",
-    "openrouter/x-ai/grok-4.5",
-    "openrouter/~deepseek/deepseek-v4-flash-latest",
-    "openrouter/deepseek/deepseek-v4-pro",
-    "openrouter/~anthropic/claude-haiku-latest",
-    "openrouter/~anthropic/claude-opus-latest",
-    "openrouter/~anthropic/claude-sonnet-latest",
-    "openrouter/~google/gemini-flash-latest",
-    "openrouter/~google/gemini-pro-latest"
+    "feather/**"
   ],
   "hideThinkingBlock": true,
   "npmCommand": [
@@ -43,12 +33,17 @@
   ],
   "terminal": {
     "showImages": true,
-    "imageWidthCells": 60
+    "imageWidthCells": 60,
+    "showTerminalProgress": false
   },
   "images": {
     "autoResize": true,
     "blockImages": false
   },
   "enableSkillCommands": true,
-  "showHardwareCursor": false
+  "showHardwareCursor": false,
+  "transport": "auto",
+  "tuiMode": "regular",
+  "doubleEscapeAction": "none",
+  "collapseChangelog": false
 }

@@ -1,24 +1,5 @@
 {
 	"providers": {
-		"minimax": {
-			"baseUrl": "https://api.minimax.io/anthropic",
-			"api": "anthropic-messages",
-			"apiKey": "$MINIMAX_API_KEY",
-			"compat": {
-				"forceAdaptiveThinking": true,
-				"supportsEagerToolInputStreaming": false
-			},
-			"models": [
-				{
-					"id": "MiniMax-M3",
-					"name": "MiniMax M3",
-					"input": ["text", "image"],
-					"reasoning": true,
-					"contextWindow": 1000000,
-					"maxTokens": 32000
-				}
-			]
-		},
 		"exo": {
 			"baseUrl": "http://127.0.0.1:52415/v1",
 			"api": "openai-completions",
@@ -42,46 +23,27 @@
 				}
 			]
 		},
-		"baseten": {
-			"baseUrl": "https://inference.baseten.co/v1",
+		"feather": {
+			"baseUrl": "https://llm.moose-mulley.ts.net/v1",
 			"api": "openai-completions",
-			"apiKey": "$BASETEN_API_KEY",
-			"compat": {
-				"supportsDeveloperRole": false,
-				"supportsReasoningEffort": false,
-				"thinkingFormat": "qwen-chat-template"
-			},
-			"models": [
-				{
-					"id": "moonshotai/Kimi-K3",
-					"name": "Kimi K3",
+			"apiKey": "$LLM_PROXY_API_KEY",
+			"compat": {},
+			"modelOverrides": {
+				"minimax/MiniMax-M3": {
+					"name": "MiniMax M3",
 					"input": ["text", "image"],
 					"reasoning": true,
-					"contextWindow": 1048576,
-					"maxTokens": 262144,
-					"cost": { "input": 3.0, "output": 15.0, "cacheRead": 0.3, "cacheWrite": 0 }
-				},
-				{
-					"id": "deepseek-ai/DeepSeek-V4-Pro",
-					"name": "DeepSeek V4 Pro",
-					"input": ["text"],
-					"reasoning": true,
-					"contextWindow": 262144,
-					"maxTokens": 262144,
-					"cost": { "input": 1.74, "output": 3.48, "cacheRead": 0.145, "cacheWrite": 0 },
-					"compat": { "supportsReasoningEffort": true }
-				},
-				{
-					"id": "zai-org/GLM-5.2-Fast",
-					"name": "GLM 5.2 Fast",
-					"input": ["text"],
-					"reasoning": true,
-					"contextWindow": 524288,
-					"maxTokens": 262144,
-					"cost": { "input": 2.1, "output": 6.6, "cacheRead": 0.21, "cacheWrite": 0 },
-					"compat": { "supportsReasoningEffort": true }
+					"contextWindow": 1000000,
+					"maxTokens": 32000,
+					"compat": {
+						"supportsDeveloperRole": false,
+						"forceAdaptiveThinking": true
+					},
+					"samplingParams": {
+						"reasoning_split": true
+					}
 				}
-			]
+			}
 		}
 	}
 }
