@@ -4,6 +4,10 @@
  * Stock pi never fetches the models endpoint. A provider with no (or empty)
  * `models` array is registered here with `refreshModels`, so `/model` and
  * startup pull whatever the proxy currently serves.
+ *
+ * Feather's `/v1/models` may include `context_length` and `max_tokens`. Those
+ * map to pi's `contextWindow` / `maxTokens`. Missing live fields fall back to
+ * models-store.json, then 128000 / 16384.
  */
 
 import { existsSync, readFileSync } from 'node:fs'
@@ -37,7 +41,53 @@ type StoredModel = {
 	compat?: JsonRecord
 }
 
+/** One `/v1/models` row. Feather emits `context_length` / `max_tokens` (RFC 0002). */
+type LiveModel = {
+	id?: unknown
+	name?: unknown
+	context_length?: unknown
+	context_window?: unknown
+	max_model_len?: unknown
+	max_context_length?: unknown
+	max_tokens?: unknown
+	max_completion_tokens?: unknown
+	max_output_tokens?: unknown
+}
+
 const ZERO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
+const FALLBACK_CONTEXT_WINDOW = 128000
+const FALLBACK_MAX_TOKENS = 16384
+
+/**
+ * Accept a positive finite number from a JSON field; skip strings and junk.
+ *
+ * @param value Raw JSON value
+ * @returns Integer, or undefined
+ */
+const positiveInt = (value: unknown): number | undefined => {
+	if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return undefined
+	if (!Number.isInteger(value)) return undefined
+	return value
+}
+
+/**
+ * Map a live models-list row onto pi's contextWindow / maxTokens.
+ *
+ * @param live Upstream list item
+ * @returns Token limits when the row advertised them
+ */
+const liveTokenLimits = (live: LiveModel): { contextWindow?: number; maxTokens?: number } => {
+	const contextWindow =
+		positiveInt(live.context_length) ??
+		positiveInt(live.context_window) ??
+		positiveInt(live.max_model_len) ??
+		positiveInt(live.max_context_length)
+	const maxTokens =
+		positiveInt(live.max_tokens) ??
+		positiveInt(live.max_completion_tokens) ??
+		positiveInt(live.max_output_tokens)
+	return { contextWindow, maxTokens }
+}
 
 /**
  * Read a JSON file from the agent dir, or `undefined` if missing/invalid.
@@ -95,27 +145,32 @@ const lookupStoreModel = (id: string, store: Record<string, { models?: StoredMod
 /**
  * Map a live `/v1/models` row onto a pi provider model.
  *
+ * Token limits: live row (proxy overlay / upstream extract) > models-store.json >
+ * pi defaults. `modelOverrides` in models.json still win on top of this — pi
+ * applies those after refreshModels returns.
+ *
  * @param live Upstream list item
  * @param providerCompat Provider-level compat from models.json
  * @param stored Optional models-store metadata
  * @returns Pi model config
  */
 const toProviderModel = (
-	live: { id?: unknown; name?: unknown },
+	live: LiveModel,
 	providerCompat: JsonRecord | undefined,
 	stored: StoredModel | undefined,
 ): ProviderModelConfig | undefined => {
 	if (typeof live.id !== 'string' || live.id.length === 0) return undefined
 	const storedCompat = stored?.compat ?? {}
 	const compat = { ...providerCompat, ...storedCompat }
+	const liveLimits = liveTokenLimits(live)
 	return {
 		id: live.id,
 		name: (typeof live.name === 'string' && live.name) || stored?.name || live.id,
 		reasoning: stored?.reasoning ?? true,
 		input: stored?.input ?? ['text', 'image'],
 		cost: stored?.cost ?? ZERO_COST,
-		contextWindow: stored?.contextWindow ?? 128000,
-		maxTokens: stored?.maxTokens ?? 16384,
+		contextWindow: liveLimits.contextWindow ?? stored?.contextWindow ?? FALLBACK_CONTEXT_WINDOW,
+		maxTokens: liveLimits.maxTokens ?? stored?.maxTokens ?? FALLBACK_MAX_TOKENS,
 		thinkingLevelMap: stored?.thinkingLevelMap,
 		compat: Object.keys(compat).length > 0 ? (compat as ProviderModelConfig['compat']) : undefined,
 	}
@@ -145,7 +200,7 @@ const fetchModels = async (
 	if (!response.ok) {
 		throw new Error(`GET ${url} → ${response.status}`)
 	}
-	const payload = (await response.json()) as { data?: Array<{ id?: unknown; name?: unknown }> }
+	const payload = (await response.json()) as { data?: LiveModel[] }
 	const rows = Array.isArray(payload.data) ? payload.data : []
 	const models = rows
 		.map((row) => toProviderModel(row, providerCompat, lookupStoreModel(String(row.id ?? ''), store)))
