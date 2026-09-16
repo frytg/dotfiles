@@ -25,6 +25,7 @@ run:
 	herdr server reload-config
 	just --yes decrypt-env .pi/.env.personal.sops.yaml
 	just --yes decrypt-env .pi/.env.work.sops.yaml
+	container system start
 	-just macos
 alias install := run
 

@@ -94,14 +94,15 @@ moshi-setup token:
 
 [group('SYSTEM')]
 clear:
-	brew cleanup --prune-prefix
-	brew cleanup -s
+	-brew cleanup --prune-prefix
+	-brew cleanup -s
 	-rm -rf "$(brew --cache)"
 	-rm -rf /tmp/bun-*
 	-rm -rf ~/.bun/install/cache
 	-npm cache clean --force
 	-npm cache verify
 	-docker system prune -a --volumes
+	-container prune
 	-cargo clean
 alias clean := clear
 
