@@ -81,7 +81,7 @@ Do: keep the green canvas; spend yellow only on interaction; stay flush on the w
 
 Don’t: purple-on-white themes, cream+serif brochure looks, pure-white page backgrounds, pill CTAs, drop shadows, decorative gradients, extra accent colors fighting yellow, or generic SaaS card grids when a flat list would do.
 
-On iOS, also don’t: radius-0 settings rows, full-bleed square sidebar fills, custom tab bars, or `systemBackground` black leaking next to the canvas.
+On iOS, also don’t: radius-0 settings rows, custom tab bars, or `systemBackground` black leaking next to the canvas.
 
 ## iOS
 
@@ -91,7 +91,8 @@ Follow [Apple’s Human Interface Guidelines](https://developer.apple.com/design
 
 ### Platform
 
-- SwiftUI. System containers: `NavigationStack`, `TabView` / `Tab` on iPhone, `NavigationSplitView` + sidebar on iPad. Same binary; compact vs regular size class.
+- SwiftUI. Default chrome is `NavigationStack` plus the system tab bar (`TabView` / `Tab`) on iPhone and iPad. Same binary; compact vs regular is padding and type, not a different shell.
+- A sidebar (`NavigationSplitView`) is only for complex, multi-section apps with a persistent source list. Two or three top-level screens stay on tabs. Do not add a sidebar because the device is an iPad.
 - Settings-style screens: inset grouped `List`, large title, section headers and footers. Destructive actions use a confirmation dialog and system red.
 - Binary preferences are toggles, not a two-segment picker. Use a picker when there are three or more choices.
 - SF Symbols for tab and nav icons. Short tab labels.
@@ -113,12 +114,12 @@ Paint the screen (`containerBackground`, list `scrollContentBackground(.hidden)`
 
 ### Shapes (iOS)
 
-Use system continuous corners. Typical radii: **10** list / sidebar highlight, **12** buttons and standalone rows, **24** a large primary control. Capsules only for avatars, status dots, and count badges — not for settings rows or CTAs.
+Use system continuous corners. Typical radii: **10** grouped list (and sidebar highlight if you have one), **12** buttons and standalone rows, **24** a large primary control. Capsules only for avatars, status dots, and count badges — not for settings rows or CTAs.
 
 - Inset-grouped sections are one card: first row rounds the top, last row the bottom, middle rows are square.
 - `listRowBackground` with a plain colour lets the list clip. If you draw the card yourself, use `UnevenRoundedRectangle` from the row index — first / middle / last / only.
 - Do not use `ContainerRelativeShape` as a section-wide row background. It stamps the section card onto every row (a stray bottom-right corner on a middle row).
-- Sidebar selection is a 10pt continuous rounded rect, inset (~8pt horizontal), yellow fill + `greeny` text. Unselected rows are clear, not a full-bleed `dark-greeny` rectangle.
+- If a sidebar exists: selection is a 10pt continuous rounded rect, inset (~8pt horizontal), yellow fill + `greeny` text. Unselected rows are clear, not a full-bleed rectangle.
 - Nav and tab bars stay system chrome on the canvas: opaque, no shadow, yellow tint, muted unselected tab items. Don’t replace them with a flush custom bar.
 
 ### Type
@@ -137,6 +138,6 @@ SF Pro (system sans). Mono for counts, paths, timestamps, hardware shortcuts. No
 
 ### Do / don’t (iOS)
 
-Do: native lists and split views; reserved layout so the primary control never jumps; name the same colours; keep yellow for interaction only.
+Do: native lists and tabs; reserved layout so the primary control never jumps; name the same colours; keep yellow for interaction only.
 
 Don’t: restyle Settings into a web tool; square primary controls against rounded lists; glow or drop shadows on the main action; serif “editorial” titles; extra accents; cards-on-cards.
