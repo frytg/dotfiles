@@ -121,3 +121,8 @@ source ~/.aliases
 
 # bun completions
 [ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/dan/.lmstudio/bin"
+# End of LM Studio CLI section
+

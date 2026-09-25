@@ -36,16 +36,7 @@
       "type": "http",
       "url": "https://mcp.firecrawl.dev/v2/mcp-oauth",
       "directTools": [
-        "firecrawl_scrape",
-        "firecrawl_map",
-        "firecrawl_search",
-        "firecrawl_crawl",
-        "firecrawl_check_crawl_status",
-        "firecrawl_agent",
-        "firecrawl_agent_status",
-        "firecrawl_interact",
-        "firecrawl_interact_stop",
-        "firecrawl_parse"
+        "firecrawl_map"
       ]
     },
     "github": {

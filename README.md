@@ -22,6 +22,27 @@ This repo uses [just](https://github.com/casey/just) as a task runner. Run `just
 - `just install` — brew, link, mise node, and upgrade toolchains
 - `just moshi-setup <token>` — pair and start moshi-hook (one-time)
 
+## Mac Setup
+
+- install xcode default extensions
+- install [1password](https://1password.com/downloads/mac)
+- install [zed](https://zed.dev/download)
+- install [cursor](https://cursor.com/download)
+- install [tailscale](https://tailscale.com/download/mac)
+- run `just run`
+- install [vivaldi](https://vivaldi.com)
+- install [obsidian](https://obsidian.md)
+- install [moshi desktop](https://getmoshi.app/desktop)
+- install [final cut pro](https://apps.apple.com/de/app/final-cut-pro-create-video/id1631624924?l=en)
+- install [ivory](https://apps.apple.com/de/app/ivory-for-mastodon-by-tapbots/id6444602274?l=en)
+- install [1password extension](https://apps.apple.com/de/app/1password-for-safari/id1569813296?l=en&mt=12)
+- install [windows remote app](https://apps.apple.com/de/app/windows-app/id1295203466?l=en&mt=12)
+- install [ms teams](https://www.microsoft.com/en-us/microsoft-teams/download-app)
+- install [outlook](https://apps.apple.com/de/app/microsoft-outlook/id985367838?l=en&mt=12)
+- install [istat menus](https://bjango.com/mac/istatmenus/)
+- install [handy](https://handy.computer)
+- install [bionic](https://lmstudio.ai) from lm studio
+
 ## Tools
 
 ### Node (mise)

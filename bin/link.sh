@@ -25,8 +25,10 @@ mkdir -p ~/.config/just
 ln -sf "$(PWD)/justfile" ~/.config/just/justfile
 
 # link vscode config
+mkdir -p ~/Library/Application\ Support/Cursor/User/
 ln -sf "$(PWD)/.cursor/keybindings.json" ~/Library/Application\ Support/Cursor/User/keybindings.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
+mkdir -p ~/Library/Application\ Support/Code/User/
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
 
 # link .pi for some extensions; clear any stale real dir first so `ln -sf`
