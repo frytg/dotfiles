@@ -39,7 +39,7 @@ Raw file content is served directly — no auth, no rate-limit surprises:
 
 ```bash
 # Plain text
-curl -sL "https://tangled.org/frytg.digital/dotfiles/raw/main/BACKUPS.md"
+curl -sL "https://tangled.org/frytg.digital/dotfiles/raw/main/docs/BACKUPS.md"
 
 # Binary file (e.g. an image)
 curl -sL "https://tangled.org/frytg.digital/dotfiles/raw/main/.sshconfig" -o .sshconfig

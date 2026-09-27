@@ -15,7 +15,7 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 
 ## Secrets and safety
 
-- Use the `.gitignore` (`.env`, `keys/*`, `.age*.txt`). For key creation, see `BACKUPS.md`.
+- Use the `.gitignore` (`.env`, `keys/*`, `.age*.txt`). For key creation, see `docs/BACKUPS.md`.
 - If the user pastes a sensitive value into chat, do not persist it to tracked files unless they explicitly ask.
 
 ## Git and PRs
