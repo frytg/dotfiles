@@ -5,3 +5,6 @@
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh --shims)"
 fi
+
+# Hermes Agent command
+case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) export PATH="$HOME/.local/bin:$PATH" ;; esac

@@ -43,6 +43,7 @@ brew "hugo"
 brew "huggingface-cli"
 brew "hurl"
 brew "hyperfine"
+brew "imagemagick" # magick
 brew "jq"
 brew "just"
 brew "k9s"

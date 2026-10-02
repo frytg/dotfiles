@@ -2,8 +2,8 @@
   "lastChangelogVersion": "1.0.0",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
-  "defaultProvider": "openrouter",
-  "defaultModel": "minimax/minimax-m3",
+  "defaultProvider": "feather",
+  "defaultModel": "minimax/MiniMax-M3",
   "defaultThinkingLevel": "high",
   "enableInstallTelemetry": true,
   "enableAnalytics": false,
@@ -33,7 +33,7 @@
   "terminal": {
     "showImages": true,
     "imageWidthCells": 60,
-    "showTerminalProgress": false
+    "showTerminalProgress": true
   },
   "images": {
     "autoResize": true,
@@ -42,7 +42,13 @@
   "enableSkillCommands": true,
   "showHardwareCursor": false,
   "transport": "auto",
-  "tuiMode": "regular",
+  "tuiMode": "fullscreen",
   "doubleEscapeAction": "none",
-  "collapseChangelog": false
+  "collapseChangelog": true,
+  "showCacheMissNotices": false,
+  "outputPad": 1,
+  "editorPaddingX": 0,
+  "defaultTools": [
+    "+codemode"
+  ]
 }
