@@ -25,6 +25,7 @@ skills/personal/
 .pi/**/extensions/*.jsonl
 .pi/**/git/
 .pi/**/mcp-oauth/
+.pi/**/mcp-auth.json
 .pi/**/npm/
 .pi/**/sessions/
 .pi/**/mcp-cache.json

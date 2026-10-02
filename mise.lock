@@ -71,13 +71,13 @@ checksum = "sha256:9fef7eca6743a6b910989cd8e78712376b394fcb9b6e1e9c44a0799a287f9
 url = "https://nodejs.org/dist/v26.10.0/node-v26.10.0-win-x64.zip"
 
 [[tools."npm:oxfmt"]]
-version = "0.70.0"
-aube = { path = ".mise/locks/npm-oxfmt/0.70.0", digest = "sha256:6f43444e29a288a4c8eaae0fd4842397419f6bde12beb04d2be2216a275f96e2" }
+version = "0.71.0"
+aube = { path = ".mise/locks/npm-oxfmt/0.71.0", digest = "sha256:2b7bfb8c20b448ab9b5549e2e0a43049a897d50d995103408bbba2b0add2bcf0" }
 backend = "npm:oxfmt"
 specifiers = ["latest"]
 
 [[tools."npm:oxlint"]]
-version = "1.85.0"
-aube = { path = ".mise/locks/npm-oxlint/1.85.0", digest = "sha256:1ac11edaea5bf540aa1b6f463ea78175728d6831733be1e1c903ef0f13544938" }
+version = "1.86.0"
+aube = { path = ".mise/locks/npm-oxlint/1.86.0", digest = "sha256:c8a39b595a1f17b68da832ab0c7f8556a4f7d46d4089b69fffe8b08559625f1e" }
 backend = "npm:oxlint"
 specifiers = ["latest"]

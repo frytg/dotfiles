@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.87.1",
+  "lastChangelogVersion": "1.0.0",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "openrouter",
@@ -12,7 +12,6 @@
   "packages": [
     "npm:@mobrienv/pi-tidy-tools",
     "npm:@datadog/pi-plugin",
-    "npm:pi-mcp-adapter",
     "npm:@gotgenes/pi-permission-system"
   ],
   "compaction": {
