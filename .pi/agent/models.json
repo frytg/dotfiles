@@ -22,28 +22,6 @@
 					"contextWindow": 131072
 				}
 			]
-		},
-		"feather": {
-			"baseUrl": "https://llm.moose-mulley.ts.net/v1",
-			"api": "openai-completions",
-			"apiKey": "$LLM_PROXY_API_KEY",
-			"compat": {},
-			"modelOverrides": {
-				"minimax/MiniMax-M3": {
-					"name": "MiniMax M3",
-					"input": ["text", "image"],
-					"reasoning": true,
-					"contextWindow": 1000000,
-					"maxTokens": 32000,
-					"compat": {
-						"supportsDeveloperRole": false,
-						"forceAdaptiveThinking": true
-					},
-					"samplingParams": {
-						"reasoning_split": true
-					}
-				}
-			}
 		}
 	}
 }
