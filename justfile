@@ -1,6 +1,7 @@
 import 'just/bootstrap.just' # machine bootstrap recipes (link, run, up — symlinks + sync the dotfiles)
 import 'just/install.just' # one-shot installer recipes for cli tools (nix, pi, cursor, fx)
 import 'just/mac.just' # macos-specific tweaks (defaults, reload, pmset)
+import 'just/ollama.just'
 import 'just/mise.just' # mise tooling
 import 'just/server.just' # headless server provisioning from a fresh clone (no homebrew, no macos)
 import 'just/sandbox.just' # ephemeral sandbox management (daytona + namespace/nsc)
