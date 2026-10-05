@@ -43,3 +43,7 @@ decrypt-key file:
 [group('ENCRYPTION')]
 decrypt-env file:
 	sops --output-type dotenv --output $(echo {{ file }} | sed 's/\.sops.yaml//g') --decrypt {{ file }}
+
+[group('GPG')]
+import-key fingerprint:
+	@curl -sSL https://keys.openpgp.org/vks/v1/by-fingerprint/{{ fingerprint }} | gpg --import

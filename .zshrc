@@ -35,7 +35,7 @@ compinit -d "$HOME/.zcompdump" -C
 # One assignment per logical group, all relative to $PATH (no duplication).
 # Order: Homebrew, system, language toolchains, project-local.
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
-export PATH="$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.lmstudio/bin:$HOME/dev/google-cloud-sdk/bin:$PATH"
+export PATH="$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.lmstudio/bin:$HOME/google-cloud-sdk/bin:$PATH"
 export PATH="/opt/homebrew/opt/libpq/bin:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/ruby/bin:$PATH"
 
 # Bun shell completion
@@ -43,8 +43,8 @@ export PATH="/opt/homebrew/opt/libpq/bin:/opt/homebrew/opt/mysql-client/bin:/opt
 
 # ---- gcloud -----------------------------------------------------------------
 
-[ -f "$HOME/dev/google-cloud-sdk/path.zsh.inc" ] && . "$HOME/dev/google-cloud-sdk/path.zsh.inc"
-[ -f "$HOME/dev/google-cloud-sdk/completion.zsh.inc" ] && . "$HOME/dev/google-cloud-sdk/completion.zsh.inc"
+[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ] && . "$HOME/google-cloud-sdk/path.zsh.inc"
+[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ] && . "$HOME/google-cloud-sdk/completion.zsh.inc"
 
 # ---- ESP32 / Rust -----------------------------------------------------------
 
@@ -125,4 +125,3 @@ source ~/.aliases
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/dan/.lmstudio/bin"
 # End of LM Studio CLI section
-

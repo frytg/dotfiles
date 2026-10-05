@@ -88,3 +88,4 @@ install-rust:
 [group('INSTALL')]
 install-gcloud:
 	CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true curl https://sdk.cloud.google.com | bash -s -- --disable-prompts
+	gcloud components install gke-gcloud-auth-plugin
