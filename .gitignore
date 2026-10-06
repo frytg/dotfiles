@@ -28,6 +28,7 @@ skills/personal/
 .pi/**/mcp-auth.json
 .pi/**/npm/
 .pi/**/sessions/
+.pi/**/auth.json
 .pi/**/mcp-cache.json
 .pi/**/mcp-onboarding.json
 .pi/**/trust.json
