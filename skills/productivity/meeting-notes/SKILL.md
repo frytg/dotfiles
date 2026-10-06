@@ -1,6 +1,6 @@
 ---
 name: meeting-notes
-description: Turn raw transcripts, scattered notes, or a voice memo into a decision log and task list — not a transcript. Use when the user pastes a meeting transcript, says "summarize this meeting", "meeting notes", "what were the action items", "write up from this call", "debrief", "recap", "what did we decide", or hands over notes from a standup, 1:1, client call, planning session, retrospective, or all-hands.
+description: Turn raw transcripts, scattered notes, or a voice memo into a decision log, a task list, and a status log — not a transcript. Use when the user pastes a meeting transcript, says "summarize this meeting", "meeting notes", "what were the action items", "write up from this call", "debrief", "recap", "what did we decide", or hands over notes from a standup, 1:1, client call, planning session, retrospective, or all-hands.
 license: MIT
 metadata:
   author: frytg
@@ -8,218 +8,196 @@ metadata:
   inspirations:
     - anthropics/skills (BLUF — headline discipline)
     - SkillMedev/skills (UNASSIGNED / TBD discipline, verb-first actions)
-    - mohitagw15856/pm-claude-skills (scoring rubric, reopen-when)
+    - mohitagw15856/pm-claude-skills (scoring rubric)
     - andreaswasita/copilot-cowork-dojo (owner verification against attendee list)
     - iankiku/forwward-teams ("every line earns its place" principle)
 ---
 
 # Meeting notes
 
-A meeting summary is not a transcript. It is a **decision log and a task list** — documentation for the future reader, not a record of who argued what in the room. Every line either records a decision, assigns work, or flags a risk. Nothing else earns a line.
+A meeting summary is not a transcript. It is a decision log, a task list, and a status log. A line records a decision, assigns work, flags a risk, or states an update that needed no decision. Cut dialogue and repeated facts. Do not cut a reported update because nobody has to act on it.
 
-The notes should answer four questions in order: **what is the call, who does what by when, what was decided, and what is still open.** If a section does not change what someone does next, cut it.
+The notes answer five questions, in order: what is the call, what was reported, who does what by when, what was decided, and what is still open.
 
-Default to **positions and outcomes over speakers**. Name people only when the name carries the work — an action item owner, an answerer of an open question, a decider whose authority matters. Never write "Sarah said X" when "X was decided" says the same thing.
+Name people when the name carries the work or the update. An owner, an answerer, a decider, the person who holds a result. Never write "Sam said X" when "X was reported" says the same thing.
 
 ## When to use
 
-- The user pastes a transcript, bullet notes, or a voice memo dump and wants structure.
-- After a meeting with decisions made or actions assigned — within 24 hours.
-- Any meeting type — standups, 1:1s, client calls, planning, retros, all-hands.
+- The user pastes a transcript, bullet notes, or a voice memo and wants structure.
+- After a meeting with decisions or assigned actions, within 24 hours.
+- Any meeting type: standup, 1:1, client call, planning, retro, all-hands, vendor workshop, kick-off.
 
 ## Not for
 
-- A long-form project retrospective with root cause analysis — use a postmortem skill.
-- A client-facing narrative with relationship context — those want prose, not a recap.
-- A board pack with financial detail — use a deck or memo skill.
+- A long-form project retrospective. Use a postmortem skill.
+- A client-facing narrative. Those want prose, not a recap.
+- A board pack with financial detail. Use a deck or memo skill.
 
-## Inputs
+## Where the notes go
 
-Ask for what is missing; do not block on it. Defaults in parentheses.
+Two shapes. Pick the one the destination already uses. Do not invent a third.
 
-- **Source**: transcript, bullet notes, or voice memo (`ask`).
-- **Meeting date** (`today` if unknown — note the assumption).
-- **Attendees** (`extract from source`; only mention the names that earn a line — deciders, owners, answerers).
-- **Meeting type** (`infer` from agenda, attendees, and language — see the type table below).
-- **Language**: **always reply in English**, unless the user specifically asks for another language. The transcription or input language does not change the output language — a German transcript still produces English notes.
+**Pattern A, default.** One master file per recurring project, named like `<Project> Meetings.md`. Each meeting is one `## YYYY-MM-DD <topic>` section. Newest first. Insert the new section above the previous dated heading. Do not restructure the file's preamble.
 
-If the source is too thin to extract from (no verbs, no names, no decisions), say so and return what is extractable rather than padding.
+**Pattern B.** One file per meeting, for events, conferences, and one-offs. File name `YYYY-MM-DD <topic>.md`. Follow the vault `AGENTS.md` for the folder. No H1; the filename is the title.
 
-## The three-pass extraction
+If a project master already exists, use it. If unsure, check the project folder, then the events folder. Never create a new master file without asking.
 
-Read the source three times, one lens per pass. A single pass reliably misses commitments buried inside discussion.
-
-1. **Decisions.** A choice between options that was settled. _“We’re going with quarterly billing.”_ A debate left open is not a decision — it lands in Open.
-2. **Commitments.** Any first-person or assigned promise — _“I’ll handle X,” “Priya will send Y,” “we should do Z by Friday.”_ Becomes an action item.
-3. **Unresolved threads.** Questions raised and dropped, disagreements without a settlement, _“let’s discuss offline,”_ deferred topics, parked items.
-
-Then collapse: duplicate mentions of the same commitment become one row, keeping the most specific phrasing and the latest stated date.
-
-## Meeting-type calibration
-
-The shape shifts by what mattered most. Infer from the source; do not ask unless ambiguous.
-
-- **Standup / sync** — lead with blockers and handoffs; compress status updates that did not surface a blocker.
-- **1:1** — lead with decisions, commitments, feedback; compress career topics unless either side raised them.
-- **Client call** — lead with what was promised and what was asked of us; compress relationship rapport.
-- **Planning / strategy** — lead with decisions (rationale + rejected options); compress long debate history.
-- **Retrospective** — lead with what to change and who owns the change; compress "what went well" unless load-bearing.
-- **All-hands / board** — lead with key messages, decisions, follow-ups; compress anything not announced.
-
-## Action item rules
-
-These rules make the sub-bullets trustworthy. One violation poisons the whole output.
-
-- **Owner**: exactly one name per action, preserved as written. If no owner was named, write **`UNASSIGNED`** in caps — the gap gets fixed in review rather than discovered at the deadline. Never assign the note-taker, the meeting organizer, or the most plausible person by inference.
-- **Action**: verb-first instruction (`Send the pricing draft to sales`), never a topic (`Pricing draft`). A topic cannot be done; a verb can.
-- **Due**: only when explicitly stated. Resolve relative dates (`by Friday`) to a calendar date **only** when the meeting date is known. Otherwise write **`TBD`**. Do not infer urgency into a date.
-- **Verify owners against the attendee list** before output. Hallucinated owners are the most common defect — cross-check every name.
-
-## Decision rules
-
-- One decision per sub-bullet, past tense, specific.
-- Include rationale if one was stated — a decision without _why_ is useless six months later when someone asks _why did we do that_.
-- Note dissent as a position, not a person: _"Rejected mobile-only checkout — desktop coverage gaps raised as the risk."_ Smoothing over disagreement erases the option to revisit. The dissenting argument enters the record; who raised it usually does not.
-- Add a `reopen-when` condition when the meeting implied one: _“Reopen when Q3 forecast lands.”_
-- If a topic was debated but not settled, it is **not** a decision — it goes to `open:` under the topic that owns it.
-
-## What stays in vs. out
-
-**In:**
-
-- Explicit decisions and the reasoning given.
-- Commitments extracted as action items with their owners.
-- Risks, blockers, escalations raised.
-- Explicitly unresolved questions.
-- Numbers, dates, and names that load-bear — preserve them exactly.
-
-**Out:**
-
-- Who said what (attribution, unless the speaker's identity carries the decision).
-- Tangents that did not produce a decision or task.
-- Pleasantries, filler, _“does that make sense?”_ moments.
-- Speculation that was not agreed on.
-- Editorialising, recommendations, or advice the room did not endorse.
-
-## Output format
-
-There is exactly one output format. The same source always renders into this structure.
-
-```markdown
-# YYYY-MM-DD <max five-word summary>
-
-<One BLUF sentence: staccato, carries the call.>
-
-- 🚀 **<topic>**: <1–3 sentences on what the room concluded about it>
-  - decision: <what was decided> — <rationale, if stated> — <counter-position, if any> — <reopen-when, if implied>
-  - action item for <owner>: <verb-first action> (due <date or TBD>)
-  - open: <question> — <answerer, by when>
-- ✨ **<topic>**: <next topic summary>
-  - action item for UNASSIGNED: <action> (due TBD)
-```
-
-**Title.** `# YYYY-MM-DD <max five-word summary>`. The summary is the meeting in five words, not the topic area.
-
-**BLUF.** One sentence, staccato, easy to understand — the call. Not a paragraph.
-
-**Topic bullets.** One bullet per topic that earned a line. Pick the emoji by content (🎯 decision, ⚠️ risk, 👤 ownership, 🚀 launch, ✨ opportunity, 🔄 status) — never decoration. Skip emoji in formal reports. If a topic didn't move a decision or surface a blocker, cut it.
-
-**Sub-bullets.** Decisions, actions, and open questions nest under the topic that owns them. Use natural-language labels: `decision:`, `action item for <owner>:`, `open:`. **A decision or action may appear under more than one topic if it fits** — duplication is fine, omission is not. A topic with only a summary and no sub-bullets is fine when the discussion was the load-bearing part.
-
-### Frontmatter (when the destination supports it)
+Frontmatter, only on a new file:
 
 ```yaml
 ---
-date: <YYYY-MM-DD>
-attendees: [<names>]
-source: <transcript | notes | voice memo>
-tags: [meeting, <project>, <team>]
+tags:
+  - <project>
+  - <team>
+docs:
+  - <url to the external master>
 ---
 ```
 
-For tone and phrasing that read like Dan, run the output through the **my-voice** skill — it can tighten the BLUF and bullet prose without breaking the structure above.
+Tags are a dash-list. Omit `docs:` when there is no external master. Do not invent `date:`, `attendees:`, or `source:`. Do not rename an existing `docs:` key after the host. Do not rewrite frontmatter on an existing master file.
 
----
+If the file already has a contacts block (`## Key-User`, `## Teilnehmer`, or `## Contacts`), add new named stakeholders there, one line per person, email inline when known. Do not add a contacts block to a file that does not have one. Do not repeat those names inside the meeting body.
+
+## Extract first
+
+Read the source three times, then write once.
+
+1. **Updates.** A status, result, or lead the room reported, including ones that need no decision and no action. A survey that is almost done. An inbox that was empty. A site that is not an official project. These earn a topic, or unlabeled sub-bullets under the topic they belong to.
+2. **Decisions.** A choice that was settled. A debate left open is not a decision.
+3. **Commitments.** A named promise. "I'll handle X." "Priya will send Y." Becomes an action.
+4. **Open threads.** Questions dropped, disagreements without a settlement, parked items.
+
+Collapse duplicates. Keep the most specific phrasing and the latest stated date. An update with no decision still stays. Do not force a `decision:` or an `action for` onto it.
+
+Lead with what that meeting type cares about. Standup: blockers and handoffs. 1:1: decisions and commitments. Client call: what was promised. Planning: the decision and the rejected option. Retro: what changes, and who owns it. Vendor workshop: what each side owes the other. Still include the reported updates. Leading with blockers does not mean dropping a status that needed no decision.
+
+If the source is too thin to extract from, say so. Return what is extractable. Do not pad.
+
+Date defaults to today when unknown. Note that assumption in chat, not as a second block in the file.
+
+## Output
+
+One English block. That block is the whole entry. Do not add a German restatement. Do not add a `### summary` under another list. Do not add a formal hand-out unless the user asks for one.
+
+```markdown
+## YYYY-MM-DD <topic>
+
+<Call, one short sentence per line.>
+<Second sentence, if it changes what someone does.>
+
+- 📅 **<topic>** — <few words, or omit the dash>
+	- <one update or fact; no label required>
+	- decision: <what was settled> — <why, if stated>
+	- action for <owner>: <verb-first action> (due <YYYY-MM-DD or TBD>)
+	- open: <question> — <answerer>, <by when or TBD>
+	- ⚠️ <risk, one line>
+```
+
+**Lines.** The call is 2–4 short sentences, one per line, no blank lines between them. A topic line is a label, not a paragraph. Each sub-bullet is one fact. Break a long thought into another sub-bullet instead of writing a sentence that wraps.
+
+**List spacing.** No blank lines between bullet lines. Not between topics, not between a topic and its sub-bullets. One blank line after the heading. One blank line between the call and the list. One blank line before the next heading. Nothing else.
+
+**Indent.** Sub-bullets use one tab. Do not use spaces. This wins over the markdown skill's blank-line and indent rules.
+
+**Labels.** `decision:`, `action for <owner>:`, `open:`. A risk line may start with ⚠️. An update has no label. A topic may be only updates. Do not use checkboxes or tables.
+
+**Emoji.** One per topic, on the topic line only, except ⚠️ on a risk sub-bullet. The set:
+
+- 🚀 launch or headline decision
+- 📍 place, hosting, where people will be
+- 👤 people, ownership, a named inbox or rota
+- 📅 date, deadline, a cancelled or moved meeting
+- 🤝 partnership or agreement
+- 🎯 scope, a slot that was secured, a target
+- 🔄 ongoing work, a retro, a migration
+- 🔧 technical status, a blocked deploy, infra
+- ✨ a reported update, result, or lead that needs no decision
+- ⚠️ do not repeat, watchlist, blocker
+
+A topic that fits two still gets one. Pick the most load-bearing.
+
+**Language.** The entry is English. Source quotes stay verbatim, in the original language, as a blockquote after the list. Do not translate them. Do not invent them.
+
+## Action, decision, open
+
+- **Owner.** Exactly one name, as written in the source. If nobody was named, write `UNASSIGNED`. Never assign the note-taker, the organizer, or the most plausible person by inference.
+- **Action.** Verb first. `Cancel the appointment`, not `Appointment`.
+- **Due.** Only when stated. Resolve `by Friday` or `next week` to a calendar date only when the meeting date is known. Otherwise `TBD`. Do not invent urgency.
+- **Decision.** One per sub-bullet. Include the why if one was stated. Record dissent as a position, not a person. A debate that did not settle is `open:`, not `decision:`.
+- **Open.** Question, answerer, by-when. `UNASSIGNED` and `TBD` when the room did not name them.
+- **Verify names** against people actually in the source before writing. A guessed owner is the usual defect.
 
 ## Anti-patterns
 
-- **Transcribing who said what in order** — extract decisions and tasks, ignore dialogue.
-- **Replaying the conversation in summary form** — summarize each topic in 1–3 sentences; do not turn every source sentence into an output bullet.
-- **Assigning actions to “the team” or “everyone”** — one named owner per row; `UNASSIGNED` if missing.
-- **Fabricating a deadline to look concrete** — `TBD` if not stated; never infer urgency into a date.
-- **Phrasing actions as topics** (`Pricing draft`) — verb-first (`Send the pricing draft to design`).
-- **Promoting debated-but-unsettled items to `decision:`** — they belong in `open:` under the same topic.
-- **Burying decisions in narrative prose** — decisions belong in their own sub-bullets, not folded into the topic sentence.
-- **Adding recommendations the room did not endorse** — neutral recorder, not participant.
-- **Skipping the rationale on a decision** — _why_ earns its line; future-you will need it.
-- **Sending the recap three days later** — within 24 hours, while owners can still act.
-- **Padding the recap to match the transcript length** — cut anything that does not change what someone does next.
-- **Dropping ownerless actions to tidy the list** — `UNASSIGNED` in caps is the feature, not a formatting failure.
+- A German list and an English summary of the same meeting. One block.
+- A `### summary` under notes that already say the same thing.
+- A topic line that is 1–3 sentences. The label is short. Facts go underneath.
+- Blank lines between bullet lines.
+- Who-said-what, in order. Extract the outcome.
+- Actions owned by "the team". One name, or `UNASSIGNED`.
+- A date that was not stated. `TBD`.
+- A debated item promoted to `decision:`.
+- A recommendation the room did not make.
+- A new master file, or a new contacts block, the file did not already have.
+- Dropping a reported update because it has no decision and no action.
+- Padding the recap with dialogue so it matches the transcript.
 
-## Quality gate (scoring rubric, 0–40)
+## Before sending
 
-Score before sending. 32+ is ship quality.
-
-- **Action accountability (0–10)**
-  - **0** — actions owned by “the team” or nobody, with no dates.
-  - **5** — named owners but vague deadlines (`next week`, `soon`) or co-owned blobs.
-  - **10** — every action has exactly one named owner and a concrete date; shared work split into separately-owned items.
-- **Decision traceability (0–10)**
-  - **0** — decisions buried in discussion or recorded without any why.
-  - **5** — decisions listed with owners but rationale thin; disagreement invisible.
-  - **10** — each decision carries context, owner, and deadline; dissent recorded inside the decision with a reopen condition.
-- **Synthesis over transcript (0–10)**
-  - **0** — verbatim capture of who said what, in order.
-  - **5** — trimmed transcript grouped by topic, still dialogue rather than distillation.
-  - **10** — discussion summarized per topic in 1–3 sentences each; quotes appear only where they carry decision weight.
-- **Loop closure (0–10)**
-  - **0** — open questions, deferred topics, escalations silently dropped.
-  - **5** — open items listed but ownerless or dateless; deferrals vanish from next steps.
-  - **10** — every open question has an owner and by-when; deferred items reappear in next steps with dates; notes sent within 24h.
-
-### Pre-send checklist
-
-- [ ] BLUF sentence carries the call, not the topic.
-- [ ] Every action item has exactly one named owner (or `UNASSIGNED`).
-- [ ] Every action item has a concrete date (or `TBD`).
-- [ ] Every decision carries context (why), and dissent if any.
-- [ ] Every open question has an answerer and a by-when.
-- [ ] Owners verified against the attendee list — no hallucinated names.
-- [ ] No verbatim transcript content — synthesis only.
+- [ ] One English block. No second summary. No German copy.
+- [ ] Call is short sentences, one per line, and it carries the call.
+- [ ] Topic lines are labels. Sub-bullets are one fact each.
+- [ ] No blank lines between bullet lines. Sub-bullets are tab-indented.
+- [ ] Reported updates are in the notes, even when nobody has to decide or act.
+- [ ] Every action has one owner, or `UNASSIGNED`, and a date, or `TBD`.
+- [ ] Every decision has a why, if one was stated.
+- [ ] Every open has an answerer and a by-when, or `UNASSIGNED` / `TBD`.
+- [ ] Names were in the source. No guessed owners.
+- [ ] Heading is `## YYYY-MM-DD <topic>`, in the existing master file, newest first.
 - [ ] Within 24 hours of the meeting.
-
----
 
 ## Example
 
-The italic notes between sections are the rule, not the output. Strip them when filling the template in.
+Synthetic. Do not copy real people, orgs, or paths into a note.
 
 ```markdown
-# YYYY-MM-DD <max five-word summary>
+## 2026-09-25 weekly
 
-<!-- Date + ≤5-word title. The summary is the meeting in five words, not the topic area. -->
+Next week's sync is off.
+The pilot stays blocked until the partner answers.
+The retro waits until the week of 10 Nov.
 
-<One BLUF sentence: staccato, carries the call.>
-
-<!-- One sentence, not a paragraph. The verdict. -->
-
-- 🚀 **<topic>**: <1–3 sentences on what the room concluded about it>
-  - decision: <what was decided> — <rationale, if stated> — <counter-position, if any> — <reopen-when, if implied>
-  - action item for <owner>: <verb-first action> (due <date or TBD>)
-  - open: <question> — <answerer, by when>
-
-<!-- One bullet per topic. Emoji marks content, not decoration. Cut topics that did not move a decision or surface a blocker. -->
-
-- ✨ **<topic>**: <next topic summary>
-  - action item for UNASSIGNED: <action> (due TBD)
-
-<!-- Sub-bullets nest under the topic that owns them. Same content may appear under multiple topics — duplication is fine, omission is not. UNASSIGNED in caps is the feature, not a formatting failure. -->
+- 📅 **Next sync** — cancelled
+	- venue clash
+	- moderation would have been Alex
+	- action for Sam: cancel the appointment (due 2026-09-26)
+- 🔧 **Pilot**
+	- mapping is in
+	- no release, so no deploy this week
+	- partner silent for ~10 days
+	- decision: let it run 2–3 weeks, then stop if still silent
+	- action for Alex: write the partner lead (due TBD)
+	- open: does the partner take the mapping — partner lead, week of 2026-10-06
+- 🔄 **Retro**
+	- needs 2–3 hours; this month does not fit
+	- earliest: week of 10 Nov
+	- decision: hold it that week
+	- action for Rio: ask an outside facilitator (due TBD)
+	- open: facilitator capacity — Rio, before the week of 2026-11-10
+- ⚠️ **Offsite**
+	- do not staff again
+	- morning slot empty; about 10 people
+	- decision: empty rooms were the event, not the talk
+- ✨ **Survey**
+	- results are nearly ready
+	- more user detail than other accounts so far
+	- the circle can join, or take the results
+	- open: presentation date — presenters, TBD
 ```
-
----
 
 ## Related skills
 
-- **bluf** — the headline-writing discipline this skill inherits. Read once if the BLUF in your recap reads like a topic.
-- **my-voice** — for tweaking the BLUF and bullet phrasing to match Dan's writing style. Run the output through my-voice if the prose doesn't read like him; the structure stays intact.
-- **obsidian** — when the destination is the user’s vault; this skill writes the content, obsidian writes the file.
+- **bluf** — if the call reads like a topic list, rewrite the opening sentences.
+- **obsidian** — when the destination is the vault. This skill writes the content. Obsidian writes the file.
+- **dots-save-article** — a long-form article, not a meeting recap. Do not use it here.
