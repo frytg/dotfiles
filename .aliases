@@ -9,10 +9,7 @@ alias ports="lsof -i -P | grep LISTEN"
 alias j="just"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
-# start pi with secrets injected via dotenvxZ
+# start pi with secrets injected via dotenvx
 pi() {
 	 dotenvx run -f ~/.dotfiles/.pi/.env.personal -- pi "$@"
-}
-piw() {
-	 dotenvx run -f ~/.dotfiles/.pi/.env.work -- pi "$@"
 }

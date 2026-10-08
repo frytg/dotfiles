@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.0.2",
+  "lastChangelogVersion": "1.1.0",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "xai",
@@ -74,6 +74,7 @@
     "feather/openrouter/~google/gemini-pro-latest",
     "feather/openrouter/~x-ai/grok-latest",
     "feather/openrouter/~z-ai/glm-flash-latest",
-    "feather/openrouter/~z-ai/glm-latest"
+    "feather/openrouter/~z-ai/glm-latest",
+    "mistral/mistral-large-4"
   ]
 }

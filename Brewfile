@@ -13,6 +13,7 @@ tap "emqx/mqttx", trusted: true
 tap "entireio/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "namespacelabs/namespace", trusted: true
+tap "nats-io/nats-tools", trusted: true
 tap "nubjs/tap", trusted: true
 tap "probe-rs/probe-rs", trusted: true
 tap "rjyo/moshi", trusted: true
@@ -41,6 +42,7 @@ brew "htop"
 brew "httpstat"
 brew "hugo"
 brew "huggingface-cli"
+brew "hunk" # https://hunk.dev
 brew "hurl"
 brew "hyperfine"
 brew "imagemagick" # magick
@@ -55,6 +57,7 @@ brew "minijinja-cli"
 brew "mise"
 brew "moshi-hook" # https://getmoshi.app/docs/hooks
 brew "mqttx-cli" # EMQX
+brew "nats-io/nats-tools/nats" # https://github.com/nats-io/natscli
 brew "opentofu"
 brew "ouch"
 brew "pkl"
