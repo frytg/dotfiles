@@ -1,5 +1,6 @@
 logs
 *.log
+.mise
 .DS_Store
 coverage/
 keys/*
