@@ -87,11 +87,11 @@ One English block. That block is the whole entry. Do not add a German restatemen
 <Second sentence, if it changes what someone does.>
 
 - 📅 **<topic>** — <few words, or omit the dash>
-	- <one update or fact; no label required>
-	- decision: <what was settled> — <why, if stated>
-	- action for <owner>: <verb-first action> (due <YYYY-MM-DD or TBD>)
-	- open: <question> — <answerer>, <by when or TBD>
-	- ⚠️ <risk, one line>
+  - <one update or fact; no label required>
+  - decision: <what was settled> — <why, if stated>
+  - action for <owner>: <verb-first action> (due <YYYY-MM-DD or TBD>)
+  - open: <question> — <answerer>, <by when or TBD>
+  - ⚠️ <risk, one line>
 ```
 
 **Lines.** The call is 2–4 short sentences, one per line, no blank lines between them. A topic line is a label, not a paragraph. Each sub-bullet is one fact. Break a long thought into another sub-bullet instead of writing a sentence that wraps.
@@ -169,31 +169,31 @@ The pilot stays blocked until the partner answers.
 The retro waits until the week of 10 Nov.
 
 - 📅 **Next sync** — cancelled
-	- venue clash
-	- moderation would have been Alex
-	- action for Sam: cancel the appointment (due 2026-09-26)
+  - venue clash
+  - moderation would have been Alex
+  - action for Sam: cancel the appointment (due 2026-09-26)
 - 🔧 **Pilot**
-	- mapping is in
-	- no release, so no deploy this week
-	- partner silent for ~10 days
-	- decision: let it run 2–3 weeks, then stop if still silent
-	- action for Alex: write the partner lead (due TBD)
-	- open: does the partner take the mapping — partner lead, week of 2026-10-06
+  - mapping is in
+  - no release, so no deploy this week
+  - partner silent for ~10 days
+  - decision: let it run 2–3 weeks, then stop if still silent
+  - action for Alex: write the partner lead (due TBD)
+  - open: does the partner take the mapping — partner lead, week of 2026-10-06
 - 🔄 **Retro**
-	- needs 2–3 hours; this month does not fit
-	- earliest: week of 10 Nov
-	- decision: hold it that week
-	- action for Rio: ask an outside facilitator (due TBD)
-	- open: facilitator capacity — Rio, before the week of 2026-11-10
+  - needs 2–3 hours; this month does not fit
+  - earliest: week of 10 Nov
+  - decision: hold it that week
+  - action for Rio: ask an outside facilitator (due TBD)
+  - open: facilitator capacity — Rio, before the week of 2026-11-10
 - ⚠️ **Offsite**
-	- do not staff again
-	- morning slot empty; about 10 people
-	- decision: empty rooms were the event, not the talk
+  - do not staff again
+  - morning slot empty; about 10 people
+  - decision: empty rooms were the event, not the talk
 - ✨ **Survey**
-	- results are nearly ready
-	- more user detail than other accounts so far
-	- the circle can join, or take the results
-	- open: presentation date — presenters, TBD
+  - results are nearly ready
+  - more user detail than other accounts so far
+  - the circle can join, or take the results
+  - open: presentation date — presenters, TBD
 ```
 
 ## Related skills

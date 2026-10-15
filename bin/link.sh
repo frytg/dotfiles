@@ -64,7 +64,8 @@ ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.fx/AGENTS.md
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents
 ln -sfh "$(PWD)/skills" ~/.agents/skills
-ln -sfh ~/Downloads/_DEV/frytg-note-vault/_skills ~/.pi/agent/skills
+mkdir -p ~/Downloads/_DEV/frytg-note-vault/.agents
+ln -sfh ~/Downloads/_DEV/frytg-note-vault/_skills ~/Downloads/_DEV/frytg-note-vault/.agents/skills
 
 # osaurus rejects skill symlinks and only discovers top-level skill dirs
 # (no nested category/ folders). flatten-copy each leaf skill into

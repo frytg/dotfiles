@@ -1,5 +1,5 @@
 {
-	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"$schema": "https://github.com/oxc-project/oxc/raw/refs/heads/main/npm/oxlint/configuration_schema.json",
 	"ignorePatterns": [
 		"**/static/**",
 		"**/store/**",

@@ -122,8 +122,8 @@ Reach for these first when applicable. The list is short on purpose.
 - [`@storagesdk/core`](https://storagesdk.dev) — unified object storage across S3, Google Cloud Storage, filesystem, and others. Switch providers by changing the import; the call site doesn't move. Snapshot and fork primitives are built-in — branch a bucket per run, mutate freely, merge or throw away the fork.
 
 ```ts
-import { Storage } from '@storagesdk/core'
 import { s3 } from '@storagesdk/adapters/s3'
+import { Storage } from '@storagesdk/core'
 
 // Scaleway Object Storage — or any S3-compatible backend; swap endpoint + creds
 const storage = new Storage({

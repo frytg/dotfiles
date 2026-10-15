@@ -25,7 +25,6 @@ run:
 	herdr server reload-config
 	brew services restart moshi-hook
 	just --yes decrypt-env .pi/.env.personal.sops.yaml
-	just --yes decrypt-env .pi/.env.work.sops.yaml
 	container system start
 	-just macos
 alias install := run
