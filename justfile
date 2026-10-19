@@ -1,5 +1,5 @@
 import 'just/bootstrap.just' # machine bootstrap recipes (link, run, up — symlinks + sync the dotfiles)
-import 'just/install.just' # one-shot installer recipes for cli tools (nix, pi, cursor, fx)
+import 'just/install.just' # one-shot installer recipes (nix, pi, cursor, fx, omlx)
 import 'just/mac.just' # macos-specific tweaks (defaults, reload, pmset)
 import 'just/ollama.just'
 import 'just/mise.just' # mise tooling

@@ -20,6 +20,7 @@ This repo uses [just](https://github.com/casey/just) as a task runner. Run `just
 - `just brew` — install Homebrew packages from `Brewfile`
 - `just node` — install/pin ambient Node via [mise](https://mise.jdx.dev/)
 - `just install` — brew, link, mise node, and upgrade toolchains
+- `just install-omlx` — install or upgrade the latest oMLX macOS app from GitHub releases, including beta
 - `just moshi-setup <token>` — pair and start moshi-hook (one-time)
 
 ## Mac Setup

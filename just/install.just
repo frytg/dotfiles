@@ -89,3 +89,10 @@ install-rust:
 install-gcloud:
 	CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true curl https://sdk.cloud.google.com | bash -s -- --disable-prompts
 	gcloud components install gke-gcloud-auth-plugin
+
+# install/upgrade the latest oMLX macOS app from GitHub releases, including beta
+# https://github.com/jundot/omlx/releases
+[group('INSTALL')]
+install-omlx:
+	#!/usr/bin/env zsh
+	exec bin/install-omlx.sh

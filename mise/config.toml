@@ -11,7 +11,7 @@ deno = "latest"
 # Major pin: mise installs the newest 26.x and auto-switches when cd'ing into
 # a project that ships .node-version / .nvmrc / package.json#devEngines.
 node = "26"
-python = "3.14"
+python = "3.15"
 
 [settings]
 lockfile = true
