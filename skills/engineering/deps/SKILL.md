@@ -1,6 +1,6 @@
 ---
 name: deps
-description: Checks for outdated dependencies in a project using its configured package manager (bun, npm, nub, cargo, go, pip, bundler), and fetches upstream release notes for GitHub Actions and other dependencies to flag breaking changes. Use when the user asks to check for updates, look for outdated packages, audit dependencies, or review upgrade impact.
+description: Checks for outdated dependencies in a project using its configured package manager (bun, npm, nub, cargo, go, pip, bundler), plus GitHub Actions refs, Terraform provider pins, and container images in Kubernetes manifests; fetches upstream release notes to flag breaking changes. Use when the user asks to check for updates, look for outdated packages, audit dependencies, or review upgrade impact.
 license: MIT
 metadata:
   author: frytg
@@ -9,7 +9,7 @@ metadata:
 
 # Check Dependencies
 
-Detect the project's package manager, list outdated dependencies, and surface breaking changes from upstream release notes.
+Detect the project's package manager, list outdated dependencies, and surface breaking changes from upstream release notes. Infra-style repos with no lockfile still have dependencies: GitHub Actions refs, Terraform provider pins, and container images pinned in Kubernetes manifests — all covered below.
 
 ## 1. Detect the package manager
 
@@ -80,6 +80,17 @@ pip list --outdated
 bundle outdated
 ```
 
+### Terraform providers (no lockfile manager — pin comparison)
+
+If the repo has `*.tf` files with `required_providers` version pins (common in infra/homelab repos with no package manager at all), compare each pin against the registry:
+
+```bash
+curl -s "https://registry.terraform.io/v1/providers/{namespace}/{name}/versions" \
+  | tr '{' '\n' | grep -oE '"version":"[0-9]+\.[0-9]+\.[0-9]+"' | cut -d'"' -f4 | sort -V | tail -1
+```
+
+Pins are usually exact (`version = "2.81.0"`), so any newer release is an update. Same-major newer → patch/minor bucket; different major (or a 0.x provider minor flagged as breaking in its changelog — 0.x providers don't guarantee semver) → major bucket with a changelog link. The `.terraform.lock.hcl` mirrors the pins; report against the pin, not the lockfile.
+
 ## 3. Find breaking changes
 
 Group outdated packages into two buckets: **patch/minor** and **major**. Only majors need release-note research.
@@ -130,7 +141,30 @@ curl -sL https://raw.githubusercontent.com/{owner}/{repo}/main/CHANGELOG.md
 
 Scan for `BREAKING`, `Breaking`, `⚠️`, `Migration`, `Removed`, renamed exports, default flips, and minimum runtime/peer bumps. Skip the raw changelog if it's mostly patch entries — only the majors are interesting.
 
-## 4. Check tool config drift (biome)
+## 4. Check container images (Kubernetes manifests)
+
+If the repo contains Kubernetes workload manifests (files with `kind: Deployment`, `StatefulSet`, `DaemonSet`, `Job`, `CronJob`, or `Pod`), every pinned `image:` tag is a dependency. Find them:
+
+```bash
+rg -l --type yaml -e '^kind: (Deployment|StatefulSet|DaemonSet|Job|CronJob|Pod)\b' .
+```
+
+**If the `k8s-images` skill is available, delegate to it** — it owns the full flow: extracting images (multi-doc safe, `yq`), classifying floating/templated/digest-pinned tags, `crane ls` lookups bounded by the pinned major, the one-at-a-time confirmation, and the YAML edits. Never duplicate that logic inline.
+
+Without the skill, do the read-only minimum yourself:
+
+1. Extract images per manifest (containers + initContainers, CronJob via `.spec.jobTemplate...`), dedupe.
+2. Skip templated (`{{`, `${`), digest-pinned (`@sha256:`), and floating tags (`latest`, `main`, `stable`, dated).
+3. `crane ls <repo>` per image, pick the highest tag matching the pinned shape within the same major; different-major latest goes in the **major** bucket with a release-notes link.
+4. Report — don't edit. Same rule as lockfiles: the user approves every bump.
+
+Registry notes:
+
+- Bare names default to Docker Hub (`nginx` → `docker.io/library/nginx`).
+- Private registries need ambient credentials; a failed lookup is a registry error in the report, not a bug.
+- `crane ls` is slow; call it once per repo, not per file. Don't wrap it in `timeout` on macOS — the binary doesn't exist there and every call silently fails.
+
+## 5. Check tool config drift (biome)
 
 If the project uses biome, the version pinned in `biome.json#.$schema` can lag behind the installed `biome` binary. Drift means new rules/options aren't available and deprecated keys may be ignored or warned. Biome ships a built-in `migrate` command for exactly this:
 
@@ -160,13 +194,14 @@ biome check .
 
 Skip this step if the project has no `biome.json` / `biome.jsonc`. For other tooling config (`.eslintrc`, `prettier.config.*`, etc.) there's no equivalent `migrate` command — compare the pinned version against the installed binary and consult the tool's changelog manually.
 
-## 5. Report
+## 6. Report
 
 Produce a tight summary, not a raw dump:
 
 - **Patch & minor** — one bullet per package, no commentary.
-- **Major & breaking** — one bullet per package with: current → next, a one-line breaking-change summary, and a link to the release notes.
-- **Action items** — anything needing user decision: Node/runtime bump, peer-dep conflict, deprecated transitive, security advisory.
+- **Major & breaking** — one bullet per package with: current → next, a one-line breaking-change summary, and a link to the release notes. Includes container images whose upstream major differs from the pinned one.
+- **Container images** — out-of-date pinned tags (file, container name, current → latest), plus separate buckets for floating tags that should be pinned and registry errors. Already-latest images get one line, not a list.
+- **Action items** — anything needing user decision: Node/runtime bump, peer-dep conflict, deprecated transitive, security advisory, rolling tags to pin.
 
 Keep the report scannable. Don't paste the full `outdated` output.
 
@@ -174,4 +209,5 @@ Keep the report scannable. Don't paste the full `outdated` output.
 
 - Never run `update` / `upgrade` / `install` as part of this skill. The user decides what to bump.
 - Never edit lockfiles or `package.json` versions. Reporting is the only job.
+- Never deploy or mutate live state: no `terraform apply`/`init -upgrade`, no `kubectl apply`, no cluster or host changes. Infra deps (providers, images) are reported like any other dependency.
 - For private registries, `npm outdated` may still work, but `gh` release lookups need an authenticated user.
