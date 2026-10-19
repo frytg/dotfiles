@@ -14,6 +14,7 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 - New skills live in `skills/<category>/<name>/SKILL.md` in this repo, where `<category>` is one of the existing top-level folders (`engineering`, `productivity`, `writing`, `media`, `social`, `ard`, `osaurus-browser`); create a new category only when none fits.
 - Each skill is a single `SKILL.md` with YAML frontmatter (`name`, `description`) and a Markdown body, per the [Agent Skills spec](https://agentskills.io/specification.md). Portability rules and the synthetic-example rule (no real names, IDs, internal hosts) live in [`.agents/AGENTS.md`](./.agents/AGENTS.md) and override anything below.
 - `bin/link.sh` wires `skills/` into pi, cursor, fx, and osaurus. Run `just link` after adding or moving a skill so the harness picks it up. See [`skills/README.md`](./skills/README.md) for the harness discovery paths.
+- The whole skills tree ships as one Cursor Plugin (`frytg-dotfiles`): [`.cursor-plugin/plugin.json`](./.cursor-plugin/plugin.json) lists every category dir in its `skills` array, registered in [`.cursor-plugin/marketplace.json`](./.cursor-plugin/marketplace.json) so the repo installs as a Cursor marketplace from its GitHub mirror. When creating a category, add its path to the `skills` array; see [`skills/README.md`](./skills/README.md) → Install as Cursor plugins.
 - The legacy path `~/.pi/agent/skills/` symlinks to a separate vault — don't add new skills there.
 
 ## Editing conventions

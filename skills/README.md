@@ -43,6 +43,17 @@ The list above only shows what `bin/link.sh` wires on this host. Each harness al
 
 For more information on how these skills are managed and linked across the environment, please see [`link.sh`](../bin/link.sh).
 
+## Install as a Cursor plugin
+
+All skills ship as one Cursor Plugin, `frytg-dotfiles`. The root manifest [`.cursor-plugin/plugin.json`](../.cursor-plugin/plugin.json) lists every category dir in its `skills` array, so skills load straight from `skills/<category>/<name>/SKILL.md` — nothing is duplicated or restructured for the plugin. [`.cursor-plugin/marketplace.json`](../.cursor-plugin/marketplace.json) registers the plugin so the repository imports as a Cursor marketplace.
+
+- Install: open **Customize** in Cursor, choose **From GitHub Repository**, and paste `https://github.com/frytg/dotfiles` (the [Tangled → GitHub mirror](../.tangled/workflows/github-mirror.yml); Cursor's repo import officially supports GitHub, GitLab, Bitbucket, and Azure DevOps, not tangled.org). Then install **frytg-dotfiles**.
+- Teams/Enterprise: import the same URL as a team marketplace under Dashboard → Plugins & MCPs → Add Marketplace.
+- Local test: `mkdir -p ~/.cursor/plugins/local/frytg-dotfiles` and copy `.cursor-plugin/` plus `skills/` into it (copies, not symlinks — Cursor skips symlinks pointing outside that folder), reload the window (Developer: Reload Window), and check Customize. Delete the copy afterwards; it goes stale as skills change.
+- New category: append its path to the `skills` array in `.cursor-plugin/plugin.json`. Validate with the [Cursor plugin template](https://github.com/cursor/plugin-template)'s `scripts/validate-template.mjs` run from the repo root.
+
+On hosts wired by `link.sh` this is optional — Cursor already reads the same skills through `~/.cursor/skills/` (symlinked to this folder). The plugin route matters for other machines and teammates installing straight from the repo URL.
+
 ## Syncing to an Open WebUI instance
 
 [`bin/sync-skills.ts`](../bin/sync-skills.ts) pushes the local `skills/<category>/<id>/SKILL.md` set to an [Open WebUI](https://docs.openwebui.com/) instance over its REST API (`/api/v1/skills/...`). Each skill's `name` and `description` come from the YAML frontmatter; the markdown body becomes `content`; the category folder becomes a `meta` tag. Existing skills are updated in place, new ones are created; pass `--prune` to delete remote skills missing locally, `--dry-run` to print the plan without making changes.

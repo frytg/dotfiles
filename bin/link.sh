@@ -64,6 +64,8 @@ ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.fx/AGENTS.md
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents
 ln -sfh "$(PWD)/skills" ~/.agents/skills
+mkdir -p ~/.cursor
+ln -sfh "$(PWD)/skills" ~/.cursor/skills
 mkdir -p ~/Downloads/_DEV/frytg-note-vault/.agents
 ln -sfh ~/Downloads/_DEV/frytg-note-vault/_skills ~/Downloads/_DEV/frytg-note-vault/.agents/skills
 
