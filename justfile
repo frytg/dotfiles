@@ -8,6 +8,7 @@ import 'just/sandbox.just' # ephemeral sandbox management (daytona + namespace/n
 import 'just/age.just' # age key recipes (create, derive pubkey, push to 1password)
 import 'just/encryption.just' # pgp + sops helpers (decrypt, rotate, edit secret files)
 import 'just/nostr.just' # nostr key recipes (nsec/npub generation, push to 1password)
+import 'just/ssh.just' # load the agent ssh key from 1Password (service account)
 
 default:
 	just --list

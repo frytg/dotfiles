@@ -19,6 +19,13 @@ export DO_NOT_TRACK=1
 export HOMEBREW_NO_ANALYTICS=1
 export GPG_TTY=$(tty)
 export XDG_CONFIG_HOME="$HOME/.config"
+export OP_SERVICE_ACCOUNT_TOKEN="$(cat ~/.config/1Password/herdr.token)"
+unset OP_CONNECT_HOST OP_CONNECT_TOKEN
+# herdr and launchd already export a live agent. `just ssh-add-key` loads
+# the vault key into it. this fallback is only for shells with no agent.
+if [[ -z "${SSH_AUTH_SOCK:-}" || ! -S "$SSH_AUTH_SOCK" ]]; then
+  export SSH_AUTH_SOCK="$HOME/.ssh/agent-herdr.sock"
+fi
 
 # ---- completion system ------------------------------------------------------
 
@@ -93,16 +100,6 @@ conda() {
   fi
   unset __conda_setup
   conda "$@"
-}
-
-# ---- scw (lazy autocomplete) -------------------------------------------------
-
-# Only the completion script is expensive (~50ms); the `scw` binary itself
-# stays a child process. Load the completion on first use.
-scw() {
-  unfunction scw
-  eval "$(command scw autocomplete script shell=zsh)"
-  scw "$@"
 }
 
 # ---- mise (node + other tools) ---------------------------------------------

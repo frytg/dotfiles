@@ -13,12 +13,19 @@ Host tangled.org
   User git
   AddressFamily inet
   PreferredAuthentications publickey
-  IdentityFile ~/.dotfiles/.ssh/id_ed25519.pub
+  # IdentityFile ~/.dotfiles/.ssh/id_ed25519.pub
 
 Host *
-  IdentityAgent ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+  # No IdentityAgent: ssh uses SSH_AUTH_SOCK. `just ssh-add-key` loads
+  # Agentic / "Agent SSH Key" into that agent via the service account token.
   PreferredAuthentications publickey
   SetEnv TERM=xterm-256color
 
 Host s0003524
+  User root
+
+Host leno0
+  User root
+
+Host locally0
   User root

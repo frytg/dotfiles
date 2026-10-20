@@ -7,7 +7,7 @@
 [user]
 	name = Daniel Freytag
 	email = daniel@frytg.com
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOcshbKSauqPwZ4+Ofm7ncDWJQOCvw0ntsL9F9YEDUnR
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFAuD9llFHf2nw8l9ozFguQ9mdFUsc2kGsW4hnCsaWHq
 
 [commit]
 	gpgsign = true
@@ -16,7 +16,7 @@
 	format = ssh
 
 [gpg "ssh"]
-	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+	program = ssh-keygen
 [advice]
 	detachedHead = false
 [credential "https://origin.cursor.com/git"]

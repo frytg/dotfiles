@@ -49,6 +49,10 @@ ln -sfn "$(PWD)/.zed/themes" ~/.config/zed/themes
 mkdir -p ~/.config/herdr
 ln -sf "$(PWD)/herdr/config.toml" ~/.config/herdr/config.toml
 
+# 1password ssh agent: which vaults the desktop agent offers
+mkdir -p ~/.config/1Password/ssh
+ln -sf "$(PWD)/1password/ssh/agent.toml" ~/.config/1Password/ssh/agent.toml
+
 # setup ssh config
 mkdir -p ~/.ssh
 chmod 700 ~/.ssh
