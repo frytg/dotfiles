@@ -35,7 +35,6 @@ printf 'moshi-theme:%s' "$(base64 -i moshi/moshi-theme-dark-greeny.json | tr -d 
 
 ## Docs and links
 
-- [Moshi setup / hooks docs](https://getmoshi.app/docs/hooks) — pairing `moshi-hook` (repo shortcut: `just moshi-setup <token>`).
 - [Moshi personalization docs](https://getmoshi.app/docs/personalization) — theme format (v1), import flow, fonts.
 - [Moshi theme gallery](https://getmoshi.app/themes) — 570+ palettes; raw JSON at `getmoshi.app/themes/<slug>.json`.
 - [iTerm2-Color-Schemes](https://iterm2colorschemes.com) — upstream source of the gallery palettes.

@@ -21,7 +21,6 @@ This repo uses [just](https://github.com/casey/just) as a task runner. Run `just
 - `just node` — install/pin ambient Node via [mise](https://mise.jdx.dev/)
 - `just install` — brew, link, mise node, and upgrade toolchains
 - `just install-omlx` — install or upgrade the latest oMLX macOS app from GitHub releases, including beta
-- `just moshi-setup <token>` — pair and start moshi-hook (one-time)
 
 ## Mac Setup
 
@@ -60,15 +59,7 @@ Project pins also come from `.node-version`, `.nvmrc`, or `package.json#devEngin
 
 ### Moshi
 
-[moshi-hook](https://getmoshi.app/docs/hooks) bridges local coding agents to the Moshi iOS app (inbox events, approvals, Live Activity). It's installed via the `Brewfile`; finish the one-time setup per machine with:
-
-```bash
-just moshi-setup <pairing-token> # token from Moshi app → Settings → Hooks
-```
-
-No tmux here — sessions run in [herdr](https://herdr.dev), which moshi-hook detects automatically via `$HERDR_ENV`. (Don't call `moshi <dir>`; that alias launches a tmux session.)
-
-The [moshi/](./moshi) directory holds the Dark Greeny custom app theme and its import docs.
+The [moshi/](./moshi) directory holds the Dark Greeny theme for the Moshi iOS app, plus the import steps. Sessions run in [herdr](https://herdr.dev).
 
 ### Crane
 

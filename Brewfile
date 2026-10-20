@@ -16,7 +16,6 @@ tap "namespacelabs/namespace", trusted: true
 tap "nats-io/nats-tools", trusted: true
 tap "nubjs/tap", trusted: true
 tap "probe-rs/probe-rs", trusted: true
-tap "rjyo/moshi", trusted: true
 tap "tinygo-org/tools", trusted: true
 tap "skyhook-io/tap", trusted: true
 tap "hashicorp/tap", trusted: true
@@ -55,7 +54,6 @@ brew "llama.cpp"
 brew "mactop"
 brew "minijinja-cli"
 brew "mise"
-brew "moshi-hook" # https://getmoshi.app/docs/hooks
 brew "mqttx-cli" # EMQX
 brew "nats-io/nats-tools/nats" # https://github.com/nats-io/natscli
 brew "opentofu"

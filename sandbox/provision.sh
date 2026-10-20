@@ -74,9 +74,6 @@ fi
 # --- everything below runs through just recipes from the dotfiles repo ---
 cd "$DOTFILES_DIR"
 
-# remove pi moshi hook (unavailable in sandboxes)
-rm .pi/agent/extensions/moshi-hooks.ts
-
 # trust the cloned repo's mise.toml — otherwise every mise invocation from
 # inside the repo errors with "config file not trusted".
 echo '==> trusting dotfiles mise.toml'

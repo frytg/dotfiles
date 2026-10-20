@@ -10,9 +10,6 @@ run:
 	brew update
 	brew upgrade --yes
 	just link
-	@if command -v moshi-hook >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^moshi-hook .*started'; then brew services restart moshi-hook; fi
-	sleep 6
-	moshi-hook install
 	just node
 	@if ! command -v pi >/dev/null 2>&1; then just install-pi; fi
 	just update-pi
@@ -23,7 +20,6 @@ run:
 	-deno upgrade
 	-gcloud components update --quiet
 	herdr server reload-config
-	brew services restart moshi-hook
 	just --yes decrypt-env .pi/.env.personal.sops.yaml
 	container system start
 	-just macos

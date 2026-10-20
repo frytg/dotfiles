@@ -1,6 +1,6 @@
 {
 	"name": "frytg-dotfiles",
-	"displayName": "frytg dotfiles",
+	"displayName": "FRYTG dotfiles",
 	"version": "0.1.0",
 	"description": "Personal agent skills from the frytg dotfiles: ARD Eventhub ingest, engineering and DevOps helpers, media summarization, productivity workflows, social platform tooling, and writing skills.",
 	"author": {
