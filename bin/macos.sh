@@ -121,6 +121,21 @@ defaults write com.apple.screensaver askForPasswordDelay -int 0
 sudo systemsetup -setremotelogin on || echo "warning: could not enable Remote Login (grant Full Disk Access or toggle it in System Settings -> General -> Sharing)"
 
 # ----------------------------------------------------------------------------
+# Power — never system-sleep, but lockable
+# ----------------------------------------------------------------------------
+
+# only on the mac mini (always-on machine); laptops keep battery-safe defaults.
+# same settings as the manual `just mac-nosleep` recipe.
+if [[ "$(scutil --get LocalHostName)" == 'dan-mac-mini-m5-pro' ]]; then
+	echo "setting no sleep options"
+	sudo pmset -a sleep 0          # never system-sleep
+	sudo pmset -a displaysleep 10  # display off after 10 min (ssh unaffected)
+	sudo pmset -a tcpkeepalive 1   # keep network connections alive
+	sudo pmset -a ttyskeepawake 1  # active ssh sessions prevent idle sleep
+	sudo pmset -a womp 1           # wake on network access
+fi
+
+# ----------------------------------------------------------------------------
 # Apply changes
 # ----------------------------------------------------------------------------
 
