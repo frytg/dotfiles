@@ -4,7 +4,7 @@
 #
 # path order (left = highest priority):
 #   ~/.local/bin           — mise binary, fx binary (default install dir)
-#   ~/.local/share/mise/shims — mise-managed tool shims (just, bun, deno)
+#   ~/.local/share/mise/shims — mise-managed tool shims (just, bun)
 #   ~/.bun/bin             — bun CLI itself (when installed standalone)
 #   ~/.bun/install/global/node_modules/.bin — bun-installed global packages (pi)
 

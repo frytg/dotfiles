@@ -17,7 +17,6 @@ run:
 	mise install
 	just mise-update
 	-bun upgrade
-	-deno upgrade
 	-gcloud components update --quiet
 	herdr server reload-config
 	just --yes decrypt-env .pi/.env.personal.sops.yaml

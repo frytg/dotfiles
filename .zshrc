@@ -42,7 +42,7 @@ compinit -d "$HOME/.zcompdump" -C
 # One assignment per logical group, all relative to $PATH (no duplication).
 # Order: Homebrew, system, language toolchains, project-local.
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
-export PATH="$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.lmstudio/bin:$HOME/google-cloud-sdk/bin:$PATH"
+export PATH="$HOME/.bun/bin:$HOME/.cargo/bin:$HOME/.local/bin:$HOME/.lmstudio/bin:$HOME/google-cloud-sdk/bin:$PATH"
 export PATH="/opt/homebrew/opt/libpq/bin:/opt/homebrew/opt/mysql-client/bin:/opt/homebrew/opt/ruby/bin:$PATH"
 
 # Bun shell completion

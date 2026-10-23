@@ -10,12 +10,10 @@
 [settings]
 # monorepo_root = true
 minimum_release_age = "3d" # override the default 24h delay
-lockfile = true
 
 [tools]
 # Node for root aube/oxc (just lint / just format / just install).
-node = "26.11.1"
+node = "26.12.0"
 # Package manager — https://aube.jdx.dev
-aube = { version = "2.7.0", workflow = ["release-plz.yml@refs/heads/main", "release.yml@refs/heads/main"] }
 "npm:oxlint" = { version = "latest" }
 "npm:oxfmt" = { version = "latest" }

@@ -1,7 +1,7 @@
 # sandbox-specific zsh config. applied by sandbox/provision.sh (symlinked to ~/.zshrc).
 # designed for ephemeral sandboxes — minimal, opinionated, points at dotfiles-managed tools.
 
-# path order: ~/.local/bin (mise, fx) → mise shims (just, bun, deno) → bun → bun pkgs (pi)
+# path order: ~/.local/bin (mise, fx) → mise shims (just, bun) → bun → bun pkgs (pi)
 export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.bun/bin:$HOME/.bun/install/global/node_modules/.bin:$PATH"
 
 # mise per-shell activation (idempotent — sets up env shims for the current shell)

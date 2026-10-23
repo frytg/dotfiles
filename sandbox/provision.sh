@@ -81,7 +81,7 @@ mise trust "$DOTFILES_DIR/mise.toml" 2>/dev/null || true
 
 # install every tool pinned in the active configs (global + repo-local).
 # this catches node (pinned in both mise/config.toml and mise.toml) which the
-# per-tool `just install-bun` / `install-deno` recipes don't install explicitly.
+# per-tool `just install-bun` recipe doesn't install explicitly.
 echo '==> installing all pinned tools (catches node from mise.toml)'
 mise install
 
@@ -90,11 +90,10 @@ mise install
 echo '==> linking server configs'
 just link-server
 
-# install runtime toolchains via mise (bun, deno) — each pins a version into
+# install runtime toolchains via mise (bun) — each pins a version into
 # ~/.config/mise/config.toml (symlinked to mise/config.toml in this repo).
-echo '==> installing bun, deno via just'
+echo '==> installing bun via just'
 just install-bun
-just install-deno
 mise reshim
 
 # install the pi agent (needs bun) and the fx CLI (curl pipe)

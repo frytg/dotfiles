@@ -4,7 +4,7 @@ ephemeral sandbox setup. provisioned into fresh sandboxes via `just nsc-start NA
 
 ## files
 
-- `provision.sh` — idempotent bootstrap. installs system packages + mise + just + bun + deno + pi + fx, clones the dotfiles, runs `link-server.sh`, applies the rc files below. entry point for both Daytona and Namespace.
+- `provision.sh` — idempotent bootstrap. installs system packages + mise + just + bun + pi + fx, clones the dotfiles, runs `link-server.sh`, applies the rc files below. entry point for both Daytona and Namespace.
 - `profile` — POSIX login config. written to `/etc/profile.d/zz-dotfiles.sh` so every login shell (interactive or not) inherits mise shims + bun bin on PATH.
 - `zshrc` — sandbox-tuned zsh config. symlinked to `~/.zshrc` on the sandbox.
 - `bashrc` — sandbox-tuned bash config. symlinked to `~/.bashrc` on the sandbox.
