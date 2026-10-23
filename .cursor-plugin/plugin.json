@@ -10,12 +10,5 @@
 	"license": "MIT",
 	"keywords": ["agent-skills", "dotfiles"],
 	"repository": "https://github.com/frytg/dotfiles",
-	"skills": [
-		"skills/ard",
-		"skills/engineering",
-		"skills/media",
-		"skills/productivity",
-		"skills/social",
-		"skills/writing"
-	]
+	"skills": ["skills"]
 }

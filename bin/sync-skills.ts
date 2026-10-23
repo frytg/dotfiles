@@ -11,10 +11,11 @@
  *   OPEN_WEBUI_API_KEY bearer token with admin role or workspace.skills perm
  *
  * skill discovery:
- *   walks <repo>/skills for files matching <category>/<id>/SKILL.md. the
- *   folder name is the skill id; the category becomes a meta tag alongside
- *   any frontmatter metadata.tags. yaml frontmatter provides `name` and
- *   `description`; the markdown body becomes the skill content.
+ *   walks <repo>/skills for files matching <id>/SKILL.md (or <category>/<id>/SKILL.md).
+ *   the folder name is the skill id; `metadata.category` (falling back to the parent
+ *   category folder) becomes a meta tag alongside any frontmatter `metadata.tags`.
+ *   yaml frontmatter provides `name` and `description`; the markdown body becomes
+ *   the skill content.
  */
 
 import { readdir, readFile, stat } from 'node:fs/promises'
@@ -118,29 +119,41 @@ function splitSkill(raw: string): ParsedSkill {
 	return { frontmatter: fm.join('\n'), body: body.join('\n') }
 }
 
-type Frontmatter = { name: string; description: string; tags: string[] }
+type Frontmatter = { name: string; description: string; category: string; tags: string[] }
 
 /**
  * Minimal yaml parser for the frontmatter subset used by these skills: top-level
- * string keys plus an optional `metadata.tags` array. Avoids pulling in a yaml
- * dependency for a tiny surface area.
+ * string keys plus an optional `metadata.category` string and `metadata.tags` array.
+ * Avoids pulling in a yaml dependency for a tiny surface area.
  * @param raw - the frontmatter block (without the surrounding `---` fences)
- * @returns extracted name, description, and tags
+ * @returns extracted name, description, category, and tags
  */
 function parseFrontmatter(raw: string): Frontmatter {
-	const result: Frontmatter = { name: '', description: '', tags: [] }
+	const result: Frontmatter = { name: '', description: '', category: '', tags: [] }
 	let inMetadata = false
+	let inMetadataTags = false
 	for (const rawLine of raw.split('\n')) {
 		const line = rawLine.replace(/\r$/, '')
 		if (!line.trim()) continue
 		if (line.startsWith(' ') || line.startsWith('-')) {
 			if (inMetadata) {
-				const m = line.match(/^\s+-\s+(.+)$/)
-				if (m) result.tags.push(m[1].trim().replace(/^["']|["']$/g, ''))
+				const kv = line.match(/^\s{2}([a-zA-Z_][a-zA-Z0-9_-]*):\s*(.*)$/)
+				if (kv) {
+					const [, k, val] = kv
+					const v = val.trim().replace(/^["']|["']$/g, '')
+					inMetadataTags = k === 'tags'
+					if (k === 'category') result.category = v
+					continue
+				}
+				if (inMetadataTags) {
+					const m = line.match(/^\s+-\s+(.+)$/)
+					if (m) result.tags.push(m[1].trim().replace(/^["']|["']$/g, ''))
+				}
 			}
 			continue
 		}
 		inMetadata = false
+		inMetadataTags = false
 		const m = line.match(/^([a-zA-Z_][a-zA-Z0-9_-]*):\s*(.*)$/)
 		if (!m) continue
 		const [, key, value] = m
@@ -220,12 +233,11 @@ async function main(): Promise<void> {
 		const skillDir = dirname(rel)
 		const id = basename(skillDir)
 		const categoryRaw = dirname(skillDir)
-		const category = categoryRaw === '.' ? 'uncategorized' : categoryRaw
-
 		const raw = await readFile(file, 'utf8')
 		const { frontmatter, body } = splitSkill(raw)
 		const fm = parseFrontmatter(frontmatter)
 		const name = fm.name || humanize(id)
+		const category = fm.category || (categoryRaw === '.' ? 'uncategorized' : categoryRaw)
 		const tags = [category, ...fm.tags]
 
 		const payload: SkillPayload = {

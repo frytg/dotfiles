@@ -71,13 +71,13 @@ ln -sfh "$(PWD)/skills" ~/.agents/skills
 mkdir -p ~/Downloads/_DEV/frytg-note-vault/.agents
 ln -sfh ~/Downloads/_DEV/frytg-note-vault/_skills ~/Downloads/_DEV/frytg-note-vault/.agents/skills
 
-# osaurus rejects skill symlinks and only discovers top-level skill dirs
-# (no nested category/ folders). flatten-copy each leaf skill into
-# ~/.osaurus/skills/<name>/ so edits land after re-running link.sh.
+# osaurus rejects skill symlinks and only discovers top-level skill dirs.
+# copy each leaf skill into ~/.fx/skills/<name>/ and ~/.osaurus/skills/<name>/
+# so edits land after re-running link.sh.
 # osaurus-native skills already in that folder are left alone.
 mkdir -p ~/.fx/skills
 mkdir -p ~/.osaurus/skills
-for skill_dir in "$(PWD)"/skills/*/*(/N); do
+for skill_dir in "$(PWD)"/skills/*(/N); do
 	[[ -f "$skill_dir/SKILL.md" ]] || continue
 	
 	name="${skill_dir:t}"

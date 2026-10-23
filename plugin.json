@@ -1,0 +1,13 @@
+{
+	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+	"name": "frytg-dotfiles",
+	"version": "0.1.0",
+	"description": "Personal agent skills from the frytg dotfiles: engineering and DevOps helpers, media summarization, productivity workflows, social platform tooling, and writing skills.",
+	"author": {
+		"name": "Daniel Freytag",
+		"email": "daniel@frytg.com"
+	},
+	"license": "MIT",
+	"keywords": ["agent-skills", "dotfiles"],
+	"repository": "https://github.com/frytg/dotfiles"
+}
