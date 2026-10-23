@@ -71,23 +71,18 @@ ln -sfh "$(PWD)/skills" ~/.agents/skills
 mkdir -p ~/Downloads/_DEV/frytg-note-vault/.agents
 ln -sfh ~/Downloads/_DEV/frytg-note-vault/_skills ~/Downloads/_DEV/frytg-note-vault/.agents/skills
 
-# osaurus rejects skill symlinks and only discovers top-level skill dirs.
-# copy each leaf skill into ~/.fx/skills/<name>/ and ~/.osaurus/skills/<name>/
-# so edits land after re-running link.sh.
-# osaurus-native skills already in that folder are left alone.
-mkdir -p ~/.fx/skills
+# osaurus rejects skill symlinks and only discovers ~/.osaurus/skills/<name>/.
+# copy each skill into ~/.osaurus/skills/<name>/ so edits land after re-running
+# link.sh; osaurus-native skills already in that folder are left alone.
+# (fx reads ~/.agents/skills/ directly now that skills/ is flat.)
 mkdir -p ~/.osaurus/skills
 for skill_dir in "$(PWD)"/skills/*(/N); do
 	[[ -f "$skill_dir/SKILL.md" ]] || continue
-	
+
 	name="${skill_dir:t}"
-	dest1="$HOME/.fx/skills/$name"
-	rm -rf "$dest1"
-	cp -R "$skill_dir" "$dest1"
-	
-	dest2="$HOME/.osaurus/skills/$name"
-	rm -rf "$dest2"
-	cp -R "$skill_dir" "$dest2"
+	dest="$HOME/.osaurus/skills/$name"
+	rm -rf "$dest"
+	cp -R "$skill_dir" "$dest"
 done
 # ln -sfh "$(PWD)/.osaurus/slash-commands" ~/.osaurus/slash-commands
 

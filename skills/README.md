@@ -5,8 +5,8 @@ This repository houses the specialized skills used by various AI harness systems
 Each AI harness reads its available skills from the following sources:
 
 - **pi** (via the Pi coding agent harness, reads from `~/.agents/skills/`)
-- **cursor** (via the Cursor AI harness, reads from `~/.cursor/skills-cursor/`)
-- **fx** (via the `fx` CLI, reads from `~/.fx/skills/`; no symlinks — `link.sh` copies each skill directory)
+- **cursor** (via the Cursor AI harness, reads from `~/.agents/skills/` and `~/.cursor/skills-cursor/`)
+- **fx** (via the `fx` CLI, reads from `~/.agents/skills/` and `~/.fx/skills/`)
 - **osaurus** (reads from `~/.osaurus/skills/`; no symlinks — `link.sh` copies each skill directory)
 
 ## Full discovery paths per harness
