@@ -20,6 +20,12 @@ just install
 - `pi config` — enable or disable package resources
 - `/atlas` to see token usage
 
+## Auto-loaded env
+
+Local directory extension: [`agent/extensions/load-env/`](./agent/extensions/load-env/).
+
+At startup, pi loads `~/.pi/.env.personal` (decrypted from [`agent/../.env.personal.sops.yaml`](./.env.personal.sops.yaml) by `just decrypt-env` / `just run`) into the process env — before MCP servers connect. So `mcp.json` interpolations like `${EXA_API_KEY}` and `${GITHUB_PAT}` resolve without manual sourcing, and bash tool calls inherit the values. Shell-exported vars win; a missing file is a no-op. Never commit the decrypted file.
+
 ## Plugins
 
 ### Optimized footer
