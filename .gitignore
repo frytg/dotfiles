@@ -39,3 +39,4 @@ skills/personal/
 # optimized-footer is a directory extension (index.ts + README)
 !.pi/**/extensions/optimized-footer/
 !.pi/**/extensions/optimized-footer/**
+*.bak

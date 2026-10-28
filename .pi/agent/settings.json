@@ -10,7 +10,6 @@
   "defaultProjectTrust": "ask",
   "externalEditor": "zed",
   "packages": [
-    "npm:@mobrienv/pi-tidy-tools",
     "npm:@gotgenes/pi-permission-system"
   ],
   "compaction": {
