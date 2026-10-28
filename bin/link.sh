@@ -65,6 +65,15 @@ chmod 600 "$(PWD)/.ssh-authorized_keys"
 mkdir -p ~/.fx
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.fx/AGENTS.md
 
+# claude code: settings, keybindings, global rules (CLAUDE.md), and skills.
+# lives in claude/ (not .claude/) so it isn't picked up as project settings here.
+# ~/.claude itself stays a real dir — it also holds sessions, history, and plugins.
+mkdir -p ~/.claude
+ln -sf "$(PWD)/claude/settings.json" ~/.claude/settings.json
+ln -sf "$(PWD)/claude/keybindings.json" ~/.claude/keybindings.json
+ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.claude/CLAUDE.md
+ln -sfh "$(PWD)/skills" ~/.claude/skills
+
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents
 ln -sfh "$(PWD)/skills" ~/.agents/skills

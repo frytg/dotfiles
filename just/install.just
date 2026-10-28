@@ -44,6 +44,11 @@ install-python:
 install-cursor:
 	curl -fsS https://cursor.com/install | bash
 
+# install claude code cli
+[group('INSTALL')]
+install-claude:
+	curl -fsSL https://claude.ai/install.sh | bash
+
 # instal cursor origin (git) cli
 [group('INSTALL')]
 install-origin:

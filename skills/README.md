@@ -8,6 +8,7 @@ Each AI harness reads its available skills from the following sources:
 - **cursor** (via the Cursor AI harness, reads from `~/.agents/skills/` and `~/.cursor/skills-cursor/`)
 - **fx** (via the `fx` CLI, reads from `~/.agents/skills/` and `~/.fx/skills/`)
 - **osaurus** (reads from `~/.osaurus/skills/`; no symlinks — `link.sh` copies each skill directory)
+- **claude code** (reads from `~/.claude/skills/`, symlinked to `skills/`)
 
 ## Full discovery paths per harness
 
