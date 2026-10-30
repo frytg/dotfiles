@@ -2,11 +2,17 @@
 
 Pi and Claude Code share one MCP config, and Cursor has its own. Pi and Claude Code both write env vars as `${VAR}`, but Cursor needs `${env:VAR}`, so one file can't serve all three.
 
-## Where each tool reads its servers
+## Config Locations
 
-- **pi:** reads `~/.pi/agent/mcp.json`. `~/.pi` links to `.pi/` in this repo, and `.pi/agent/mcp.json` is a relative symlink to [`.agents/mcp.json`](../.agents/mcp.json).
-- **Claude Code:** reads user-scope servers from the `mcpServers` key in `~/.claude.json`. That file also holds session state, so it can't be a symlink. `just mcp` copies each server from [`.agents/mcp.json`](../.agents/mcp.json) into it with `claude mcp add-json -s user`, without the pi-only `directTools` key.
-- **Cursor:** reads `~/.cursor/mcp.json`. `bin/link.sh` links it to [`.cursor/mcp.json`](../.cursor/mcp.json), which you edit by hand.
+- **pi**
+  - Reads: `~/.pi/agent/mcp.json`
+  - Source: [`.agents/mcp.json`](../.agents/mcp.json), through a relative symlink at `.pi/agent/mcp.json`. `~/.pi` links to `.pi/` in this repo.
+- **Claude Code**
+  - Reads: the `mcpServers` key in `~/.claude.json` (user scope)
+  - Source: [`.agents/mcp.json`](../.agents/mcp.json), copied in by `just mcp` with `claude mcp add-json -s user`, without the pi-only `directTools` key. `~/.claude.json` also holds session state, so it can't be a symlink.
+- **Cursor**
+  - Reads: `~/.cursor/mcp.json`
+  - Source: [`.cursor/mcp.json`](../.cursor/mcp.json), linked by `bin/link.sh` and edited by hand.
 
 ## Changing a server
 
@@ -19,3 +25,9 @@ Pi and Claude Code share one MCP config, and Cursor has its own. Pi and Claude C
 `GITHUB_PAT` is only a placeholder in these files. Pi loads its value from `~/.pi/.env.personal` itself. Claude Code and Cursor only see the environment they start in. If the value is missing, the GitHub server fails to connect, and `claude mcp list` shows a warning. Cursor started from the Dock never sees shell exports.
 
 The other servers use OAuth. Log in once per tool: `/mcp` in Claude Code, and the MCP settings in Cursor.
+
+## Docs
+
+- **pi:** [MCP Servers](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/mcp.md)
+- **Claude Code:** [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp)
+- **Cursor:** [Model Context Protocol (MCP)](https://cursor.com/docs/mcp)

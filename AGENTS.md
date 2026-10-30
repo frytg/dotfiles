@@ -18,6 +18,10 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 - The whole skills tree ships as an [Agent Plugin](https://agent-plugins.org) ([`plugin.json`](./plugin.json) at the repo root, importable into Perplexity Computer and other Agent Plugins 1.0 clients) and as a Cursor Plugin (`frytg-dotfiles` via [`.cursor-plugin/plugin.json`](./.cursor-plugin/plugin.json) and [`.cursor-plugin/marketplace.json`](./.cursor-plugin/marketplace.json)). See [`skills/README.md`](./skills/README.md) for plugin installation.
 - The legacy path `~/.pi/agent/skills/` symlinks to a separate vault — don't add new skills there.
 
+## MCP servers
+
+- Before adding, changing, or removing an MCP server, read [`context/MCP.md`](./context/MCP.md). Pi, Claude Code, and Cursor read different files with different env var syntax, so a change must go into both config files and be synced with `just mcp`.
+
 ## Editing conventions
 
 - Shell scripts use `zsh` with `set -e`; preserve existing patterns.
