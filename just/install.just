@@ -50,6 +50,7 @@ install-claude:
 	curl -fsSL https://claude.ai/install.sh | bash
 
 # install herdr core
+[group('INSTALL')]
 install-herdr:
 	# this install herdr core
 	curl -fsSL https://releases.herdr.dev/app/install.sh | sh
@@ -64,11 +65,6 @@ install-origin:
 [group('INSTALL')]
 install-fx:
 	curl -fsSL https://fx.sh/setup.sh | bash
-
-# install hermes agent
-[group('INSTALL')]
-install-hermes:
-	curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
 # install Rust/ Cargo
 [group('INSTALL')]
