@@ -27,6 +27,8 @@ ln -sf "$(PWD)/justfile" ~/.config/just/justfile
 # link vscode config
 mkdir -p ~/Library/Application\ Support/Cursor/User/
 ln -sf "$(PWD)/.cursor/keybindings.json" ~/Library/Application\ Support/Cursor/User/keybindings.json
+mkdir -p ~/.cursor
+ln -sf "$(PWD)/.cursor/mcp.json" ~/.cursor/mcp.json
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 mkdir -p ~/Library/Application\ Support/Code/User/
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
@@ -50,10 +52,14 @@ mkdir -p ~/.config/herdr
 ln -sf "$(PWD)/herdr/config.toml" ~/.config/herdr/config.toml
 
 # herdr-app config (the app rewrites everything else in this folder)
-mkdir -p ~/.config/herdr-app/themes
+mkdir -p ~/.config/herdr-app/themes ~/.config/herdr-app/layouts ~/.config/herdr-app/mods/git-changes
 ln -sf "$(PWD)/herdr-app/keys.json" ~/.config/herdr-app/keys.json
 ln -sf "$(PWD)/herdr-app/settings.json" ~/.config/herdr-app/settings.json
 ln -sf "$(PWD)/herdr-app/themes/dark-greeny.json" ~/.config/herdr-app/themes/dark-greeny.json
+ln -sf "$(PWD)/herdr-app/layouts/dan.json" ~/.config/herdr-app/layouts/dan.json
+for f in main.js mod.json changes.svg; do
+	ln -sf "$(PWD)/herdr-app/mods/git-changes/$f" ~/.config/herdr-app/mods/git-changes/$f
+done
 
 # 1password ssh agent: which vaults the desktop agent offers
 mkdir -p ~/.config/1Password/ssh

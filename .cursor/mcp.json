@@ -1,0 +1,25 @@
+{
+	"mcpServers": {
+		"betterstack": {
+			"url": "https://mcp.betterstack.com"
+		},
+		"cloudflare": {
+			"url": "https://mcp.cloudflare.com/mcp"
+		},
+		"datadog": {
+			"url": "https://mcp.datadoghq.eu/v1/mcp?toolsets=core"
+		},
+		"exa": {
+			"url": "https://mcp.exa.ai/mcp?login"
+		},
+		"firecrawl": {
+			"url": "https://mcp.firecrawl.dev/v2/mcp-oauth"
+		},
+		"github": {
+			"url": "https://api.githubcopilot.com/mcp/",
+			"headers": {
+				"Authorization": "Bearer ${env:GITHUB_PAT}"
+			}
+		}
+	}
+}

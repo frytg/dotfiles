@@ -3,6 +3,10 @@
   "permissions": {
     "defaultMode": "auto"
   },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "hooks": {
     "SessionStart": [
       {

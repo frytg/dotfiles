@@ -268,6 +268,10 @@ Never reach for `process.env` directly to validate required env vars. Document n
 
 When the user asks the agent to create or update a GitHub issue, post an issue comment, or open a pull request, append a line identifying the agent that performed the action — e.g. `(created by pi)` or `(updated by Cursor)`. This keeps it transparent that the action came from an AI agent, not the user directly.
 
+## Herdr app
+
+When the user wants to change or work with the herdr app (`herdr-app`, the window app, not the `herdr` TUI), read `~/.config/herdr-app/AGENTS.md` first. The app ships it with its own guidance, so it matches the installed version. Edit only the symlinked `keys.json`, `settings.json`, and `themes/` files in the dotfiles, because the app rewrites everything else in that folder.
+
 ## External references
 
 When the user asks for a specific company's design system, fetch its public design doc and apply it before drafting UI.

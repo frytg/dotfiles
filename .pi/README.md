@@ -45,9 +45,7 @@ Setup by running `/datadog setup eu` in pi.
 
 ### MCP
 
-Setup [`pi-mcp-adapter`](https://pi.dev/packages/pi-mcp-adapter) using [mcp.json](../.agents/mcp.json).
-
-Then run `/mcp-auth` in pi to authenticate with the MCP server.
+`agent/mcp.json` is a symlink to [`.agents/mcp.json`](../.agents/mcp.json). See [`context/MCP.md`](../context/MCP.md) for how pi, Claude Code, and Cursor read their MCP servers.
 
 ### Web search
 
