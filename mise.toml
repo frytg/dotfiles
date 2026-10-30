@@ -13,7 +13,7 @@ minimum_release_age = "3d" # override the default 24h delay
 
 [tools]
 # Node for root aube/oxc (just lint / just format / just install).
-node = "26.12.0"
+node = "26.12.1"
 # Package manager — https://aube.jdx.dev
 "npm:oxlint" = { version = "latest" }
 "npm:oxfmt" = { version = "latest" }

@@ -19,7 +19,7 @@ run:
 	just mise-update
 	-bun upgrade
 	-gcloud components update --quiet
-	herdr server reload-config
+	-hc update
 	just --yes decrypt-env .pi/.env.personal.sops.yaml
 	container system start
 	-just macos
