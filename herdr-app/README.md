@@ -19,6 +19,10 @@ Migrated from the TUI `[keys]` block. The window has no prefix mode, so `ctrl+a`
 
 `themes/dark-greeny.json`. Terminal ANSI is gruvbox dark (`theme.name`). Panel colors are the `theme.custom` tokens. `panel_bg = transparent` and `surface0 = reset` become the same background as the terminal. `settings.json` locks `appearance` to `dark` (`auto_switch = false`).
 
+## Git panel
+
+`layouts/dan.json` is a clone of the shipped `main` layout. Its Changes panel runs `mods/git-changes`, a clone of the shipped `changes` mod with a sync row: upstream ahead/behind, Fetch (`--prune`), Pull (`--ff-only`) and Push (sets the upstream on the first push). Clones never get Herdr's updates, so compare against the shipped `changes` mod after an app update. The app writes `gpui-kit.d.ts` and `jsconfig.json` next to the mod for editor types, so they stay out of the repo.
+
 ## Not a setting anymore
 
 - Sidebar collapse is already a compact rail.
