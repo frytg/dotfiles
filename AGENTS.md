@@ -8,6 +8,7 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 
 - New dotfiles are wired through `link.sh` (or have manual steps documented in `README.md`).
 - Editor settings are shared: `.vscode/settings.json` is symlinked to Cursor and VS Code, `.zed/settings.json` to Zed.
+- Herdr: `herdr/config.toml` is the TUI; `herdr-app/` is the window (keys, settings, theme). Both are wired in `link.sh`.
 
 ## Skills
 

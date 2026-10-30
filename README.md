@@ -61,6 +61,10 @@ Project pins also come from `.node-version`, `.nvmrc`, or `package.json#devEngin
 
 The [moshi/](./moshi) directory holds the Dark Greeny theme for the Moshi iOS app, plus the import steps. Sessions run in [herdr](https://herdr.dev).
 
+### Herdr
+
+The TUI config is [herdr/config.toml](./herdr/config.toml). The window app reads [herdr-app/](./herdr-app/): keys, settings, and the dark-greeny theme. `just link` symlinks both.
+
 ### Crane
 
 Useful tool for managing containers.

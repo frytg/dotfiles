@@ -49,6 +49,11 @@ install-cursor:
 install-claude:
 	curl -fsSL https://claude.ai/install.sh | bash
 
+# install herdr core
+install-herdr:
+	# this install herdr core
+	curl -fsSL https://releases.herdr.dev/app/install.sh | sh
+
 # instal cursor origin (git) cli
 [group('INSTALL')]
 install-origin:

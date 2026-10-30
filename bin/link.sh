@@ -49,6 +49,12 @@ ln -sfn "$(PWD)/.zed/themes" ~/.config/zed/themes
 mkdir -p ~/.config/herdr
 ln -sf "$(PWD)/herdr/config.toml" ~/.config/herdr/config.toml
 
+# herdr-app config (the app rewrites everything else in this folder)
+mkdir -p ~/.config/herdr-app/themes
+ln -sf "$(PWD)/herdr-app/keys.json" ~/.config/herdr-app/keys.json
+ln -sf "$(PWD)/herdr-app/settings.json" ~/.config/herdr-app/settings.json
+ln -sf "$(PWD)/herdr-app/themes/dark-greeny.json" ~/.config/herdr-app/themes/dark-greeny.json
+
 # 1password ssh agent: which vaults the desktop agent offers
 mkdir -p ~/.config/1Password/ssh
 ln -sf "$(PWD)/1password/ssh/agent.toml" ~/.config/1Password/ssh/agent.toml
