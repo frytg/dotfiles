@@ -83,6 +83,7 @@ ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.fx/AGENTS.md
 mkdir -p ~/.claude
 ln -sf "$(PWD)/claude/settings.json" ~/.claude/settings.json
 ln -sf "$(PWD)/claude/keybindings.json" ~/.claude/keybindings.json
+ln -sf "$(PWD)/claude/statusline.sh" ~/.claude/statusline.sh
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.claude/CLAUDE.md
 ln -sfh "$(PWD)/skills" ~/.claude/skills
 

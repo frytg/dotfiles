@@ -1,0 +1,26 @@
+#!/bin/zsh
+# claude code status line: model, context, session cost, and plan rate limits.
+# also forwards the payload to orca's status line script so its usage panel keeps working.
+
+payload=$(cat)
+
+orca_script="$HOME/.orca/agent-hooks/claude-statusline.sh"
+if [ -x "$orca_script" ]; then
+	print -r -- "$payload" | /bin/sh "$orca_script" >/dev/null 2>&1 &!
+fi
+
+print -r -- "$payload" | jq -r '
+	def pct: if . == null then "–" else "\(. | floor)%" end;
+	def reset:
+		if . == null then ""
+		else ((. - now) / 60 | ceil | if . > 0 then . else 0 end) as $m
+			| " ↻" + (if $m >= 60 then "\($m / 60 | floor)h\($m % 60)m" else "\($m)m" end)
+		end;
+	[
+		(.model.display_name // "claude"),
+		"ctx " + (.context_window.used_percentage | pct),
+		"$" + ((.cost.total_cost_usd // 0) * 100 | round / 100 | tostring),
+		(if .rate_limits.five_hour then "5h " + (.rate_limits.five_hour.used_percentage | pct) + (.rate_limits.five_hour.resets_at | reset) else empty end),
+		(if .rate_limits.seven_day then "7d " + (.rate_limits.seven_day.used_percentage | pct) else empty end)
+	] | join(" · ")
+' 2>/dev/null || print "claude"
