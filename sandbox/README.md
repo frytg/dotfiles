@@ -24,6 +24,6 @@ changes to any file in this folder take effect on the next `just nsc-provision N
 ## related
 
 - `just/sandbox.just` — recipes (`nsc-up`, `nsc-shell`, `nsc-provision`, `nsc-down`, `daytona-*` parallels). imports this folder's `provision.sh` over `bash -s`.
-- `bin/link-server.sh` — server-only symlinks (herdr, justfile, agents skills, .pi), invoked by `just link-server` from `provision.sh`.
+- `bin/link-server.sh` — server-only symlinks (justfile, agents skills, .pi), invoked by `just link-server` from `provision.sh`.
 - `bin/link.sh` — macOS full symlinks. not used in sandboxes (it touches Cursor/VSCode/Zed/k9s paths that don't exist on Linux).
 - the host-side `.zshrc` (linked via `bin/link.sh`) is the right place for `sb-up`/`sb-down`/etc. aliases — those manage sandboxes FROM the host, not from inside one.

@@ -47,10 +47,6 @@ ln -sf "$(PWD)/.zed/keymap.json" ~/.config/zed/keymap.json
 rm -rf ~/.config/zed/themes
 ln -sfn "$(PWD)/.zed/themes" ~/.config/zed/themes
 
-# herdr config
-mkdir -p ~/.config/herdr
-ln -sf "$(PWD)/herdr/config.toml" ~/.config/herdr/config.toml
-
 # herdr-app config (the app rewrites everything else in this folder)
 mkdir -p ~/.config/herdr-app/themes ~/.config/herdr-app/layouts ~/.config/herdr-app/mods/git-changes
 ln -sf "$(PWD)/herdr-app/keys.json" ~/.config/herdr-app/keys.json

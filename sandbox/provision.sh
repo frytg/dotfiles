@@ -86,7 +86,7 @@ echo '==> installing all pinned tools (catches node from mise.toml)'
 mise install
 
 
-# link server configs (herdr, justfile, agents skills, .pi)
+# link server configs (justfile, agents skills, .pi)
 echo '==> linking server configs'
 just link-server
 

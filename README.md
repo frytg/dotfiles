@@ -63,7 +63,7 @@ The [moshi/](./moshi) directory holds the Dark Greeny theme for the Moshi iOS ap
 
 ### Herdr
 
-The TUI config is [herdr/config.toml](./herdr/config.toml). The window app reads [herdr-app/](./herdr-app/): keys, settings, and the dark-greeny theme. `just link` symlinks both.
+The window app reads [herdr-app/](./herdr-app/): keys, settings, layout, mods, and the dark-greeny theme. `just link` symlinks them.
 
 ### Crane
 

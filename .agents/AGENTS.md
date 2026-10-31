@@ -270,7 +270,7 @@ When the user asks the agent to create or update a GitHub issue, post an issue c
 
 ## Herdr app
 
-When the user wants to change or work with the herdr app (`herdr-app`, the window app, not the `herdr` TUI), read `~/.config/herdr-app/AGENTS.md` first. The app ships it with its own guidance, so it matches the installed version. Edit only the symlinked `keys.json`, `settings.json`, and `themes/` files in the dotfiles, because the app rewrites everything else in that folder.
+When the user wants to change or work with the herdr app (`herdr-app`, the window app), read `~/.config/herdr-app/AGENTS.md` first. The app ships it with its own guidance, so it matches the installed version. Edit only the symlinked `keys.json`, `settings.json`, and `themes/` files in the dotfiles, because the app rewrites everything else in that folder.
 
 ## External references
 

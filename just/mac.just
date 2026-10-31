@@ -11,7 +11,6 @@ macos-reload:
 	killall Finder
 	killall Dock
 	killall SystemUIServer
-	herdr server stop
 
 # keep the mac awake but lockable: never system-sleep, display may sleep,
 # ssh sessions stay reachable. persists across reboots (pmset writes to nvram-backed prefs).

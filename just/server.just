@@ -1,4 +1,4 @@
-# symlink server config: herdr, just, agents skills, .pi.
+# symlink server config: just, agents skills, .pi.
 [group('SERVER')]
 link-server:
 	zsh ./bin/link-server.sh

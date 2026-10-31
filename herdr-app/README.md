@@ -1,6 +1,6 @@
 # Herdr app
 
-Window config for herdr-app. The older TUI still reads `herdr/config.toml`. `just link` symlinks these files into `~/.config/herdr-app`.
+Window config for herdr-app. `just link` symlinks these files into `~/.config/herdr-app`.
 
 ## Keys
 
