@@ -48,13 +48,16 @@ rm -rf ~/.config/zed/themes
 ln -sfn "$(PWD)/.zed/themes" ~/.config/zed/themes
 
 # herdr-app config (the app rewrites everything else in this folder)
-mkdir -p ~/.config/herdr-app/themes ~/.config/herdr-app/layouts ~/.config/herdr-app/mods/git-changes
+mkdir -p ~/.config/herdr-app/themes ~/.config/herdr-app/layouts ~/.config/herdr-app/mods/git-changes ~/.config/herdr-app/mods/usage
 ln -sf "$(PWD)/herdr-app/keys.json" ~/.config/herdr-app/keys.json
 ln -sf "$(PWD)/herdr-app/settings.json" ~/.config/herdr-app/settings.json
 ln -sf "$(PWD)/herdr-app/themes/dark-greeny.json" ~/.config/herdr-app/themes/dark-greeny.json
 ln -sf "$(PWD)/herdr-app/layouts/dan.json" ~/.config/herdr-app/layouts/dan.json
 for f in main.js mod.json changes.svg; do
 	ln -sf "$(PWD)/herdr-app/mods/git-changes/$f" ~/.config/herdr-app/mods/git-changes/$f
+done
+for f in main.js mod.json; do
+	ln -sf "$(PWD)/herdr-app/mods/usage/$f" ~/.config/herdr-app/mods/usage/$f
 done
 
 # 1password ssh agent: which vaults the desktop agent offers

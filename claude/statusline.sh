@@ -1,12 +1,21 @@
 #!/bin/zsh
 # claude code status line: model, context, session cost, and plan rate limits.
-# also forwards the payload to orca's status line script so its usage panel keeps working.
+# also forwards the payload to orca's status line script so its usage panel keeps working,
+# and caches the rate limits for the herdr-app status bar.
 
 payload=$(cat)
 
 orca_script="$HOME/.orca/agent-hooks/claude-statusline.sh"
 if [ -x "$orca_script" ]; then
 	print -r -- "$payload" | /bin/sh "$orca_script" >/dev/null 2>&1 &!
+fi
+
+# cache the plan rate limits for the herdr-app status bar (mods/usage-status)
+usage_cache="$HOME/.cache/claude-usage.json"
+if print -r -- "$payload" | jq -e '.rate_limits' >/dev/null 2>&1; then
+	mkdir -p "${usage_cache:h}"
+	print -r -- "$payload" | jq -c '.rate_limits + {updated_at: now}' >"$usage_cache.tmp" 2>/dev/null &&
+		mv -f "$usage_cache.tmp" "$usage_cache"
 fi
 
 print -r -- "$payload" | jq -r '
