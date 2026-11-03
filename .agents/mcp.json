@@ -69,6 +69,10 @@
 				"search_users",
 				"sub_issue_write"
 			]
+		},
+		"victorialogs": {
+			"type": "http",
+			"url": "https://victoria-logs-mcp.moose-mulley.ts.net/mcp"
 		}
 	}
 }

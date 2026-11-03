@@ -20,6 +20,9 @@
 			"headers": {
 				"Authorization": "Bearer ${env:GITHUB_PAT}"
 			}
+		},
+		"victorialogs": {
+			"url": "https://victoria-logs-mcp.moose-mulley.ts.net/mcp"
 		}
 	}
 }

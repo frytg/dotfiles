@@ -24,6 +24,8 @@ Pi and Claude Code share one MCP config, and Cursor has its own. Pi and Claude C
 
 `GITHUB_PAT` is only a placeholder in these files. Pi loads its value from `~/.pi/.env.personal` itself. Claude Code and Cursor only see the environment they start in. If the value is missing, the GitHub server fails to connect, and `claude mcp list` shows a warning. Cursor started from the Dock never sees shell exports.
 
+`victorialogs` is the self-hosted Victoria Logs MCP server on locally0. It has no auth and is only reachable on the tailnet, so it fails to connect when Tailscale is down.
+
 The other servers use OAuth. Log in once per tool: `/mcp` in Claude Code, and the MCP settings in Cursor.
 
 ## Docs
