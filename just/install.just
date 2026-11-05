@@ -44,6 +44,11 @@ install-python:
 install-cursor:
 	curl -fsS https://cursor.com/install | bash
 
+# install cursor agent cli
+[group('INSTALL')]
+install-factory:
+	curl -fsSL https://app.factory.ai/cli | sh
+
 # install claude code cli
 [group('INSTALL')]
 install-claude:

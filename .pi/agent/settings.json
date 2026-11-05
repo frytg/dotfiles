@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.5.0",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "xai",
@@ -74,5 +74,8 @@
     "feather/openrouter/~z-ai/glm-flash-latest",
     "feather/openrouter/~z-ai/glm-latest",
     "mistral/mistral-large-4"
-  ]
+  ],
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:@gotgenes/pi-permission-system\",\"scope\":\"user\"}": "42.0.0"
+  }
 }
