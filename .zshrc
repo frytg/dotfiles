@@ -32,10 +32,23 @@ fi
 # Custom completions (precompiled kubectl, etc.) take precedence over Homebrew's.
 fpath=("$HOME/.zsh_completions" "/opt/homebrew/share/zsh/site-functions" $fpath)
 autoload -Uz compinit
-# -C skips the security audit (Homebrew dirs are group-writable on macOS).
-# compinit auto-rebuilds the dump if fpath entries are newer, so no manual
-# check is needed. `just refresh-completions` forces a full rebuild.
-compinit -d "$HOME/.zcompdump" -C
+# -C reuses the dump without checking for new completion files, so rebuild
+# it when a completion dir changed since the last dump (brew install/uninstall
+# touches the dir mtime). -i skips insecure dirs instead of prompting.
+# `just refresh-completions` forces a full rebuild.
+_zcompdump="$HOME/.zcompdump"
+_zcomp_stale=0
+[[ -s "$_zcompdump" ]] || _zcomp_stale=1
+for _zcomp_dir in "$HOME/.zsh_completions" /opt/homebrew/share/zsh/site-functions; do
+  [[ "$_zcomp_dir" -nt "$_zcompdump" ]] && _zcomp_stale=1
+done
+if (( _zcomp_stale )); then
+  rm -f "$_zcompdump"
+  compinit -i -d "$_zcompdump"
+else
+  compinit -C -d "$_zcompdump"
+fi
+unset _zcompdump _zcomp_stale _zcomp_dir
 
 # ---- PATH -------------------------------------------------------------------
 
@@ -117,8 +130,8 @@ fi
 source ~/.aliases
 
 # bun completions
-[ -s "/Users/dan/.bun/_bun" ] && source "/Users/dan/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/dan/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 # End of LM Studio CLI section

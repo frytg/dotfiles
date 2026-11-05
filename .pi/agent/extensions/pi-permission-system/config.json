@@ -105,8 +105,6 @@
 			"*": "ask",
 			"~/Downloads/_DEV/frytg-note-vault/*": "allow",
 			"~/.agents/*": "allow",
-			"/Users/dan/.agents/skills/": "allow",
-			"/Users/frytg/.agents/skills/": "allow",
 			"~/.bun/install/global/node_modules/@earendil-works/*": "allow"
 		}
 	}
