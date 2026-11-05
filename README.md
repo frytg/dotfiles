@@ -65,6 +65,21 @@ The [moshi/](./moshi) directory holds the Dark Greeny theme for the Moshi iOS ap
 
 The window app reads [herdr-app/](./herdr-app/): keys, settings, layout, mods, and the dark-greeny theme. `just link` symlinks them.
 
+### Droid
+
+Shared [Droid settings](https://docs.factory.com/droid-cli/settings) live in
+[`factory/settings.json`](./factory/settings.json). `just link` symlinks that file and
+[`.agents/AGENTS.md`](./.agents/AGENTS.md) into `~/.factory/`. Skills use the existing `~/.agents/skills` link.
+
+The one-line status uses [`factory/statusline.sh`](./factory/statusline.sh), also linked by `just link`.
+It shows the model, directory, Git branch (or detached commit), and context percentage. It requires `jq`.
+Context stays hidden until Droid provides usage. Validate changes with `droid statusline-probe`.
+
+Before the first `just link` on an existing Droid setup, move `~/.factory/settings.json` to
+`~/.factory/settings.local.json`. If the local file already exists, merge the settings you want to keep instead.
+Local settings override the shared file, so keep only machine-specific values there, such as trusted-folder paths.
+Keep credentials out of the shared file. Leave `~/.factory/` itself local because it also holds auth, sessions, and caches.
+
 ### Crane
 
 Useful tool for managing containers.

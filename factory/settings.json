@@ -1,0 +1,32 @@
+{
+	"outputStyle": "concise",
+	"statusLine": {
+		"type": "command",
+		"command": "\"$HOME/.factory/statusline.sh\"",
+		"maxRows": 1
+	},
+	"logoAnimation": "off",
+	"completionSound": "off",
+	"awaitingInputSound": "off",
+	"sessionDefaultSettings": {
+		"model": "auto",
+		"reasoningEffort": "none",
+		"interactionMode": "auto",
+		"autonomyLevel": "medium",
+		"autonomyMode": "auto-medium"
+	},
+	"theme": "factory-dark",
+	"toolResultDisplay": "compact",
+	"ideAutoConnect": false,
+	"includeCoAuthoredByDroid": false,
+	"enableDroidShield": true,
+	"showThinkingInMainView": false,
+	"streamAssistantResponses": true,
+	"showTokenUsageIndicator": true,
+	"hideChangelog": true,
+	"nerdFont": false,
+	"vimMode": false,
+	"soundVolume": 100,
+  "subagentAutonomyLevel": "inherit",
+  "locale": "en"
+}

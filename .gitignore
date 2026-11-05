@@ -16,6 +16,7 @@ tmp
 *.npub*
 ~/
 skills/personal/
+settings.local.json
 
 # .pi specific
 .pi/pi-acp/**

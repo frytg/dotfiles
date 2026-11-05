@@ -76,6 +76,12 @@ chmod 600 "$(PWD)/.ssh-authorized_keys"
 mkdir -p ~/.fx
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.fx/AGENTS.md
 
+# droid: shared settings and global rules; keep auth, sessions, and local overrides on this host.
+mkdir -p ~/.factory
+ln -sf "$(PWD)/factory/settings.json" ~/.factory/settings.json
+ln -sf "$(PWD)/factory/statusline.sh" ~/.factory/statusline.sh
+ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.factory/AGENTS.md
+
 # claude code: settings, keybindings, global rules (CLAUDE.md), and skills.
 # lives in claude/ (not .claude/) so it isn't picked up as project settings here.
 # ~/.claude itself stays a real dir — it also holds sessions, history, and plugins.
