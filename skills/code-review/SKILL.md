@@ -5,9 +5,9 @@ description: >-
   write one severity-ranked report. Builds a numbered diff file whose TOC is the coverage checklist, sends open questions
   to parallel read-only reviewer subagents when the calling harness documents a subagent tool, verifies every finding
   against the code before keeping it, and stores per-branch state in the repo's git-ignored `.local/code-review/` so
-  later runs re-review only new
-  commits. Runs inside whatever harness invokes it, so it never posts to GitHub and never edits code. Use when the user
-  asks to "review my changes", "code review this", "review this branch/diff/PR", "check before I push", "re-review",
+  later runs re-review only new commits. Closes with a merge-risk assessment from the `merge-risk` skill. Runs inside
+  whatever harness invokes it, so it never posts to GitHub and never edits code. Use when the user asks to "review my
+  changes", "code review this", "review this branch/diff/PR", "check before I push", "re-review",
   "/code-review", or wants a PR-style review done locally.
 license: MIT
 metadata:
@@ -42,6 +42,7 @@ Parse the invocation text into these values. Anything left over is focus text, f
 
 - Target. Nothing means auto. Other values: `staged`, `worktree`, `<ref>` (review the branch against this base), `since <sha>`, or `#<n>` / `pr <n>` (a PR diff through `gh`).
 - `--full` ignores stored state and reviews everything again.
+- `--no-risk` skips the merge-risk step.
 
 ## Harness check
 
@@ -149,11 +150,31 @@ For every candidate, open the code at the anchor and trace the failure path your
 
 The verdict is the highest tier present, or `clean` when nothing survived.
 
-### 9. Write the report and state
+### 9. Assess merge risk
+
+Skip this step when `--no-risk` is set.
+
+Load the `merge-risk` skill in this order:
+
+1. If the harness lists a `merge-risk` skill, invoke it through the harness's skill mechanism.
+2. Otherwise, if `../merge-risk/SKILL.md` exists next to this skill's directory, read it and follow it.
+3. Otherwise, skip the section and add "merge-risk skill not available" to the scope line.
+
+Give it the context you already have. Don't re-read the diff for it.
+
+- **Alignment:** the PR title, body, and linked issue (`gh pr view <n>` in `pr` mode). Otherwise use the commit messages (`git log --format=%s%n%b <base>..HEAD`) and the branch name. For `worktree` and `staged`, use the user's focus text if there is any.
+- **Impact:** the seams from step 5 and the sensitive areas the diff touches.
+- **Verification:** tests added or changed in the diff, and screenshots or profiling the PR body mentions.
+- **Rollback cost:** migrations, data rewrites, deletions, renamed public contracts, and dependency bumps.
+- **Error detection:** findings about swallowed errors or silent fallbacks, plus logging and alerting changes in the diff.
+
+Merge risk is a separate judgment. It doesn't change the defect verdict, and its gaps are not findings. A gap that is a real defect must already be a verified finding from step 7. Never add one here.
+
+### 10. Write the report and state
 
 Print the report in chat and save the same text to `<state_dir>/review.md`. Then write `<state_dir>/state.json`. Never write state outside `<root>/.local/code-review/`.
 
-### 10. Stop
+### 11. Stop
 
 Don't edit code. The only write outside the state dir is the script's one-time `.gitignore` line. End with one line that offers the next step: fix the findings, or post them to the PR with `gh`. Post only when the user explicitly asks.
 
@@ -173,6 +194,10 @@ Each finding is 2-3 sentences: what breaks, which input or state triggers it, an
    <What breaks, under which input or state, and the consequence.>
    Fix: <direction in one line>.
 
+### Merge risk
+
+<merge-risk skill output, verbatim in its own format.>
+
 ### Prior findings
 
 - F2 `src/api/limit.ts:40` resolved: <what changed>.
@@ -183,7 +208,7 @@ Each finding is 2-3 sentences: what breaks, which input or state triggers it, an
 - <A question you couldn't settle that the author should answer, with its `path:line`.>
 ```
 
-Leave out sections with no content. A `clean` review is the verdict line, the scope line, and nothing else. "Prior findings" appears only when state existed.
+Leave out sections with no content. A `clean` review is the verdict line, the scope line, and the merge-risk section. "Prior findings" appears only when state existed.
 
 ## State file
 
@@ -197,6 +222,7 @@ Leave out sections with no content. A `clean` review is the verdict line, the sc
 	"head": "<full sha, or WORKTREE / INDEX>",
 	"reviewedAt": "2030-01-01T12:00:00Z",
 	"verdict": "fix",
+	"mergeRisk": "medium",
 	"nextId": 4,
 	"findings": [
 		{
@@ -212,6 +238,7 @@ Leave out sections with no content. A `clean` review is the verdict line, the sc
 }
 ```
 
+- `mergeRisk` is `low`, `medium`, `high`, or `null` when step 9 was skipped.
 - `id` comes from `nextId` and never gets reused across runs.
 - `fingerprint` is the trimmed source text of the anchor line.
 - Keep `resolved` and `obsolete` findings for one more run, then drop them.
@@ -221,5 +248,6 @@ Leave out sections with no content. A `clean` review is the verdict line, the sc
 - Every TOC range is read or listed as skimmed.
 - Every finding was traced by you, sits on a diff line, and has one root cause.
 - No style, test-coverage, or pre-existing items unless the instructions asked for them.
+- Merge risk came from the `merge-risk` skill, or the report says why it is missing. It added no unverified findings.
 - One report in chat, `review.md` and `state.json` in `.local/code-review/<branch>/`, no code edits.
 - If the script printed `gitignore=added`, the user was told.
