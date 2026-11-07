@@ -11,6 +11,7 @@ node_modules/
 vendor/
 tmp
 .dev/
+.local/
 .age*.txt
 *.nsec*
 *.npub*
