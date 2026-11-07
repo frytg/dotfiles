@@ -83,9 +83,10 @@ chmod 600 "$(PWD)/.ssh-authorized_keys"
 mkdir -p ~/.fx
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.fx/AGENTS.md
 
-# droid: shared settings and global rules; keep auth, sessions, and local overrides on this host.
+# droid: shared settings, MCP servers, and global rules; keep auth, sessions, and local overrides on this host.
 mkdir -p ~/.factory
 ln -sf "$(PWD)/factory/settings.json" ~/.factory/settings.json
+ln -sf "$(PWD)/factory/mcp.json" ~/.factory/mcp.json
 ln -sf "$(PWD)/factory/statusline.sh" ~/.factory/statusline.sh
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.factory/AGENTS.md
 

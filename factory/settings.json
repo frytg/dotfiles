@@ -27,6 +27,7 @@
 	"nerdFont": false,
 	"vimMode": false,
 	"soundVolume": 100,
-  "subagentAutonomyLevel": "inherit",
-  "locale": "en"
+	"subagentAutonomyLevel": "inherit",
+	"locale": "en",
+	"reauthBannerShownTui": true
 }
