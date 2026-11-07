@@ -16,8 +16,11 @@ tmp
 *.nsec*
 *.npub*
 ~/
-skills/personal/
 settings.local.json
+
+# herdr specific
+herdr-app/**/gpui-kit.d.ts
+herdr-app/**/jsconfig.json
 
 # .pi specific
 .pi/pi-acp/**

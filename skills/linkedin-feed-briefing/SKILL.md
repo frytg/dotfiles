@@ -1,6 +1,6 @@
 ---
 name: linkedin-feed-briefing
-description: Pull recent posts from the user's LinkedIn feed and write a one-page BLUF briefing in their voice. Tool-agnostic — works with any persistent browser automation (Osaurus, Playwright MCP, Browserbase, etc.) with a Firecrawl/Exa fallback for public-only summaries. Use when the user asks for a LinkedIn briefing, feed summary, "what's on my feed."
+description: Pull recent posts from the user's LinkedIn feed and write a one-page BLUF briefing in their voice. Tool-agnostic — works with any persistent browser automation (Playwright MCP, Browserbase, etc.) with a Firecrawl/Exa fallback for public-only summaries. Use when the user asks for a LinkedIn briefing, feed summary, "what's on my feed."
 metadata:
   category: social
   auth-required: true (LinkedIn session)
@@ -19,7 +19,7 @@ Pull the recent posts from the user's LinkedIn feed and turn them into a one-pag
 
 - LinkedIn fights automation aggressively. A **persistent, logged-in browser session** is the only reliable path. Anonymous scraping via Firecrawl/Exa returns shallow, stale, and often blocked results — use it only as a smoke test or when the user has explicitly opted out of signing in.
 - Login is a one-time gate. Plan for it; don't try to brute it.
-- WebKit fingerprints (used by Osaurus today) trip LinkedIn's bot checks more often than Chromium. If sign-in fails repeatedly, surface it to the user instead of retrying.
+- WebKit fingerprints trip LinkedIn's bot checks more often than Chromium. If sign-in fails repeatedly, surface it to the user instead of retrying.
 
 ## Flow
 
@@ -29,7 +29,6 @@ Reach for whichever persistent browser tool is available. Examples:
 
 | Tool                                          | Notes                                                                                                                                                                             |
 | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Osaurus Browser** (`osaurus-browser` skill) | Native to this dotfiles repo; persistent per-agent session; helper window for login.                                                                                              |
 | **Playwright MCP** (`@playwright/mcp`)        | Chromium; persistent context via `browser_install`/`browser_profile`; same `browser_navigate` / `browser_click` shape.                                                            |
 | **Browserbase / Steel / Anchor**              | Hosted Chromium with profile cookies; usually exposed via `browser_session_create` + `browser_navigate`.                                                                          |
 | **Firecrawl `scrape`**                        | No login. Returns a markdown snapshot of the public feed view — useful for one-off check-ins, not the full session-authenticated feed. Falls back here when login is unavailable. |
@@ -48,7 +47,7 @@ url: https://www.linkedin.com/feed/
 If the response says login is required (auth wall, `LOGIN_REQUIRED` style error, or a redirect to `/login` or `/checkpoint`):
 
 1. Tell the user: "I need to sign in to LinkedIn. Opening a window for you."
-2. Open a browser window the user can interact with (Osaurus: `browser_open_login`; Playwright MCP: open the page and pause; hosted browsers usually have a "take over" mode).
+2. Open a browser window the user can interact with (Playwright MCP: open the page and pause; hosted browsers usually have a "take over" mode).
 3. Wait for the user to confirm in chat that they're done signing in.
 4. Retry the navigate.
 
@@ -62,7 +61,7 @@ The shape is the same in every browser tool:
 2. After each pass, snapshot the visible posts.
 3. Stop when you hit the requested count or the posts stop being "recent" (>3 days or older).
 
-Use the tool's batch / action primitive (Osaurus: `browser_do` with `scroll` action; Playwright MCP: `browser_evaluate` of `window.scrollBy`; hosted browsers: usually a `scroll` or `act` action). Wait for `networkidle` or `domstable` between passes so lazy-loaded posts render.
+Use the tool's batch / action primitive (Playwright MCP: `browser_evaluate` of `window.scrollBy`; hosted browsers: usually a `scroll` or `act` action). Wait for `networkidle` or `domstable` between passes so lazy-loaded posts render.
 
 Capture per post:
 

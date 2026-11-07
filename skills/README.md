@@ -7,7 +7,6 @@ Each AI harness reads its available skills from the following sources:
 - **pi** (via the Pi coding agent harness, reads from `~/.agents/skills/`)
 - **cursor** (via the Cursor AI harness, reads from `~/.agents/skills/` and `~/.cursor/skills-cursor/`)
 - **fx** (via the `fx` CLI, reads from `~/.agents/skills/` and `~/.fx/skills/`)
-- **osaurus** (reads from `~/.osaurus/skills/`; no symlinks — `link.sh` copies each skill directory)
 - **claude code** (reads from `~/.claude/skills/`, symlinked to `skills/`)
 
 ## Full discovery paths per harness
@@ -35,12 +34,6 @@ The list above only shows what `bin/link.sh` wires on this host. Each harness al
     - `~/.fx/skills/` — the only path `fx install` writes
     - `~/.config/opencode/skills/`, `~/.codex/skills/`, `~/.claude/skills/`, `~/.agents/skills/`, `~/.claw/skills/`
   - note: additional workspace directories don't contribute skills
-- **osaurus** ([docs.osaurus.ai/skills](https://docs.osaurus.ai/skills))
-  - global: `~/.osaurus/skills/{skill-name}/SKILL.md` (flat, no nested category folders)
-    - with optional `references/` and `assets/` subfolders
-  - imports:
-    - any GitHub repo carrying `.claude-plugin/marketplace.json`
-    - full directory-based Claude plugin layout: skills + scheduled agents + slash commands + MCP providers + shared `CLAUDE.md`
 
 For more information on how these skills are managed and linked across the environment, please see [`link.sh`](../bin/link.sh).
 

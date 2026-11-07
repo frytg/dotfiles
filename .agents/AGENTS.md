@@ -18,6 +18,7 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 - Linting via `just lint` must pass on every commit/PR.
 - Prefer lists over tables in Markdown. Tables add visual weight, don't render in plain-text tools, and force row-by-row scanning. Use a table only when a true two-axis comparison is the point.
 - Markdown files must not need an index or table of contents. If a reader needs navigation, the sections aren't titled sharply enough or the file should be split.
+- Don't duplicate configuration paths or secret references in README files. Link to the source config or task instead.
 - No drive-by refactors, magic numbers, commented-out code, or unrelated changes in a diff.
 
 ## Writing style

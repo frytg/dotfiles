@@ -29,6 +29,9 @@ mkdir -p ~/Library/Application\ Support/Cursor/User/
 ln -sf "$(PWD)/.cursor/keybindings.json" ~/Library/Application\ Support/Cursor/User/keybindings.json
 mkdir -p ~/.cursor
 ln -sf "$(PWD)/.cursor/mcp.json" ~/.cursor/mcp.json
+# A global-only filename avoids loading these hooks again as project hooks.
+ln -sf "$(PWD)/.cursor/hooks.global.json" ~/.cursor/hooks.json
+ln -sf "$(PWD)/.cursor/herdr-desktop-status.sh" ~/.cursor/herdr-desktop-status.sh
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 mkdir -p ~/Library/Application\ Support/Code/User/
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
@@ -56,8 +59,12 @@ ln -sf "$(PWD)/herdr-app/layouts/dan.json" ~/.config/herdr-app/layouts/dan.json
 for f in main.js mod.json changes.svg; do
 	ln -sf "$(PWD)/herdr-app/mods/git-changes/$f" ~/.config/herdr-app/mods/git-changes/$f
 done
-for f in main.js mod.json; do
-	ln -sf "$(PWD)/herdr-app/mods/usage/$f" ~/.config/herdr-app/mods/usage/$f
+# Copy the whole usage mod so imports and reloads use files inside Herdr's home.
+for f in main.js mod.json factory-usage.js; do
+	target="$HOME/.config/herdr-app/mods/usage/$f"
+	# Replace links from earlier installs without copying through to the source.
+	if [[ -L "$target" ]]; then rm "$target"; fi
+	cp "$(PWD)/herdr-app/mods/usage/$f" "$target"
 done
 
 # 1password ssh agent: which vaults the desktop agent offers
@@ -97,21 +104,6 @@ mkdir -p ~/.agents
 ln -sfh "$(PWD)/skills" ~/.agents/skills
 mkdir -p ~/Downloads/_DEV/frytg-note-vault/.agents
 ln -sfh ~/Downloads/_DEV/frytg-note-vault/_skills ~/Downloads/_DEV/frytg-note-vault/.agents/skills
-
-# osaurus rejects skill symlinks and only discovers ~/.osaurus/skills/<name>/.
-# copy each skill into ~/.osaurus/skills/<name>/ so edits land after re-running
-# link.sh; osaurus-native skills already in that folder are left alone.
-# (fx reads ~/.agents/skills/ directly now that skills/ is flat.)
-mkdir -p ~/.osaurus/skills
-for skill_dir in "$(PWD)"/skills/*(/N); do
-	[[ -f "$skill_dir/SKILL.md" ]] || continue
-
-	name="${skill_dir:t}"
-	dest="$HOME/.osaurus/skills/$name"
-	rm -rf "$dest"
-	cp -R "$skill_dir" "$dest"
-done
-# ln -sfh "$(PWD)/.osaurus/slash-commands" ~/.osaurus/slash-commands
 
 # link k9s config (macOS path only — symlink the config file, not the whole
 # k9s dir, which also contains k9s.log and per-host cluster context files)
