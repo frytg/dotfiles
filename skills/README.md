@@ -60,26 +60,3 @@ All skills also ship as one Cursor Plugin, `frytg-dotfiles`. The manifest [`.cur
 - Validate with the [Cursor plugin template](https://github.com/cursor/plugin-template)'s `scripts/validate-template.mjs` run from the repo root.
 
 On hosts wired by `link.sh` this is optional — Cursor already reads the same skills through `~/.agents/skills/` (symlinked to this folder). The plugin route matters for other machines and teammates installing straight from the repo URL.
-
-## Syncing to an Open WebUI instance
-
-[`bin/sync-skills.ts`](../bin/sync-skills.ts) pushes the local `skills/<id>/SKILL.md` set to an [Open WebUI](https://docs.openwebui.com/) instance over its REST API (`/api/v1/skills/...`). Each skill's `name` and `description` come from the YAML frontmatter; the markdown body becomes `content`; `metadata.category` from frontmatter becomes a `meta` tag alongside any `metadata.tags`. Existing skills are updated in place, new ones are created; pass `--prune` to delete remote skills missing locally, `--dry-run` to print the plan without making changes.
-
-Run via the [`_env`](../justfile) recipe (which wraps `sops exec-env`) so the API URL and token come from an encrypted `.env.sops.yaml`:
-
-```sh
-# default sops file is .env.sops.yaml; override with SOPS_ENV_FILE=...
-just sync-skills                    # create + update
-just sync-skills --dry-run          # show planned operations
-just sync-skills --prune            # also delete remote-only skills
-SOPS_ENV_FILE=.pi/.env.personal.sops.yaml just sync-skills --prune
-```
-
-Required sops entries:
-
-```yaml
-OPEN_WEBUI_URL: https://chat.example.com # base url, no trailing slash
-OPEN_WEBUI_API_KEY: sk-... # bearer token, admin or workspace.skills permission
-```
-
-Runtime: [bun](https://bun.sh) (handles TS natively, no build step). No third-party dependencies.

@@ -60,6 +60,7 @@ ssh-add-key lifetime='8h':
 		| ssh-add -t '{{ lifetime }}' -
 	echo "ok: loaded Agent SSH Key (lifetime {{ lifetime }})"
 	ssh-add -l
+alias sshk := ssh-add-key
 
 # list keys registered in the ssh-agent (fingerprints).
 [group('SSH')]

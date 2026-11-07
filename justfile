@@ -98,11 +98,6 @@ clear:
 	-cargo clean
 alias clean := clear
 
-# push local skills/ to an open webui instance via its REST API. --prune to delete remote skills, --dry-run to plan
-[group('SKILLS')]
-sync-skills *args:
-	SOPS_ENV_FILE=.env.owui.sops.yaml just _env bun run bin/sync-skills.ts {{ args }}
-
 # update rust packages
 [group('RUST')]
 update-rust:
