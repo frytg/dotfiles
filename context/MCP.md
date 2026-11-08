@@ -31,6 +31,10 @@ Pi and Claude Code share one MCP config. Cursor and Droid each have their own be
 
 The other servers use OAuth. Log in once per tool in each client: `/mcp` in Claude Code and Droid, or the MCP settings in Cursor.
 
+## Figma
+
+Figma isn't in any of the configs yet. To add it, follow the [Guide to the Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server), then apply the steps in [Changing a server](#changing-a-server).
+
 ## Docs
 
 - **pi:** [MCP Servers](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/mcp.md)

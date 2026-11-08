@@ -22,6 +22,7 @@ This repo uses [just](https://github.com/casey/just) as a task runner. Run `just
 - `just install` — brew, link, mise node, and upgrade toolchains
 - `just install-omlx` — install or upgrade the latest oMLX macOS app from GitHub releases, including beta
 - `just install-uzu` — build [uzu](https://github.com/trymirai/uzu) from source for local inference (see [`context/UZU.md`](./context/UZU.md))
+- `just install-beszel-agent` — opt-in [Beszel](https://beszel.dev) monitoring agent for this Mac (see [`docs/BESZEL.md`](./docs/BESZEL.md))
 
 ## Mac Setup
 

@@ -1,11 +1,12 @@
 {
-  "zoom": 1,
+  "zoom": 1.0,
   "sounds": {
     "enabled": true
   },
-  "minimum_contrast": 1,
+  "font_size": 12.0,
+  "font_ligatures": false,
+  "telemetry": false,
+  "minimum_contrast": 1.0,
   "appearance": "dark",
-  "theme": "dark-greeny",
-  "font_size": 12,
-  "telemetry": false
+  "theme": "dark-greeny"
 }
