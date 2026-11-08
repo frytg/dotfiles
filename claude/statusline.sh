@@ -10,12 +10,14 @@ if [ -x "$orca_script" ]; then
 	print -r -- "$payload" | /bin/sh "$orca_script" >/dev/null 2>&1 &!
 fi
 
-# cache the plan rate limits for the herdr-app status bar (mods/usage-status)
+# Keep previous windows when Claude sends a partial snapshot; Herdr handles expired resets.
 usage_cache="$HOME/.cache/claude-usage.json"
 if print -r -- "$payload" | jq -e '.rate_limits' >/dev/null 2>&1; then
 	mkdir -p "${usage_cache:h}"
-	print -r -- "$payload" | jq -c '.rate_limits + {updated_at: now}' >"$usage_cache.tmp" 2>/dev/null &&
-		mv -f "$usage_cache.tmp" "$usage_cache"
+	print -r -- "$payload" | jq -c --slurpfile previous <(jq -c 'objects' "$usage_cache" 2>/dev/null) '
+		($previous[0] // {}) + (.rate_limits | objects | with_entries(select(.value != null))) + {updated_at: now}
+	' >"$usage_cache.$$.tmp" 2>/dev/null &&
+		mv -f "$usage_cache.$$.tmp" "$usage_cache"
 fi
 
 print -r -- "$payload" | jq -r '

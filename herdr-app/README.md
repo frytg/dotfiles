@@ -41,7 +41,8 @@ After editing, run `just link` to refresh the mod.
 
 - Claude Code: the [status line](../claude/statusline.sh) caches the 5h and 7d rate limits on every refresh.
   The mod reads the cache every minute, so the numbers only move while a Claude session runs.
-  A window whose reset has passed shows 0%.
+  Partial snapshots keep previously reported windows. Claude drops expired windows from its payload;
+  a missing or expired window shows 0% once either subscription window has been reported.
 - Cursor: every 12 minutes the mod takes the first unexpired access token from the `cursor-agent` Keychain login,
   CLI auth, or desktop state database, the same order Orca uses. It calls the undocumented
   `cursor.com/api/usage-summary`, and for `unified_` plans `api/dashboard/get-current-period-usage`.
@@ -64,8 +65,7 @@ the mod doesn't copy it to Keychain or disk, inspect Droid's login or browser co
 or bodies. `FACTORY_API_KEY` and the old Keychain item are no longer used. The next five-minute refresh picks up
 changes to the 1Password item.
 
-Run `just test-herdr-usage` for synthetic API, credential, refresh and rendering checks.
-Parser and credential tests run without VM modules; only the panel integration tests need them.
+Run `just test-herdr-usage` for Claude status-line cache and usage-window regression checks.
 Use `herdr-app check herdr-app/mods/usage` from the repo root for the native mod check.
 
 ## Not a setting anymore

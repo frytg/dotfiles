@@ -43,16 +43,17 @@ function until(resetsAt) {
   return m >= 60 ? `${Math.floor(m / 60)}h${m % 60}m` : `${m}m`;
 }
 
-// A window whose reset has passed starts at zero until Claude Code reports again.
+// Claude drops expired windows from status-line snapshots. Keep both meters after a reset.
 function claudeWindow(w) {
-  if (!w) return null;
-  return w.resets_at != null && w.resets_at * 1000 < Date.now() ? { used: 0, resets_at: null } : { used: w.used_percentage, resets_at: w.resets_at };
+  if (!w || (w.resets_at != null && w.resets_at * 1000 <= Date.now())) return { used: 0, resets_at: null };
+  return { used: w.used_percentage, resets_at: w.resets_at };
 }
 
 async function readClaude() {
   const text = await readTextFile(`${home()}/${CLAUDE_CACHE}`);
   if (!text) return null;
   const r = JSON.parse(text);
+  if (!r.five_hour && !r.seven_day) return null;
   return { five: claudeWindow(r.five_hour), week: claudeWindow(r.seven_day) };
 }
 
