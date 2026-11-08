@@ -32,6 +32,7 @@ run:
 	just update-pi
 	-agent update
 	-claude upgrade
+	-droid update
 	mise install
 	just mise-update
 	-bun upgrade

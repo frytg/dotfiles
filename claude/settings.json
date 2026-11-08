@@ -185,6 +185,11 @@
     "command": "~/.claude/statusline.sh",
     "refreshInterval": 30
   },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
   "pluginConfigs": {
     "cc-plugin-agents-md@builtin": {
       "options": {
@@ -203,9 +208,7 @@
   "fileCheckpointingEnabled": true,
   "showTurnDuration": true,
   "terminalProgressBarEnabled": true,
-  "modelSettings": {
-    "claude-opus-5-5": {
-      "effortLevel": "high"
-    }
+  "enabledPlugins": {
+    "figma@claude-plugins-official": true
   }
 }
