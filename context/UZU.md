@@ -26,6 +26,14 @@ uzu reads only its own model format. It downloads catalog models on first use in
   - `/v1/models` reports the catalog ID (`alibaba:qwen3.6:27b:mirai:mirai-m:4`), not the HF ID.
   - Qwen3.6 reasons by default, and `server` has no `--reasoning-effort` flag. Thinking comes back in `reasoning_content`, so a small `max_tokens` can use up the budget and return an empty `content`.
 
+## Tailnet HTTPS
+
+`just uzu-tailscale` publishes the local server as the Tailscale Service `svc:uzu` at `https://uzu.<tailnet>.ts.net:8000`. Clients use `…:8000/v1` as the OpenAI base URL. The service has its own virtual IP, so HTTPS on 8000 doesn't clash with uzu listening on `127.0.0.1:8000`. `just uzu-tailscale-off` drains and clears it.
+
+- **The serve config persists.** tailscaled stores it, so it survives reboots. But it only proxies. While `just uzu-serve` isn't running, requests get a 502.
+- **Services need a tagged host and admin approval.** The Mac carries `tag:devices`. The first run registers the host as pending. Approve it on the admin console's Services page (define `svc:uzu` with `tcp:8000` there if it doesn't exist yet), or add an `autoApprovers.services` entry for the tag in the policy file.
+- **No auth on uzu.** Tailnet ACLs and grants decide who can reach `svc:uzu`.
+
 ## Measured
 
 Qwen3.6-27B-M on an M5 Pro with 64 GB, `--reasoning-effort disabled`, short prompt, November 2026:

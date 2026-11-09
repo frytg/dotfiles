@@ -6,6 +6,11 @@ UZU_BIN := UZU_DIR / 'target' / 'release' / 'cli'
 UZU_MODEL := env('UZU_MODEL', 'trymirai/Qwen3.6-27B-M')
 UZU_PORT := env('UZU_PORT', '8000')
 
+# the Mac app's CLI; the `tailscale` alias isn't visible to just
+TAILSCALE := env('TAILSCALE', '/Applications/Tailscale.app/Contents/MacOS/Tailscale')
+UZU_TS_SERVICE := 'svc:uzu'
+UZU_TS_PORT := '8000'
+
 # clone or pull uzu, ensure the Metal toolchain, and build the release CLI (see context/UZU.md)
 [group('INSTALL')]
 install-uzu:
@@ -42,3 +47,15 @@ uzu-serve port=UZU_PORT:
 [group('UZU')]
 uzu-models:
 	"{{ UZU_BIN }}" list-models
+
+# expose the uzu server as the tagged Tailscale Service svc:uzu over HTTPS (see context/UZU.md)
+[group('UZU')]
+uzu-tailscale:
+	"{{ TAILSCALE }}" serve --service={{ UZU_TS_SERVICE }} --https={{ UZU_TS_PORT }} --yes http://127.0.0.1:{{ UZU_PORT }}
+	"{{ TAILSCALE }}" serve status
+
+# remove the svc:uzu Tailscale Service config from this machine
+[group('UZU')]
+uzu-tailscale-off:
+	"{{ TAILSCALE }}" serve drain {{ UZU_TS_SERVICE }}
+	"{{ TAILSCALE }}" serve clear {{ UZU_TS_SERVICE }}
