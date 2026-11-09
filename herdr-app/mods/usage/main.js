@@ -20,6 +20,8 @@ const WARN_PCT = 80;
 const BLOCK_ID = "usage";
 const BORDER = 1;
 const FOLDED_KEY = "usage.folded";
+// Room under the last meter, so it clears the window edge like the footer beside it.
+const LIST_BOTTOM = 20;
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -264,7 +266,7 @@ export default class Usage extends View {
     return root.child(content
       .child(header)
       .when(!this.folded && meters.length === 0, el => el.child(div().px(16).pb(10).text_size(12).text_color(t.dim).child("No usage yet.")))
-      .when(!this.folded && meters.length > 0, el => el.child(v_flex().px(8).pb(8).gap(2).children(meters.map((m) => this.row(t, m.id, m.icon, m.name, m.w, m.stale)))))
+      .when(!this.folded && meters.length > 0, el => el.child(v_flex().px(8).pb(LIST_BOTTOM).gap(2).children(meters.map((m) => this.row(t, m.id, m.icon, m.name, m.w, m.stale)))))
       .when(Boolean(factoryNote), el => el.child(div().px(16).pb(8).text_size(11).text_color(t.dim).child(factoryNote))));
   }
 }

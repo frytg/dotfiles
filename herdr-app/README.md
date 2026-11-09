@@ -21,6 +21,23 @@ The [theme](themes/dark-greeny.json) uses gruvbox dark for terminal ANSI (`theme
 `theme.custom` tokens. `panel_bg = transparent` and `surface0 = reset` become the same background as the terminal.
 The [settings](settings.json) lock `appearance` to `dark` (`auto_switch = false`).
 
+## Sidebar
+
+The [layout](layouts/dan.json) splits the sidebar into two columns under the brand bar: spaces and the footer on the
+left, agents and usage on the right. Drag the line between them to change the split. The outer node keeps the id
+`sidebar`, because the shipped mods read its width to decide on the compact rail. On the rail, the spaces column takes
+the full width and the agents column shrinks to nothing.
+
+Both lists are clones of the shipped mods, so they don't get Herdr's updates. Compare them after an app update.
+`just link` copies them into Herdr's home, because Herdr doesn't hot-reload a mod through a symlink. Run it after
+every edit.
+
+- [my-spaces](mods/my-spaces/main.js) sets space avatars from the `icons` prop on the `spaces` block in the layout,
+  keyed by space name. A value is an emoji, up to two letters on the space's color, a shipped program icon name
+  (`nix` for `icons/nix.svg`), or a path in Herdr's home. Spaces without an entry keep their first letter.
+- [my-agents](mods/my-agents/main.js) draws each agent on two lines: the name, then the detail (tab or agent title)
+  and the machine for remote agents.
+
 ## Git panel
 
 The [layout](layouts/dan.json) is a clone of the shipped `main` layout. Its Changes panel runs the
@@ -31,7 +48,7 @@ The app writes `gpui-kit.d.ts` and `jsconfig.json` next to the mod for editor ty
 
 ## Usage box
 
-The [usage mod](mods/usage/main.js) is a sidebar box between the agents list and the footer.
+The [usage mod](mods/usage/main.js) is a box under the agents list in the sidebar's second column.
 It shows Claude Code (5h and 7d), Cursor, and Factory (5h, 7d and 30d) plan usage as meters with their reset times.
 On the compact rail it shows only icons and percentages. The box resizes its `usage` layout block to fit its content,
 so the layout's `px` is only the starting height. Click the header to fold it down to one line with the percentages.

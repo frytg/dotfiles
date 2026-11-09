@@ -22,62 +22,92 @@
           "window_drag": true
         },
         {
-          "id": "sidebar-lists",
-          "type": "column",
+          "id": "sidebar-body",
+          "type": "row",
           "children": [
             {
-              "id": "spaces",
-              "type": "block",
-              "content": {
-                "mod": "spaces"
-              },
+              "id": "spaces-col",
+              "type": "column",
+              "children": [
+                {
+                  "id": "spaces",
+                  "type": "block",
+                  "content": {
+                    "mod": "my-spaces",
+                    "props": {
+                      "icons": {
+                        "dotfiles": "🔧",
+                        "nixos": "nix"
+                      }
+                    }
+                  },
+                  "size": {
+                    "weight": 1
+                  }
+                },
+                {
+                  "id": "sidebar-footer",
+                  "type": "block",
+                  "content": {
+                    "mod": "workspace-chrome",
+                    "props": {
+                      "footer": true
+                    }
+                  },
+                  "size": {
+                    "px": 69
+                  }
+                }
+              ],
               "size": {
                 "weight": 1
               },
-              "min": 90
+              "min": 76,
+              "resizable": false
             },
             {
-              "id": "agents",
-              "type": "block",
-              "content": {
-                "mod": "agents"
-              },
+              "id": "agents-col",
+              "type": "column",
+              "children": [
+                {
+                  "id": "agents",
+                  "type": "block",
+                  "content": {
+                    "mod": "my-agents"
+                  },
+                  "size": {
+                    "weight": 1
+                  }
+                },
+                {
+                  "id": "usage",
+                  "type": "block",
+                  "content": {
+                    "mod": "usage"
+                  },
+                  "size": {
+                    "px": 136
+                  }
+                }
+              ],
               "size": {
-                "weight": 1
+                "weight": 1.25
               },
-              "min": 90
+              "min": 0,
+              "resizable": false
             }
-          ]
-        },
-        {
-          "id": "usage",
-          "type": "block",
-          "content": {
-            "mod": "usage"
-          },
-          "size": {
-            "px": 136
-          }
-        },
-        {
-          "id": "sidebar-footer",
-          "type": "block",
-          "content": {
-            "mod": "workspace-chrome",
-            "props": {
-              "footer": true
-            }
-          },
-          "size": {
-            "px": 69
+          ],
+          "divider": {
+            "width": 1,
+            "color": "border"
           }
         }
       ],
       "size": {
-        "px": 268
+        "px": 560
       },
       "min": 44,
-      "max": 480,
+      "max": 900,
       "background": "chrome",
       "resizable": false
     },

@@ -58,6 +58,9 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 - [Nub](https://github.com/nubjs/nub) is the preferred package manager and runner: `nub`, `nubx`, `nub watch`, `nub install`.
 - Lockfiles are committed and reviewed. No floating `latest` in CI.
 - If Nub is not a fit, fall back to a `justfile` + a lockfile-driven package manager. No parallel ad-hoc tooling.
+- Avoid Python when existing tools or runtimes can handle the task. Prefer shell for system automation and the project's
+  existing runtime for scripts. Use Python only when it materially simplifies the work or no suitable alternative exists.
+  Don't add Python tooling or dependencies for one-off tasks.
 
 ## Runtimes
 
