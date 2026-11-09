@@ -89,6 +89,8 @@ const SECTION_STATUS = { 4: 'blocked', 3: 'done', 2: 'working' }
 const ROW_HEIGHT = 40
 const NAME_LINE = '16px'
 const SUB_LINE = '14px'
+// How wide a remote machine's name after the agent's name may get.
+const MACHINE_MAX = 150
 
 function duration(ms) {
 	const m = Math.floor(ms / 60000)
@@ -470,10 +472,20 @@ export default class Agents extends View {
 			const name = full
 				? a.space_name || label(a)
 				: (more ?? (/^\d+$/.test(label(a)) ? a.program?.name || label(a) : label(a)))
-			// The second line says what the first leaves out: the detail under a space name,
-			// else the program; then the machine for a remote agent.
+			// The second line says what the first leaves out: the detail under a space name, else the program.
 			const below = full ? clean(more) || clean(a.title) : clean(a.title) !== clean(name) ? clean(a.title) : ''
-			const sub = [below || a.program?.name || '', machine].filter(Boolean).join(' \u00b7 ')
+			const sub = below || a.program?.name || ''
+			// A remote agent names its machine, with the icon the spaces list uses for machines.
+			const where = h_flex()
+				.flex_shrink(1)
+				.min_w(0)
+				.max_w(MACHINE_MAX)
+				.gap(4)
+				.items_center()
+				.text_size(11)
+				.text_color(t.dim)
+				.child(svg('mods/workspace-chrome/server.svg').size(11).flex_none())
+				.child(div().min_w(0).truncate().child(machine ?? ''))
 			return h_flex()
 				.id(`ag-${a.address}`)
 				.px(8)
@@ -510,12 +522,20 @@ export default class Agents extends View {
 						.flex_1()
 						.min_w(0)
 						.child(
-							div()
+							h_flex()
 								.min_w(0)
-								.truncate()
-								.line_height(NAME_LINE)
-								.text_color(idle ? t.muted : t.foreground)
-								.child(name)
+								.gap(8)
+								.items_center()
+								.child(
+									div()
+										.flex_shrink(1)
+										.min_w(0)
+										.truncate()
+										.line_height(NAME_LINE)
+										.text_color(idle ? t.muted : t.foreground)
+										.child(name)
+								)
+								.when(Boolean(machine), (el) => el.child(where))
 						)
 						.when(Boolean(sub), (el) =>
 							el.child(div().min_w(0).truncate().line_height(SUB_LINE).text_size(11.5).text_color(t.dim).child(sub))

@@ -37,8 +37,8 @@ every edit.
   (`nix` for `icons/nix.svg`), or a path in Herdr's home. Spaces without an entry keep their first letter.
   The `colors` prop maps a name prefix to the avatar's `#rrggbb` color, so related spaces share one. The longest
   matching prefix wins; other spaces keep their picked color.
-- [my-agents](mods/my-agents/main.js) draws each agent on two lines: the name, then the detail (tab or agent title)
-  and the machine for remote agents.
+- [my-agents](mods/my-agents/main.js) draws each agent on two lines: the name, plus the machine for a remote agent,
+  then the detail (tab or agent title).
 
 ## Git panel
 
