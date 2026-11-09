@@ -3,10 +3,11 @@ name: just-commands
 description: >-
   Write and edit `justfile` task recipes for the `just` command runner, following house conventions: a private
   `_default` listing recipe first, exactly one doc-comment line above every recipe, every public recipe in a
-  `[group()]`, and larger task sets split into `just/*.just` files imported from the root `justfile`. Covers recipe
-  syntax, parameters, dependencies, variables, settings, shebang recipes, imports, and modules, with links to the
-  full manual. Use when the user asks to "add a just recipe", "add a just command", "create a justfile", "split the
-  justfile", "move tasks to just", or edits any `justfile` / `*.just` file.
+  `[group()]`, larger task sets split into `just/*.just` files imported from the root `justfile`, and `just install`
+  / `just update` recipes that wrap the repo's mise, bun, or aube commands. Covers recipe syntax, parameters,
+  dependencies, variables, settings, shebang recipes, imports, and modules, with links to the full manual. Use when
+  the user asks to "add a just recipe", "add a just command", "create a justfile", "split the justfile", "move tasks
+  to just", "add install/update recipes", or edits any `justfile` / `*.just` file.
 license: MIT
 metadata:
   author: frytg
@@ -47,6 +48,35 @@ Full docs: [manual](https://just.systems/man/en/) and [GitHub README](https://gi
 4. **Split by topic into `just/*.just`.** Keep the root `justfile` short: imports, shared settings and variables, then
    `_default`. Add a trailing comment on each `import` line so the root file doubles as a table of contents.
 5. **Indent with tabs**, consistently within a recipe. just rejects mixed indentation.
+6. **Provide `just install` and `just update`.** They wrap the repo's tool and package managers, so nobody has to
+   remember which ones a repo uses. If a justfile lacks them, suggest adding them. If they exist, point the user to
+   them instead of raw `mise` / `bun` / `aube` commands. See [Install and update](#install-and-update).
+
+## Install and update
+
+Detect the managers from the files in the repo. Chain only the ones that are present.
+
+- `mise.toml` or `.mise.toml` → `mise install` / `mise upgrade`
+- `bun.lock` → `bun install` / `bun update`
+- `aube-lock.yaml` → `aube install` / `aube update`
+
+```just
+# install pinned tools and dependencies
+[group('DEV')]
+install:
+	mise install
+	bun install
+
+# update tools and dependencies within their pinned ranges
+[group('DEV')]
+update:
+	mise upgrade
+	bun update
+```
+
+Both commands respect existing ranges (`mise upgrade` keeps `node = "26"` on 26.x). Major bumps (`mise upgrade --bump`,
+`aube update --latest`) rewrite pins, so add them as a separate recipe only on request. Use `aube ci` / `bun install
+--frozen-lockfile` in CI, not `just install`.
 
 ## Layout
 
@@ -196,4 +226,5 @@ menu, so keep them cheap and safe, or move the command into the recipe body.
 - Every public recipe has a `[group('NAME')]`; private helpers start with `_`.
 - Topic files live in `just/*.just`, imported from the root with a trailing comment.
 - Imported recipe names carry a topic prefix.
+- `just install` and `just update` exist (or were suggested) and wrap every package manager in the repo.
 - Run bare `just` and check the menu reads cleanly before finishing.
