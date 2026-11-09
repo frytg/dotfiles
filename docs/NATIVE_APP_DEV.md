@@ -2,7 +2,7 @@
 
 Starting point for native Apple apps (SwiftUI on iOS, iPadOS, macOS). It collects what worked and what bit us while building feather-ai-chat, a one-binary chat client for an OpenAI-compatible proxy, deployment floor 26 (Liquid Glass), September 2026.
 
-[DESIGN.md](../context/DESIGN.md) still owns colour and tone, and HIG still wins on chrome. This file owns process, project setup, architecture, UX patterns, testing, and the gotchas that cost time. Where the project departed from DESIGN.md, the [Visual design](#visual-design-on-the-designmd-palette) section says so.
+[DESIGN.md](DESIGN.md) still owns colour and tone, and HIG still wins on chrome. This file owns process, project setup, architecture, UX patterns, testing, and the gotchas that cost time. Where the project departed from DESIGN.md, the [Visual design](#visual-design-on-the-designmd-palette) section says so.
 
 ## Day-one checklist
 

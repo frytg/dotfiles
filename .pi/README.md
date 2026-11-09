@@ -45,7 +45,7 @@ Setup by running `/datadog setup eu` in pi.
 
 ### MCP
 
-`agent/mcp.json` is a symlink to [`.agents/mcp.json`](../.agents/mcp.json). See [`context/MCP.md`](../context/MCP.md) for how pi, Claude Code, and Cursor read their MCP servers.
+`agent/mcp.json` is a symlink to [`.agents/mcp.json`](../.agents/mcp.json). See [`docs/MCP.md`](../docs/MCP.md) for how pi, Claude Code, and Cursor read their MCP servers.
 
 ### Web search
 

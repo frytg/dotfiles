@@ -2,7 +2,7 @@ import 'just/bootstrap.just' # machine bootstrap recipes (link, run, up — syml
 import 'just/install.just' # one-shot installer recipes (nix, pi, cursor, fx, omlx)
 import 'just/mac.just' # macos-specific tweaks (defaults, reload, pmset)
 import 'just/ollama.just'
-import 'just/uzu.just' # uzu local inference: build from source, chat, serve (see context/UZU.md)
+import 'just/uzu.just' # uzu local inference: build from source, chat, serve (see docs/UZU.md)
 import 'just/beszel.just' # beszel monitoring agent, opt-in per machine (see docs/BESZEL.md)
 import 'just/mise.just' # mise tooling
 import 'just/server.just' # headless server provisioning from a fresh clone (no homebrew, no macos)

@@ -1,4 +1,4 @@
-# uzu: local inference engine by Mirai, built from source. See context/UZU.md.
+# uzu: local inference engine by Mirai, built from source. See docs/UZU.md.
 
 # checkout lives next to the dotfiles repo unless UZU_DIR is set
 UZU_DIR := env('UZU_DIR', justfile_directory() / '..' / 'uzu')
@@ -11,7 +11,7 @@ TAILSCALE := env('TAILSCALE', '/Applications/Tailscale.app/Contents/MacOS/Tailsc
 UZU_TS_SERVICE := 'svc:uzu'
 UZU_TS_PORT := '8000'
 
-# clone or pull uzu, ensure the Metal toolchain, and build the release CLI (see context/UZU.md)
+# clone or pull uzu, ensure the Metal toolchain, and build the release CLI (see docs/UZU.md)
 [group('INSTALL')]
 install-uzu:
 	#!/usr/bin/env zsh
@@ -48,7 +48,7 @@ uzu-serve port=UZU_PORT:
 uzu-models:
 	"{{ UZU_BIN }}" list-models
 
-# expose the uzu server as the tagged Tailscale Service svc:uzu over HTTPS (see context/UZU.md)
+# expose the uzu server as the tagged Tailscale Service svc:uzu over HTTPS (see docs/UZU.md)
 [group('UZU')]
 uzu-tailscale:
 	"{{ TAILSCALE }}" serve --service={{ UZU_TS_SERVICE }} --https={{ UZU_TS_PORT }} --yes http://127.0.0.1:{{ UZU_PORT }}

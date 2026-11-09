@@ -22,12 +22,12 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 
 ## MCP servers
 
-- Before adding, changing, or removing an MCP server, read [`context/MCP.md`](./context/MCP.md). Pi and Claude Code share one config; Cursor and Droid use separate configs with different formats. Sync Claude Code with `just mcp`.
+- Before adding, changing, or removing an MCP server, read [`docs/MCP.md`](./docs/MCP.md). Pi and Claude Code share one config; Cursor and Droid use separate configs with different formats. Sync Claude Code with `just mcp`.
 
 ## Editing conventions
 
 - Shell scripts use `zsh` with `set -e`; preserve existing patterns.
-- Just recipes get exactly one comment line above the recipe, because `just --list` shows only that line. Put longer explanations in `context/` and link them from that line.
+- Just recipes get exactly one comment line above the recipe, because `just --list` shows only that line. Put longer explanations in `docs/` and link them from that line.
 
 ## Secrets and safety
 

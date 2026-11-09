@@ -8,5 +8,5 @@ because it also stores authentication, sessions, and machine-specific state.
 
 - [`settings.json`](./settings.json) contains shared Droid preferences.
 - [`mcp.json`](./mcp.json) defines MCP servers in Droid's config format. See the
-  [MCP guide](../context/MCP.md) before changing server definitions.
+  [MCP guide](../docs/MCP.md) before changing server definitions.
 - [`statusline.sh`](./statusline.sh) renders the one-line status and requires `jq`.

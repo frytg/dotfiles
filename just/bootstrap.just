@@ -3,7 +3,7 @@
 link:
 	zsh ./bin/link.sh
 
-# sync .agents/mcp.json into claude code user scope (see context/MCP.md)
+# sync .agents/mcp.json into claude code user scope (see docs/MCP.md)
 [group('SYSTEM')]
 mcp:
 	#!/usr/bin/env zsh
