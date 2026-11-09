@@ -1,17 +1,9 @@
 {
 	"version": 1,
 	"hooks": {
-		"sessionStart": [
-			{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" idle" }
-		],
-		"beforeSubmitPrompt": [
-			{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" working" }
-		],
-		"stop": [
-			{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" idle" }
-		],
-		"sessionEnd": [
-			{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" clear" }
-		]
+		"sessionStart": [{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" idle" }],
+		"beforeSubmitPrompt": [{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" working" }],
+		"stop": [{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" idle" }],
+		"sessionEnd": [{ "command": "zsh \"$HOME/.cursor/herdr-desktop-status.sh\" clear" }]
 	}
 }

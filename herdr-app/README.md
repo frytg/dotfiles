@@ -35,6 +35,8 @@ every edit.
 - [my-spaces](mods/my-spaces/main.js) sets space avatars from the `icons` prop on the `spaces` block in the layout,
   keyed by space name. A value is an emoji, up to two letters on the space's color, a shipped program icon name
   (`nix` for `icons/nix.svg`), or a path in Herdr's home. Spaces without an entry keep their first letter.
+  The `colors` prop maps a name prefix to the avatar's `#rrggbb` color, so related spaces share one. The longest
+  matching prefix wins; other spaces keep their picked color.
 - [my-agents](mods/my-agents/main.js) draws each agent on two lines: the name, then the detail (tab or agent title)
   and the machine for remote agents.
 

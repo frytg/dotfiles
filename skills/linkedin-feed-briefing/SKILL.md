@@ -27,12 +27,12 @@ Pull the recent posts from the user's LinkedIn feed and turn them into a one-pag
 
 Reach for whichever persistent browser tool is available. Examples:
 
-| Tool                                          | Notes                                                                                                                                                                             |
-| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Playwright MCP** (`@playwright/mcp`)        | Chromium; persistent context via `browser_install`/`browser_profile`; same `browser_navigate` / `browser_click` shape.                                                            |
-| **Browserbase / Steel / Anchor**              | Hosted Chromium with profile cookies; usually exposed via `browser_session_create` + `browser_navigate`.                                                                          |
-| **Firecrawl `scrape`**                        | No login. Returns a markdown snapshot of the public feed view — useful for one-off check-ins, not the full session-authenticated feed. Falls back here when login is unavailable. |
-| **Exa `search`**                              | Last resort: query for `site:linkedin.com "<author>" "<keyword>"` to surface individual posts. Loses ordering, dedup, and recency guarantees.                                     |
+| Tool                                   | Notes                                                                                                                                                                             |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Playwright MCP** (`@playwright/mcp`) | Chromium; persistent context via `browser_install`/`browser_profile`; same `browser_navigate` / `browser_click` shape.                                                            |
+| **Browserbase / Steel / Anchor**       | Hosted Chromium with profile cookies; usually exposed via `browser_session_create` + `browser_navigate`.                                                                          |
+| **Firecrawl `scrape`**                 | No login. Returns a markdown snapshot of the public feed view — useful for one-off check-ins, not the full session-authenticated feed. Falls back here when login is unavailable. |
+| **Exa `search`**                       | Last resort: query for `site:linkedin.com "<author>" "<keyword>"` to surface individual posts. Loses ordering, dedup, and recency guarantees.                                     |
 
 Pick the first row that is loaded. Prefer anything that exposes a real browser with a logged-in session; fall back to Firecrawl/Exa only when nothing else works.
 
