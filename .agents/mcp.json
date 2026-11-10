@@ -1,30 +1,5 @@
 {
 	"mcpServers": {
-		"betterstack": {
-			"type": "http",
-			"url": "https://mcp.betterstack.com",
-			"directTools": [
-				"incident_comments",
-				"incident",
-				"incident_timeline",
-				"incidents",
-				"severity",
-				"severities",
-				"monitor_availability",
-				"monitor",
-				"monitor_response_times",
-				"monitors"
-			]
-		},
-		"cloudflare": {
-			"type": "http",
-			"url": "https://mcp.cloudflare.com/mcp",
-			"directTools": true
-		},
-		"datadog": {
-			"type": "http",
-			"url": "https://mcp.datadoghq.eu/v1/mcp?toolsets=core"
-		},
 		"exa": {
 			"type": "http",
 			"url": "https://mcp.exa.ai/mcp?login",
@@ -69,10 +44,6 @@
 				"search_users",
 				"sub_issue_write"
 			]
-		},
-		"victorialogs": {
-			"type": "http",
-			"url": "https://victoria-logs-mcp.moose-mulley.ts.net/mcp"
 		}
 	}
 }

@@ -485,7 +485,12 @@ export default class Agents extends View {
 				.text_size(11)
 				.text_color(t.dim)
 				.child(svg('mods/workspace-chrome/server.svg').size(11).flex_none())
-				.child(div().min_w(0).truncate().child(machine ?? ''))
+				.child(
+					div()
+						.min_w(0)
+						.truncate()
+						.child(machine ?? '')
+				)
 			return h_flex()
 				.id(`ag-${a.address}`)
 				.px(8)

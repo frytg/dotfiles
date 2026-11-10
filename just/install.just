@@ -49,6 +49,11 @@ install-cursor:
 install-factory:
 	curl -fsSL https://app.factory.ai/cli | sh
 
+# install Devin CLI
+[group('INSTALL')]
+install-devin:
+	curl -fsSL https://cli.devin.ai/install.sh | bash
+
 # install claude code cli
 [group('INSTALL')]
 install-claude:

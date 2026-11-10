@@ -1,29 +1,5 @@
 {
 	"mcpServers": {
-		"betterstack": {
-			"type": "http",
-			"url": "https://mcp.betterstack.com",
-			"enabledTools": [
-				"incident_comments",
-				"incident",
-				"incident_timeline",
-				"incidents",
-				"severity",
-				"severities",
-				"monitor_availability",
-				"monitor",
-				"monitor_response_times",
-				"monitors"
-			]
-		},
-		"cloudflare": {
-			"type": "http",
-			"url": "https://mcp.cloudflare.com/mcp"
-		},
-		"datadog": {
-			"type": "http",
-			"url": "https://mcp.datadoghq.eu/v1/mcp?toolsets=core"
-		},
 		"exa": {
 			"type": "http",
 			"url": "https://mcp.exa.ai/mcp?login",
@@ -37,7 +13,9 @@
 		"github": {
 			"type": "http",
 			"url": "https://api.githubcopilot.com/mcp/",
-			"headers": { "Authorization": "Bearer ${GITHUB_PAT}" },
+			"headers": {
+				"Authorization": "Bearer ${GITHUB_PAT}"
+			},
 			"oauth": false,
 			"enabledTools": [
 				"add_issue_comment",
@@ -69,10 +47,6 @@
 				"search_users",
 				"sub_issue_write"
 			]
-		},
-		"victorialogs": {
-			"type": "http",
-			"url": "https://victoria-logs-mcp.moose-mulley.ts.net/mcp"
 		}
 	}
 }

@@ -1,17 +1,5 @@
 {
 	"mcpServers": {
-		"betterstack": {
-			"url": "https://mcp.betterstack.com",
-			"transport": "http"
-		},
-		"cloudflare": {
-			"url": "https://mcp.cloudflare.com/mcp",
-			"transport": "http"
-		},
-		"datadog": {
-			"url": "https://mcp.datadoghq.eu/v1/mcp?toolsets=core",
-			"transport": "http"
-		},
 		"exa": {
 			"url": "https://mcp.exa.ai/mcp?login",
 			"transport": "http"
@@ -24,10 +12,6 @@
 			"url": "https://api.githubcopilot.com/mcp/",
 			"transport": "http",
 			"headers": { "Authorization": "Bearer ${env:GITHUB_PAT}" }
-		},
-		"victorialogs": {
-			"url": "https://victoria-logs-mcp.moose-mulley.ts.net/mcp",
-			"transport": "http"
 		}
 	}
 }
