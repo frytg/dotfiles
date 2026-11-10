@@ -3,19 +3,17 @@
 link:
 	zsh ./bin/link.sh
 
-# sync .agents/mcp.json into claude code user scope (see docs/MCP.md)
+# remove legacy Claude Code MCP entries (see docs/MCP.md)
 [group('SYSTEM')]
 mcp:
 	#!/usr/bin/env zsh
 	set -e
-	src="$PWD/.agents/mcp.json"
 	if ! command -v claude >/dev/null 2>&1; then
 		echo 'skipped: claude not on PATH'
 		exit 0
 	fi
-	for name in $(jq -r '.mcpServers | keys[]' "$src"); do
+	for name in exa firecrawl github; do
 		claude mcp remove -s user "$name" >/dev/null 2>&1 || true
-		claude mcp add-json -s user "$name" "$(jq -c --arg n "$name" '.mcpServers[$n] | del(.directTools)' "$src")"
 	done
 	claude mcp list
 

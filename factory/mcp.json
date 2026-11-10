@@ -1,15 +1,5 @@
 {
 	"mcpServers": {
-		"exa": {
-			"type": "http",
-			"url": "https://mcp.exa.ai/mcp?login",
-			"enabledTools": ["web_search_exa", "web_fetch_exa"]
-		},
-		"firecrawl": {
-			"type": "http",
-			"url": "https://mcp.firecrawl.dev/v2/mcp-oauth",
-			"enabledTools": ["firecrawl_map"]
-		},
 		"github": {
 			"type": "http",
 			"url": "https://api.githubcopilot.com/mcp/",

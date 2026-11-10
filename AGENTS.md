@@ -25,7 +25,9 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 
 ## MCP servers
 
-- Before adding, changing, or removing an MCP server, read [`docs/MCP.md`](./docs/MCP.md). Pi and Claude Code share one config; Cursor and Droid use separate configs with different formats. Sync Claude Code with `just mcp`.
+- Before adding, changing, or removing an MCP server, read [`docs/MCP.md`](./docs/MCP.md).
+  Pi uses `.agents/mcp.json`; Claude Code uses the official GitHub plugin. Cursor, Droid, and Devin use
+  separate configs. Run `just mcp` to remove legacy Claude Code MCP entries.
 
 ## Editing conventions
 

@@ -1,6 +1,7 @@
 # MCP
 
-Pi and Claude Code share one MCP config. Cursor, Droid, and Devin each have their own because their config formats differ.
+Pi uses `.agents/mcp.json`. Claude Code uses Anthropic's official GitHub plugin instead of syncing that
+file. Cursor, Droid, and Devin each have their own MCP config because their formats differ.
 
 ## Config Locations
 
@@ -8,8 +9,9 @@ Pi and Claude Code share one MCP config. Cursor, Droid, and Devin each have thei
   - Reads: `~/.pi/agent/mcp.json`
   - Source: [`.agents/mcp.json`](../.agents/mcp.json), through a relative symlink at `.pi/agent/mcp.json`. `~/.pi` links to `.pi/` in this repo.
 - **Claude Code**
-  - Reads: the `mcpServers` key in `~/.claude.json` (user scope)
-  - Source: [`.agents/mcp.json`](../.agents/mcp.json), copied in by `just mcp` with `claude mcp add-json -s user`, without the pi-only `directTools` key. `~/.claude.json` also holds session state, so it can't be a symlink.
+  - Uses the [GitHub plugin](https://claude.com/marketplace/plugins/github) from Anthropic's official
+    marketplace. Install it with `/plugin install github@claude-plugins-official` and choose user scope.
+  - Plugin settings and installed files are managed by Claude Code, not this repo.
 - **Cursor**
   - Reads: `~/.cursor/mcp.json`
   - Source: [`.cursor/mcp.json`](../.cursor/mcp.json), linked by `bin/link.sh` and edited by hand.
@@ -22,17 +24,29 @@ Pi and Claude Code share one MCP config. Cursor, Droid, and Devin each have thei
 
 ## Changing a server
 
-1. **Edit each config:** update `.agents/mcp.json` with `${VAR}`, `.cursor/mcp.json` with `${env:VAR}`, `factory/mcp.json` in Droid's native format, and `devin/mcp.json` in Devin's native format.
-2. **Sync Claude Code:** run `just mcp`. `just run` also does this. It only adds and updates servers. To remove one, run `claude mcp remove -s user <name>`.
+1. **Edit each config:** update `.agents/mcp.json` for pi, `.cursor/mcp.json` with `${env:VAR}`,
+   `factory/mcp.json` in Droid's native format, and `devin/mcp.json` in Devin's native format.
+2. **Claude Code:** install or manage the GitHub plugin with `/plugin`. `just mcp` removes legacy
+   user-scope MCP entries named `exa`, `firecrawl`, and `github`; it does not sync `.agents/mcp.json`
+   to Claude Code. `just run` also runs this cleanup.
 3. **Reload:** use `/reload` in pi, start a new Claude Code session, restart Cursor, and use `/mcp` in Droid or Devin if needed.
 
 ## Secrets
 
-`GITHUB_PAT` is only a placeholder in these files. Pi loads its value from `~/.pi/.env.personal` itself. Claude Code, Cursor, Droid, and Devin only see the environment they start in. If the value is missing, the GitHub server fails to connect, and `claude mcp list` shows a warning. Cursor or Droid started from the Dock may not see shell exports.
+`GITHUB_PAT` is a placeholder in the MCP configs. Pi loads it from `~/.pi/.env.personal` before
+connecting. Claude Code's GitHub plugin instead expects `GITHUB_PERSONAL_ACCESS_TOKEN` in the
+environment that launches Claude Code. It does not read Pi's env file or the repo's `GITHUB_PAT`
+setting, so the plugin cannot authenticate without that variable. Do not store the token in tracked
+files.
 
-`victorialogs` is the self-hosted Victoria Logs MCP server on locally0. It has no auth and is only reachable on the tailnet, so it fails to connect when Tailscale is down.
+Cursor, Droid, and Devin only see the environment they start in. A missing `GITHUB_PAT` makes their
+GitHub MCP server fail to connect. Cursor or Droid started from the Dock may not see shell exports.
 
-The other servers use OAuth. Log in once per tool in each client: `/mcp` in Claude Code and Droid, or the MCP settings in Cursor.
+`victorialogs` is the self-hosted Victoria Logs MCP server on locally0. It has no auth and is only
+reachable on the tailnet, so it fails to connect when Tailscale is down.
+
+For OAuth-backed servers, log in once per tool in each client: `/mcp` in Claude Code and Droid, or the
+MCP settings in Cursor.
 
 ## Figma
 
