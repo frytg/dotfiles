@@ -1,0 +1,13 @@
+{
+	"version": 1,
+	"devin": {
+		"org_id": "org-4155044201dc4ff985f7be692e156435"
+	},
+	"shell": {
+		"setup_complete": true
+	},
+	"theme_mode": "dark",
+	"permissions": {
+		"allow": ["Exec(grep)", "Exec(find)", "Exec(cat)"]
+	}
+}

@@ -99,6 +99,13 @@ ln -sf "$(PWD)/factory/mcp.json" ~/.factory/mcp.json
 ln -sf "$(PWD)/factory/statusline.sh" ~/.factory/statusline.sh
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.factory/AGENTS.md
 
+# devin: config, MCP servers, and global rules. config.json is shared across
+# hosts, so CLI-written keys (theme, permissions) propagate everywhere.
+mkdir -p ~/.config/devin
+ln -sf "$(PWD)/devin/config.json" ~/.config/devin/config.json
+ln -sf "$(PWD)/devin/mcp.json" ~/.config/devin/mcp_config.json
+ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.config/devin/AGENTS.md
+
 # claude code: settings, keybindings, global rules (CLAUDE.md), and skills.
 # lives in claude/ (not .claude/) so it isn't picked up as project settings here.
 # ~/.claude itself stays a real dir — it also holds sessions, history, and plugins.

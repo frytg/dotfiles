@@ -11,6 +11,9 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 - Herdr: `herdr-app/` holds the window app config (keys, settings, theme, layout, mods), wired in `link.sh`.
 - Droid: `factory/settings.json`, `factory/mcp.json`, `factory/statusline.sh`, and `.agents/AGENTS.md` are linked into `~/.factory/` by `bin/link.sh`.
   Keep `~/.factory/` itself local because it also holds auth, sessions, and machine-specific settings.
+- Devin: `devin/config.json`, `devin/mcp.json`, and `.agents/AGENTS.md` are linked into `~/.config/devin/` by `bin/link.sh`.
+  `config.json` is shared across hosts, so CLI-written keys (theme, permissions) show up as repo diffs; commit them when they settle.
+  Skills come via the existing `~/.agents/skills` link.
 
 ## Skills
 
