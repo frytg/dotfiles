@@ -1,7 +1,7 @@
 // Workspace spaces: stable colored avatars, worktrees under their checkout,
 // grouped by machine when more than one is known. After a space's name, the repo
-// its first terminal is in now, only where unusual: branch, ahead/behind. Agent state lives in the agents list, not here. Click to
-// switch, right-click for its menu, drag to reorder.
+// its first terminal is in now, only where unusual: branch, ahead/behind, uncommitted file count.
+// Agent state lives in the agents list, not here. Click to switch, right-click for its menu, drag to reorder.
 
 import { v_flex, h_flex } from 'gpui-base'
 import { View, div, svg, image } from 'gpui-kit'
@@ -278,7 +278,16 @@ export default class Spaces extends View {
 			// Writes nothing under .git (index lock, fsmonitor cookie): watch() would wake on it.
 			const r = await exec(
 				'git',
-				['--no-optional-locks', '-c', 'core.fsmonitor=false', 'status', '--porcelain=v2', '--branch'],
+				[
+					'--no-optional-locks',
+					'-c',
+					'core.fsmonitor=false',
+					'status',
+					'--porcelain=v2',
+					'--branch',
+					'--untracked-files=all',
+					'-z',
+				],
 				{ cwd, on }
 			)
 			if (r.code !== 0) {
@@ -297,15 +306,21 @@ export default class Spaces extends View {
 				branch: null,
 				ahead: 0,
 				behind: 0,
+				changed: 0,
 				repo: JSON.stringify([on, repo]),
 				linked: repo !== `${top.stdout.trim()}/.git`,
 			}
-			for (const line of r.stdout.split('\n')) {
+			const lines = r.stdout.split('\0')
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i]
 				if (line.startsWith('# branch.head ')) info.branch = line.slice(14)
 				else if (line.startsWith('# branch.ab ')) {
 					const [a, b] = line.slice(12).split(' ')
-					info.ahead = Math.abs(parseInt(a, 10)) || 0
-					info.behind = Math.abs(parseInt(b, 10)) || 0
+					info.ahead = Math.abs(Number.parseInt(a, 10)) || 0
+					info.behind = Math.abs(Number.parseInt(b, 10)) || 0
+				} else if (/^(?:1 |2 |u |\? )/.test(line)) {
+					info.changed++
+					if (line.startsWith('2 ')) i++
 				}
 			}
 			this.git[key] = info
@@ -608,6 +623,15 @@ export default class Spaces extends View {
 			.when(Boolean(where), (el) => el.child(div().min_w(0).truncate().child(where)))
 			.when(g.ahead > 0, (el) => el.child(div().flex_none().text_color(t.ansi2).child(`\u2191${g.ahead}`)))
 			.when(g.behind > 0, (el) => el.child(div().flex_none().text_color(t.ansi1).child(`\u2193${g.behind}`)))
+			.when(g.changed > 0, (el) =>
+				el.child(
+					div()
+						.flex_none()
+						.text_color(t.ansi3)
+						.tooltip(`${g.changed} uncommitted file${g.changed === 1 ? '' : 's'}`)
+						.child(String(g.changed))
+				)
+			)
 	}
 
 	row({ w, i, g, tree }, t) {
