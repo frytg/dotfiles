@@ -40,6 +40,13 @@ every edit.
 - [my-agents](mods/my-agents/main.js) draws each agent on two lines: the name, plus the machine for a remote agent,
   then the detail (tab or agent title).
 
+## Tab bar
+
+The [my-tabs mod](mods/my-tabs/main.js) is a clone of the shipped `tabs` mod. A tab nobody named shows its agent's
+terminal title instead of the program name, cut to `MAX_TITLE` characters. Tabs you rename keep their name. Titles
+that are only a folder, a `user@host` or the program name fall back to the program name. Like the list mods, it is
+a clone, so compare it with the shipped `tabs` mod after an app update. `just link` copies it into Herdr's home.
+
 ## Git panel
 
 The [layout](layouts/dan.json) is a clone of the shipped `main` layout. Its Changes panel runs the
