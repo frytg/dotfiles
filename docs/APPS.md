@@ -9,7 +9,6 @@ Mac apps that are not in the [`Brewfile`](../Brewfile). Most of them update them
 - [Ghostty](https://ghostty.org/download)
 - [Claude](https://claude.ai/download)
 - [Factory](https://factory.ai)
-- [Orca](https://www.onorca.dev) — run coding agents in parallel, one worktree each
 - [Herdr](https://herdr.dev/download/) — config lives in [`herdr-app/`](../herdr-app)
 - [Moshi desktop](https://getmoshi.app/desktop)
 - [Figma](https://www.figma.com/downloads/)

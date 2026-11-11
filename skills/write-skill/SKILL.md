@@ -33,7 +33,7 @@ description: >- # ≤1024 chars, see formula below
 license: MIT
 metadata:
   author: frytg
-  agent: pi # pi | fx | orca — the harness the skill was created in
+  agent: pi # pi | fx — the harness the skill was created in
   category: engineering # engineering | productivity | writing | media | social | ard
   inspirations: [] # optional, list sources borrowed from
 ---
