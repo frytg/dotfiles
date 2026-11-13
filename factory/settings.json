@@ -8,6 +8,18 @@
 	"logoAnimation": "off",
 	"completionSound": "off",
 	"awaitingInputSound": "off",
+	"customModels": [
+		{
+			"model": "uzu/alibaba:qwen3.6:27b:mirai:mirai-m:4",
+			"displayName": "Feather: Uzu Qwen3.6 27B",
+			"baseUrl": "https://llm.moose-mulley.ts.net/v1",
+			"provider": "generic-chat-completion-api",
+			"apiKeyHelper": "op read 'op://Agentic/Feather LLM Proxy/credential'",
+			"maxOutputTokens": 8192,
+			"maxContextLimit": 24000,
+			"noImageSupport": true
+		}
+	],
 	"sessionDefaultSettings": {
 		"model": "auto",
 		"reasoningEffort": "none",
