@@ -82,6 +82,22 @@ const SORTS = [
 	{ id: 'grouped', label: 'Grouped by space', icon: 'layers' },
 ]
 const sortOf = () => SORTS.find((s) => s.id === shared('agents.sort')) ?? SORTS[0]
+const FILTERS = [
+	{ id: 'all', label: 'all', hint: 'All machines' },
+	{ id: 'mine', label: 'mine', hint: 'This computer' },
+	{ id: 'other', label: 'other', hint: 'All other machines' },
+]
+const filterOf = () => FILTERS.find((f) => f.id === shared('agents.machine')) ?? FILTERS[0]
+
+/**
+ * Match an app terminal address against the selected machine filter.
+ * @param {string} address Terminal address, machine-prefixed only for remote terminals.
+ * @param {string} filter Selected machine filter.
+ * @returns {boolean} Whether the terminal belongs in the filtered list.
+ */
+const matchesMachine = (address, filter) =>
+	filter === 'all' || (filter === 'other' ? address.includes('/') : !address.includes('/'))
+
 const SECTION = { 4: 'Needs you', 3: 'Done', 2: 'Working', 1: 'Idle' }
 const SECTION_STATUS = { 4: 'blocked', 3: 'done', 2: 'working' }
 
@@ -314,14 +330,17 @@ export default class Agents extends View {
 		if (props()?.sortMenu) return this.sortMenu(t)
 		const collapsed = narrow()
 		const sort = sortOf()
+		const filter = filterOf()
 		let list = agents()
 		this.listed = new Map(list.map((a) => [a.address, a.status]))
-		const all = terminals()
-		this.migratePins(all)
+		const everyTerminal = terminals()
+		this.migratePins(everyTerminal)
+		const all = everyTerminal.filter((a) => matchesMachine(a.address, filter.id))
 		const shown = focused()?.agent
 		const now = Date.now()
 		this.track(list, now)
 		this.hold(list)
+		list = list.filter((a) => matchesMachine(a.address, filter.id))
 		// A kept sub-agent (one with a pane) is in agents() too: where a tree shows
 		// it, it gets no row of its own, unless it's pinned.
 		const nested = new Set(collapsed ? [] : list.flatMap((a) => this.tree(all, a.address).map((s) => s.t.address)))
@@ -626,8 +645,31 @@ export default class Agents extends View {
 						.h(31)
 						.flex_none()
 						.items_center()
-						.justify_between()
+						.gap(6)
 						.child(div().text_size(11.5).font_medium().text_color(t.dim).child('Agents'))
+						.child(
+							h_flex()
+								.gap(2)
+								.items_center()
+								.children(
+									FILTERS.map((f) =>
+										div()
+											.id(`ag-machine-${f.id}`)
+											.px(5)
+											.py(2)
+											.rounded(4)
+											.text_size(11)
+											.text_color(f.id === filter.id ? t.foreground : t.dim)
+											.when(f.id === filter.id, (el) => el.bg(t.selected))
+											.cursor_pointer()
+											.hover((s) => s.bg(t.hover).text_color(t.foreground))
+											.tooltip(f.hint)
+											.on_click(() => setShared('agents.machine', f.id))
+											.child(f.label)
+									)
+								)
+						)
+						.child(div().flex_1())
 						.child(
 							div()
 								.id('ag-sort')
@@ -649,7 +691,11 @@ export default class Agents extends View {
 						.text_size(12)
 						.text_color(t.dim)
 						.child(
-							'No agent status yet. Agents show up here when they report their status. Older versions and agents inside tmux may not.'
+							filter.id === 'all'
+								? 'No agent status yet. Agents show up here when they report their status. Older versions and agents inside tmux may not.'
+								: filter.id === 'mine'
+									? 'No agents on this computer.'
+									: 'No agents on other machines.'
 						)
 				)
 			)
