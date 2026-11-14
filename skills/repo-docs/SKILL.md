@@ -50,10 +50,12 @@ split broader docs by reader goal:
 
   ```markdown
   <!-- Public repository -->
+
   **Visibility:** Public repository. Use synthetic placeholders (`acme`, `example.com`, `<host>`) in docs and examples.
   Exclude internal hostnames, private URLs, IP addresses, account IDs, and credentials.
 
   <!-- Private repository -->
+
   **Visibility:** Private repository. Real hostnames (`node-01`), service URLs, and namespaces belong in docs so
   `Verify` commands stay runnable; use `<tailnet>` where parameterized and exclude plaintext secrets, tokens, and PII.
   ```

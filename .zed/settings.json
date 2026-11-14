@@ -45,6 +45,10 @@
 	"format_on_save": "on",
 	"formatter": "auto",
 	"git": {
+		"auto_fetch": {
+			"enabled": true,
+			"interval_secs": 600
+		},
 		"inline_blame": {
 			"enabled": true,
 			"min_column": 60,

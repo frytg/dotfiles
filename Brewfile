@@ -22,6 +22,7 @@ tap "hashicorp/tap", trusted: true
 
 # --- Formulas ---
 brew "age"
+brew "awscli"
 brew "brotli"
 brew "cosign"
 brew "crane"

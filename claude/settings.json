@@ -12,6 +12,10 @@
 		"command": "~/.claude/statusline.sh",
 		"refreshInterval": 30
 	},
+	"enabledPlugins": {
+		"figma@claude-plugins-official": true,
+		"github@claude-plugins-official": true
+	},
 	"modelSettings": {
 		"claude-opus-5-5": {
 			"effortLevel": "high"
@@ -34,9 +38,5 @@
 	"autoContinueAtUsageLimit": false,
 	"fileCheckpointingEnabled": true,
 	"showTurnDuration": true,
-	"terminalProgressBarEnabled": true,
-	"enabledPlugins": {
-		"figma@claude-plugins-official": true,
-		"github@claude-plugins-official": true
-	}
+	"terminalProgressBarEnabled": true
 }
