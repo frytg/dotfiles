@@ -38,7 +38,7 @@ VAULT=$(obsidian vault info=path)
 Use `$VAULT` for absolute paths to read/edit/write. The CLI requires the app to be running.
 
 - **Check `<vault>/AGENTS.md` first.** Vaults may carry a root-level `AGENTS.md` (or similarly named conventions file) with vault-specific guidance — folder structure, naming conventions, frontmatter rules, what's off-limits. Read it before assuming defaults; treat it as a higher-priority overlay on the rules below.
-- **Multiple vaults.** Run `obsidian vaults` to see registered names. The `vault=<name>` flag on any CLI command targets a specific vault by name. For a non-active vault's path: `obsidian vault info=path vault=<name>`. With file tools there is no ambiguity — the path is the path.
+- **Multiple vaults.** Run `obsidian vaults` to see registered names. `vault=<name>` targets a specific vault, but only as the first parameter (`obsidian vault=Other search query=x`); anywhere else it is ignored. For a non-active vault's path: `obsidian vault=<name> vault info=path`. With file tools there is no ambiguity — the path is the path.
 - **Vault info fields.** `obsidian vault` prints the full info (name, path, file count, folder count, size). Use `info=<field>` to pull a single one — `path`, `name`, `files`, `folders`, `size`.
 - **Vault layout on disk:**
   - Notes: `*.md`.
@@ -114,7 +114,7 @@ TEMPLATE_BODY=$(obsidian template:read name="Daily Standup")
 # write the body into "$VAULT/Meetings/2026-07-13.md" with the file tool
 ```
 
-edit "$VAULT/$DAILY" oldText="...last line" newText="...last line\n\n## Reflection"
+**Update a scalar property.** Use the file tool.
 
 ```
 edit "$VAULT/Projects/Foo.md"  oldText="status: active"  newText="status: done"
@@ -154,223 +154,15 @@ rg -l '#old-tag' "$VAULT" --glob '*.md'       # discover
 rg '#old-tag' "$VAULT" --glob '*.md' | wc -l  # confirm zero
 ```
 
-## Note syntax
+## Related skills
 
-Obsidian extends CommonMark. A handful of patterns come up constantly when writing notes — get these right and the rest behaves like standard Markdown. The agent edits notes as plain text, so knowing the syntax is what separates a clean edit from one that renders as raw backticks.
-
-### Wikilinks
-
-The headline feature. No paths — the vault resolves by name, case-insensitive, and rewrites links on rename.
-
-```markdown
-[[Recipe]] basic link
-[[Recipe|Lasagna]] alias display text
-[[Recipe#Ingredients]] link to a heading
-[[Recipe#^step-3]] link to a block
-[[#Method]] same-note heading link
-```
-
-Block IDs are the one bit of new syntax: append `^block-id` to a paragraph to make it linkable. For lists and quotes, put the ID on its own line directly after the block.
-
-### Callouts
-
-Sidebar callouts for asides, warnings, and tips. The type is one of Obsidian's built-in keywords; the title is optional; a trailing `-` or `+` folds the body (`-` = collapsed by default, `+` = expanded by default, no marker = always open).
-
-```markdown
-> [!note]
-> Inline aside.
-
-> [!warning] Watch out
-> Title comes before the body.
-
-> [!tip]-
-> Hidden until clicked.
-```
-
-Built-in types: `note`, `tip`, `info`, `warning`, `danger`, `example`, `quote`, `question`, `success`, `failure`, `bug`, `abstract`, `todo`. Custom types render as `note` unless a CSS class is registered for them.
-
-### Properties (frontmatter)
-
-YAML block at the top of the file. Three keys Obsidian treats specially: `tags` (searchable labels), `aliases` (alternative names for link suggestions), `cssclasses` (CSS hooks for styling). Everything else is opaque — Obsidian stores it without interpreting.
-
-```markdown
----
-title: Lasagna
-date: 2026-07-13
-tags: [recipe, italian]
-aliases: [Lasagne]
----
-```
-
-For array values, `property:set` keeps the YAML well-formed whether you prefer inline (`[a, b]`) or block list form. Pick one shape per file to keep diffs small.
-
-### Tags
-
-`#tag` anywhere in body content. Letters, numbers, `_`, `-`, `/` are allowed; numbers can't be the first character. Slashes make nested tags: `#project/active`.
-
-The same tag can live in body or under `tags:` in frontmatter — Obsidian merges them. Frontmatter is better for tags you want indexed cleanly; inline is better for tags that earn their keep in context.
-
-### Highlights
-
-`==text==` marks text for the highlighter pen. Renders as a yellow background by default; themeable via CSS.
-
-### Embeds
-
-Prefix any wikilink with `!` to inline its content.
-
-```markdown
-![[Recipe]]                   full note inline
-![[Recipe#Ingredients]]       one section
-![[photo.jpg]]                image
-![[photo.jpg|300]]            image, width 300px
-![[manual.pdf#page=3]]        one PDF page
-```
-
-The renderer is selected by the target's MIME type, so audio, video, and search embeds all use the same `![[…]]` shape.
-
-### What doesn't need Obsidian-specific syntax
-
-Standard Markdown (headings, lists, quotes, tables, code blocks), LaTeX math (`$inline$` / `$$block$$`), and Mermaid diagrams (` ```mermaid `) all work without any new syntax. Reach for them when the note calls for them — no Obsidian-specific reference needed.
-
-## CLI reference
-
-`obsidian <command> [name=value] [flag]`. `key=value` pairs; quote values with spaces. `--copy` copies output to the clipboard. `format=json|tsv|csv|text` is offered by list-style commands.
-
-`file=<name>` resolves like a wikilink (case-insensitive, basename). `path=<vault-relative.md>` is exact. Both are relative to the active vault unless `vault=` is set.
-
-### Discovery
-
-```bash
-obsidian search query="TODO" matches
-obsidian search query="status::active" format=json
-obsidian search query="meeting" path="Projects" limit=20 format=tsv
-obsidian search:open query="project notes"     # open results in the app
-obsidian files path="Inbox"
-obsidian folders
-obsidian tags all counts
-obsidian tag name=project
-obsidian orphans                                # no incoming links
-obsidian deadends                               # no outgoing links
-obsidian unresolved verbose counts              # broken wikilinks
-obsidian properties                             # all property keys
-obsidian backlinks file=Recipe                  # what links here
-obsidian links file=Recipe                      # what this links to
-```
-
-### Vault
-
-```bash
-obsidian vaults                              # list registered vault names
-obsidian vault                               # full info for active vault (tsv)
-obsidian vault info=path                     # absolute path of active vault
-obsidian vault info=name                     # name, files, folders, or size also work
-obsidian vault info=path vault=Other         # path of a named, non-active vault
-```
-
-### Read
-
-Prefer the agent's file tool for reading — the CLI works but adds a round-trip.
-
-```bash
-obsidian read                                  # active file
-obsidian read file=Recipe
-obsidian read path="Daily/2026-07-13.md"
-obsidian file=Recipe                            # metadata (size, mtime, links)
-obsidian outline file=Recipe                    # headings
-obsidian wordcount file=Recipe
-obsidian open file=Recipe                       # open in app
-obsidian open path="Inbox/Idea.md" newtab
-```
-
-### Write
-
-Prefer the agent's file tool — `write` to create, `edit` to modify. The CLI is a fallback.
-
-```bash
-obsidian create name="New Note"
-obsidian create path="Inbox/Idea.md" content="# Idea"
-obsidian create name="Meeting" template="Daily Standup"
-obsidian append file=Note content="New line"
-obsidian prepend file=Note content="After frontmatter"
-obsidian template:read name="Daily Standup"
-obsidian template:insert name="Daily Standup"
-```
-
-### Move and delete
-
-CLI only — `move` rewrites wikilinks; `delete` confirms.
-
-```bash
-obsidian move file=Note to=Archive/
-obsidian move path="Inbox/Old.md" to="Projects/New.md"
-obsidian delete file=Note
-```
-
-`delete` does not move to trash; the file is gone. Confirm the path first (`obsidian file=Note`).
-
-### Daily notes
-
-```bash
-obsidian daily                                   # open today's
-obsidian daily:path                              # print path
-obsidian daily:read                              # print contents
-obsidian daily:append content="## Reflection"
-obsidian daily:prepend content="## Morning"
-```
-
-For non-trivial edits, use `daily:path` to get the path and edit the file with the file tool.
-
-### Properties
-
-Use `edit` for scalar values. Use the CLI for arrays/objects/dates — it normalises YAML.
-
-```bash
-obsidian property:read name=status file=Note
-obsidian property:set file=Note name=status value=done
-obsidian property:set file=Note name=tags value="[work, urgent]"
-obsidian property:remove file=Note name=status
-```
-
-### Tags, links, history
-
-```bash
-obsidian tag name=project
-obsidian aliases file=Note
-obsidian history:list
-obsidian history file=Note
-obsidian history:read file=Note version=2
-obsidian history:restore file=Note version=2
-```
-
-### Bases (structured data)
-
-```bash
-obsidian bases
-obsidian base:views file="Projects.base"
-obsidian base:query file="Projects.base" view="Active" format=json
-obsidian base:create file="Projects.base" view="Active" ...
-```
-
-### Plugins, themes, app-side
-
-```bash
-obsidian plugins
-obsidian plugins:enabled
-obsidian plugin:enable id=dataview
-obsidian plugin:disable id=dataview
-obsidian plugin:reload id=my-plugin
-obsidian themes
-obsidian theme:set name="Things"
-obsidian eval code="app.vault.getFiles().length"
-obsidian command id="workspace:toggle-folders"
-obsidian dev:errors
-obsidian dev:console
-obsidian dev:screenshot file=shot.png
-```
+- **obsidian-markdown** — note syntax: wikilinks, embeds, callouts, properties, tags, comments, highlights.
+- **obsidian-cli** — CLI syntax, file and vault targeting, output flags, plugin and theme dev loop. Run `obsidian help` for the full command list.
+- **json-canvas** — reading and writing `.canvas` files.
 
 ## Safety
 
-- **Never `delete` without explicit ask.** The CLI does not move to trash. Recover via `history:restore` only if file history was on.
+- **Never `delete` without explicit ask.** `delete` moves to the Obsidian trash; `permanent` skips it, so never pass `permanent` unless asked.
 - **Prefer `obsidian move` over `mv`.** The CLI rewrites `[[wikilinks]]`; `mv` leaves them broken and `unresolved` will list them forever.
 - **Don't edit `.obsidian/`** unless the user asks. Plugin state, workspace layout, and app settings live there — manual edits are silently overwritten.
 - **CLI requires the app to be running.** If commands hang or return empty results, check that Obsidian is open with the vault loaded. File tools do not have this constraint.
