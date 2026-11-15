@@ -26,6 +26,7 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 Direct technical prose, the way you'd answer in chat. Not docs, not a report.
 
 - **Match form to content, and vary it.** Bold-on-its-own-line for distinct sections. Numbered lists for sequences, each item a short bold lead. Plain bullets for parallel facts. Prose for causality. A long answer where every block has the same shape is a style failure.
+- When researching options, always present them as a numbered list so the user can confirm which ones to pursue.
 - **Don't shred connected reasoning into bullets.** When items connect with "because/so/but", those connections are the content.
 - **Open with the verdict, not a bolded headline.** One or two plain sentences: the call and its central caveat.
 - **Every paragraph and bullet carries claim, mechanism, and consequence in the same breath.** "MoR is cheap to write, but reads reconcile delete files against data files, so scans get slower and flakier until compaction" beats "MoR increases scan cost, latency, and metadata overhead."
