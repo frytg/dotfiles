@@ -16,8 +16,8 @@ A canvas file (`.canvas`) contains two top-level arrays following the [JSON Canv
 
 ```json
 {
-  "nodes": [],
-  "edges": []
+	"nodes": [],
+	"edges": []
 }
 ```
 
@@ -67,31 +67,31 @@ Nodes are objects placed on the canvas. Array order determines z-index: first no
 
 ### Generic Node Attributes
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `id` | Yes | string | Unique 16-char hex identifier |
-| `type` | Yes | string | `text`, `file`, `link`, or `group` |
-| `x` | Yes | integer | X position in pixels |
-| `y` | Yes | integer | Y position in pixels |
-| `width` | Yes | integer | Width in pixels |
-| `height` | Yes | integer | Height in pixels |
-| `color` | No | canvasColor | Preset `"1"`-`"6"` or hex (e.g., `"#FF0000"`) |
+| Attribute | Required | Type        | Description                                   |
+| --------- | -------- | ----------- | --------------------------------------------- |
+| `id`      | Yes      | string      | Unique 16-char hex identifier                 |
+| `type`    | Yes      | string      | `text`, `file`, `link`, or `group`            |
+| `x`       | Yes      | integer     | X position in pixels                          |
+| `y`       | Yes      | integer     | Y position in pixels                          |
+| `width`   | Yes      | integer     | Width in pixels                               |
+| `height`  | Yes      | integer     | Height in pixels                              |
+| `color`   | No       | canvasColor | Preset `"1"`-`"6"` or hex (e.g., `"#FF0000"`) |
 
 ### Text Nodes
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `text` | Yes | string | Plain text with Markdown syntax |
+| Attribute | Required | Type   | Description                     |
+| --------- | -------- | ------ | ------------------------------- |
+| `text`    | Yes      | string | Plain text with Markdown syntax |
 
 ```json
 {
-  "id": "6f0ad84f44ce9c17",
-  "type": "text",
-  "x": 0,
-  "y": 0,
-  "width": 400,
-  "height": 200,
-  "text": "# Hello World\n\nThis is **Markdown** content."
+	"id": "6f0ad84f44ce9c17",
+	"type": "text",
+	"x": 0,
+	"y": 0,
+	"width": 400,
+	"height": 200,
+	"text": "# Hello World\n\nThis is **Markdown** content."
 }
 ```
 
@@ -103,40 +103,40 @@ Write `.canvas` files directly. Don't create them with `obsidian create content=
 
 ### File Nodes
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | string | Path to file within the system |
-| `subpath` | No | string | Link to heading or block (starts with `#`) |
+| Attribute | Required | Type   | Description                                |
+| --------- | -------- | ------ | ------------------------------------------ |
+| `file`    | Yes      | string | Path to file within the system             |
+| `subpath` | No       | string | Link to heading or block (starts with `#`) |
 
 **File path escaping**: If a file name contains double quotes, they must be escaped as `\"` in the JSON string. For example, a file named `My "Notes".md` should be referenced as `"file": "My \"Notes\".md"`.
 
 ```json
 {
-  "id": "a1b2c3d4e5f67890",
-  "type": "file",
-  "x": 500,
-  "y": 0,
-  "width": 400,
-  "height": 300,
-  "file": "Attachments/diagram.png"
+	"id": "a1b2c3d4e5f67890",
+	"type": "file",
+	"x": 500,
+	"y": 0,
+	"width": 400,
+	"height": 300,
+	"file": "Attachments/diagram.png"
 }
 ```
 
 ### Link Nodes
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `url` | Yes | string | External URL |
+| Attribute | Required | Type   | Description  |
+| --------- | -------- | ------ | ------------ |
+| `url`     | Yes      | string | External URL |
 
 ```json
 {
-  "id": "c3d4e5f678901234",
-  "type": "link",
-  "x": 1000,
-  "y": 0,
-  "width": 400,
-  "height": 200,
-  "url": "https://obsidian.md"
+	"id": "c3d4e5f678901234",
+	"type": "link",
+	"x": 1000,
+	"y": 0,
+	"width": 400,
+	"height": 200,
+	"url": "https://obsidian.md"
 }
 ```
 
@@ -144,22 +144,22 @@ Write `.canvas` files directly. Don't create them with `obsidian create content=
 
 Groups are visual containers for organizing other nodes. Position child nodes inside the group's bounds.
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `label` | No | string | Text label for the group |
-| `background` | No | string | Path to background image |
-| `backgroundStyle` | No | string | `cover`, `ratio`, or `repeat` |
+| Attribute         | Required | Type   | Description                   |
+| ----------------- | -------- | ------ | ----------------------------- |
+| `label`           | No       | string | Text label for the group      |
+| `background`      | No       | string | Path to background image      |
+| `backgroundStyle` | No       | string | `cover`, `ratio`, or `repeat` |
 
 ```json
 {
-  "id": "d4e5f6789012345a",
-  "type": "group",
-  "x": -50,
-  "y": -50,
-  "width": 1000,
-  "height": 600,
-  "label": "Project Overview",
-  "color": "4"
+	"id": "d4e5f6789012345a",
+	"type": "group",
+	"x": -50,
+	"y": -50,
+	"width": 1000,
+	"height": 600,
+	"label": "Project Overview",
+	"color": "4"
 }
 ```
 
@@ -167,27 +167,27 @@ Groups are visual containers for organizing other nodes. Position child nodes in
 
 Edges connect nodes via `fromNode` and `toNode` IDs.
 
-| Attribute | Required | Type | Default | Description |
-|-----------|----------|------|---------|-------------|
-| `id` | Yes | string | - | Unique identifier |
-| `fromNode` | Yes | string | - | Source node ID |
-| `fromSide` | No | string | - | `top`, `right`, `bottom`, or `left` |
-| `fromEnd` | No | string | `none` | `none` or `arrow` |
-| `toNode` | Yes | string | - | Target node ID |
-| `toSide` | No | string | - | `top`, `right`, `bottom`, or `left` |
-| `toEnd` | No | string | `arrow` | `none` or `arrow` |
-| `color` | No | canvasColor | - | Line color |
-| `label` | No | string | - | Text label |
+| Attribute  | Required | Type        | Default | Description                         |
+| ---------- | -------- | ----------- | ------- | ----------------------------------- |
+| `id`       | Yes      | string      | -       | Unique identifier                   |
+| `fromNode` | Yes      | string      | -       | Source node ID                      |
+| `fromSide` | No       | string      | -       | `top`, `right`, `bottom`, or `left` |
+| `fromEnd`  | No       | string      | `none`  | `none` or `arrow`                   |
+| `toNode`   | Yes      | string      | -       | Target node ID                      |
+| `toSide`   | No       | string      | -       | `top`, `right`, `bottom`, or `left` |
+| `toEnd`    | No       | string      | `arrow` | `none` or `arrow`                   |
+| `color`    | No       | canvasColor | -       | Line color                          |
+| `label`    | No       | string      | -       | Text label                          |
 
 ```json
 {
-  "id": "0123456789abcdef",
-  "fromNode": "6f0ad84f44ce9c17",
-  "fromSide": "right",
-  "toNode": "a1b2c3d4e5f67890",
-  "toSide": "left",
-  "toEnd": "arrow",
-  "label": "leads to"
+	"id": "0123456789abcdef",
+	"fromNode": "6f0ad84f44ce9c17",
+	"fromSide": "right",
+	"toNode": "a1b2c3d4e5f67890",
+	"toSide": "left",
+	"toEnd": "arrow",
+	"label": "leads to"
 }
 ```
 
@@ -195,14 +195,14 @@ Edges connect nodes via `fromNode` and `toNode` IDs.
 
 The `canvasColor` type accepts either a hex string or a preset number:
 
-| Preset | Color |
-|--------|-------|
-| `"1"` | Red |
-| `"2"` | Orange |
-| `"3"` | Yellow |
-| `"4"` | Green |
-| `"5"` | Cyan |
-| `"6"` | Purple |
+| Preset | Color  |
+| ------ | ------ |
+| `"1"`  | Red    |
+| `"2"`  | Orange |
+| `"3"`  | Yellow |
+| `"4"`  | Green  |
+| `"5"`  | Cyan   |
+| `"6"`  | Purple |
 
 Preset color values are intentionally undefined -- applications use their own brand colors.
 
@@ -222,13 +222,13 @@ Generate 16-character lowercase hexadecimal strings (64-bit random value):
 - Space nodes 50-100px apart; leave 20-50px padding inside groups
 - Align to grid (multiples of 10 or 20) for cleaner layouts
 
-| Node Type | Suggested Width | Suggested Height | CJK Width (1.5x) |
-|-----------|-----------------|------------------|-------------------|
-| Small text | 200-300 | 80-150 | 300-450 |
-| Medium text | 300-450 | 150-300 | 450-675 |
-| Large text | 400-600 | 300-500 | 600-900 |
-| File preview | 300-500 | 200-400 | 450-750 |
-| Link preview | 250-400 | 100-200 | 375-600 |
+| Node Type    | Suggested Width | Suggested Height | CJK Width (1.5x) |
+| ------------ | --------------- | ---------------- | ---------------- |
+| Small text   | 200-300         | 80-150           | 300-450          |
+| Medium text  | 300-450         | 150-300          | 450-675          |
+| Large text   | 400-600         | 300-500          | 600-900          |
+| File preview | 300-500         | 200-400          | 450-750          |
+| Link preview | 250-400         | 100-200          | 375-600          |
 
 **CJK text sizing**: CJK characters (Chinese, Japanese, Korean) are wider than Latin characters. For content primarily in CJK languages, multiply the suggested width by ~1.5× to avoid cramped layouts and awkward line breaks.
 

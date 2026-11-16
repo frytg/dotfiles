@@ -4,7 +4,6 @@
 
 # --- Taps ---
 # Homebrew 6+ requires explicit trust for non-official taps before loading their Ruby.
-tap "514-labs/tap", trusted: true
 tap "cloudflare/cloudflare", trusted: true
 tap "depot/tap", trusted: true
 tap "derailed/k9s", trusted: true
@@ -16,12 +15,12 @@ tap "namespacelabs/namespace", trusted: true
 tap "nats-io/nats-tools", trusted: true
 tap "nubjs/tap", trusted: true
 tap "probe-rs/probe-rs", trusted: true
-tap "tinygo-org/tools", trusted: true
 tap "skyhook-io/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 
 # --- Formulas ---
 brew "age"
+brew "agent-browser" # https://agent-browser.dev — run `agent-browser install` once to fetch Chrome for Testing
 brew "awscli"
 brew "brotli"
 brew "cosign"
@@ -30,10 +29,8 @@ brew "container" # https://github.com/apple/container
 brew "cloudflare/cloudflare/cloudflared"
 brew "depot/tap/depot"
 brew "namespacelabs/namespace/nsc"
-brew "dnsglobe" # https://github.com/514-labs/dnsglobe
 brew "dotenvx"
 brew "ffmpeg"
-brew "flyctl"
 brew "goat"
 brew "gh" # https://cli.github.com
 brew "helm"
@@ -69,7 +66,6 @@ brew "scw"
 brew "skyhook-io/tap/radar" # https://radarhq.io/docs/install
 brew "sops"
 brew "terraform" # hashicorp/tap
-brew "tinygo"
 brew "valkey"
 brew "yq"
 
