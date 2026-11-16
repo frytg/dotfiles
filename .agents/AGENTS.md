@@ -42,12 +42,6 @@ Direct technical prose, the way you'd answer in chat. Not docs, not a report.
 
 - All task definitions live in a `justfile`. Run with `just <recipe>`.
 
-## Sandboxes
-
-For ephemeral isolated execution — untrusted commands, package experiments, `/tmp`-style probes, fresh-Linux checks — use the [daytona-sandbox skill](../skills/daytona-sandbox/SKILL.md) instead of running on the host. The skill wraps the `daytona` CLI's create/exec/delete cycle on a throwaway Linux sandbox; default snapshot is `daytona-medium` (2 vCPU, 4 GiB RAM, 8 GiB disk) in `eu` with `--auto-stop 30` and `--auto-delete 60` so a forgotten sandbox can't bill forever.
-
-Reach for it when the task would otherwise run on the host but you don't trust the side effects (`curl | sh`, deleting unknown paths, network probes). Skip it when the task needs the local repo — sandboxes start from a snapshot, the working tree is not auto-synced — or when the workflow needs long-lived state across many turns. The CLI is assumed installed and logged in; if `daytona` is missing or `DAYTONA_API_KEY` isn't set, exit with a warning rather than installing it for the user.
-
 ## Skills
 
 When creating new skills, follow the [Agent Skills spec](https://agentskills.io/home) for the directory layout, frontmatter, and discovery rules. See the full [specification](https://agentskills.io/specification.md) for required fields, allowed properties, and validation.
@@ -180,6 +174,10 @@ For live content from external sites, reach for [Exa](https://exa.ai/docs/) or [
 - **Firecrawl** — turn any URL into clean markdown, HTML, or structured JSON, with proxies, anti-bot, and JS rendering built in. Covers scrape, crawl, map, search, batch, and browser-sandbox workflows. Use [Interact](https://docs.firecrawl.dev/features/interact) for live-browser sessions: scrape once to obtain a `scrapeId`, then drive clicks, form fills, or dynamic-content extraction with natural-language prompts (or executable code) and stop the session when done. Persists state per session and exposes `liveViewUrl` for inspection.
 
 Reach for **Exa** when the task starts with a question and needs relevant sources discovered across the web. Reach for **Firecrawl** when the task starts with a URL (or a known site to crawl) and needs the rendered page, structured data, or a real browser interaction. Both can extract markdown; Firecrawl is the better default for page fidelity and JS-heavy sites, Exa is the better default for search relevance and token-efficient highlights.
+
+### Browser automation
+
+- [`agent-browser`](https://agent-browser.dev) — local Chrome CLI for interactive pages (clicks, forms, logins, screenshots, QA of a running app). See the [agent-browser skill](../skills/agent-browser/SKILL.md); use Exa or Firecrawl instead for read-only extraction.
 
 ### AI
 
