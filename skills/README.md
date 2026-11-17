@@ -53,3 +53,13 @@ All skills also ship as one Cursor Plugin, `frytg-dotfiles`. The manifest [`.cur
 - Validate with the [Cursor plugin template](https://github.com/cursor/plugin-template)'s `scripts/validate-template.mjs` run from the repo root.
 
 On hosts wired by `link.sh` this is optional — Cursor already reads the same skills through `~/.agents/skills/` (symlinked to this folder). The plugin route matters for other machines and teammates installing straight from the repo URL.
+
+## Install as a Claude Code plugin
+
+All skills also ship as one Claude Code plugin, `frytg-dotfiles`. The manifest [`.claude-plugin/plugin.json`](../.claude-plugin/plugin.json) points to `skills/`, and [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) registers the repository as a marketplace with the plugin at its root. Plugin skills are namespaced, so they show up as `frytg-dotfiles:<name>`.
+
+- Install: in Claude Code run `/plugin marketplace add https://github.com/frytg/dotfiles` (the [Tangled → GitHub mirror](../.tangled/workflows/github-mirror.yml)), then `/plugin install frytg-dotfiles@frytg-dotfiles`.
+- Local test: `claude --plugin-dir .` from the repo root loads the plugin for one session without installing it.
+- Validate with `claude plugin validate .` from the repo root.
+
+On hosts wired by `link.sh`, skip the install. `~/.claude/skills/` already links to this folder, so installing the plugin as well loads every skill twice (once bare, once namespaced).
