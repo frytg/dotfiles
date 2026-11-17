@@ -38,5 +38,6 @@
 	"autoContinueAtUsageLimit": false,
 	"fileCheckpointingEnabled": true,
 	"showTurnDuration": true,
-	"terminalProgressBarEnabled": true
+	"terminalProgressBarEnabled": true,
+	"model": "claude-fable-5-2[1m]"
 }
