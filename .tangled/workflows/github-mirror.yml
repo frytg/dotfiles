@@ -10,7 +10,7 @@ engine: microvm
 image: nixos
 
 clone:
-  depth: 60
+  depth: 90
 
 dependencies:
   - git
