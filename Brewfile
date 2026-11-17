@@ -64,6 +64,7 @@ brew "rsync"
 brew "ruby"
 brew "scw"
 brew "skyhook-io/tap/radar" # https://radarhq.io/docs/install
+brew "smartmontools" # smartctl for drive SMART status
 brew "sops"
 brew "terraform" # hashicorp/tap
 brew "valkey"

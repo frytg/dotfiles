@@ -154,7 +154,8 @@ environment:
 steps:
   - name: 'Mirror to GitHub'
     command: |
-      set -euo pipefail
+      # No -u: the step runs in a login shell, and NixOS /etc/bash_logout reads an unset variable on exit.
+      set -eo pipefail
 
       if [ -z "${GITHUB_DEPLOY_KEY:-}" ]; then
         echo "GITHUB_DEPLOY_KEY not set — skipping"
