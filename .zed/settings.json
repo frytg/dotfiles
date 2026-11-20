@@ -1,4 +1,30 @@
 {
+	"search": {
+		"whole_word": false
+	},
+	"tabs": {
+		"close_position": "left",
+		"file_icons": false,
+		"git_status": true
+	},
+	"tab_bar": {
+		"show_pinned_tabs_in_separate_row": false,
+		"show_tab_bar_buttons": false,
+		"show_nav_history_buttons": false,
+		"show": true
+	},
+	"title_bar": {
+		"open_menus_on_hover": false,
+		"show_menus": false,
+		"show_user_picture": true,
+		"show_user_menu": true,
+		"show_sign_in": true,
+		"show_onboarding_banner": false,
+		"show_project_items": true,
+		"show_worktree_name": true,
+		"show_branch_name": true,
+		"show_branch_status_icon": false
+	},
 	"agent": {
 		"default_model": {
 			"model": "deepseek/deepseek-v4-flash",
@@ -56,7 +82,7 @@
 		}
 	},
 	"git_panel": {
-		"dock": "left",
+		"dock": "right",
 		"group_by": "none",
 		"tree_view": true
 	},
@@ -366,6 +392,15 @@
 	},
 	"preferred_line_length": 120,
 	"project_panel": {
+		"hide_hidden": false,
+		"hide_root": true,
+		"git_status_indicator": true,
+		"bold_folder_labels": false,
+		"indent_size": 20.0,
+		"folder_indicator": "chevron",
+		"file_icons": true,
+		"entry_spacing": "comfortable",
+		"hide_gitignore": false,
 		"dock": "left",
 		"sticky_scroll": true
 	},
