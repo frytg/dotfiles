@@ -13,7 +13,6 @@ Host tangled.org
   User git
   AddressFamily inet
   PreferredAuthentications publickey
-  # IdentityFile ~/.dotfiles/.ssh/id_ed25519.pub
 
 Host *
   # No IdentityAgent: ssh uses SSH_AUTH_SOCK. `just ssh-add-key` loads
@@ -22,6 +21,15 @@ Host *
   SetEnv TERM=xterm-256color
 
 Host s0003524
+  User root
+
+Host s0006663
+  User root
+
+Host s0006669
+  User root
+
+Host s0006670
   User root
 
 Host leno0

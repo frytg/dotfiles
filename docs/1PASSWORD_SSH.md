@@ -38,6 +38,12 @@ just ssh-keys       # fingerprints currently registered
 
 `op` has to be on `PATH`. A missing token file fails the recipe before it touches the agent.
 
+## gcloud compute ssh
+
+`gcloud compute ssh` passes `-i ~/.ssh/google_compute_engine` with `IdentitiesOnly=yes`, so it ignores the agent. `just ssh-add-key` writes the public half of **Agent SSH Key** to that path and its `.pub`, which makes `ssh` sign with the matching agent key. No private key is on disk.
+
+gcloud registers the key on first connect. The recipe skips a `google_compute_engine` that holds a real private key; delete the pair to switch that host over.
+
 ## Git signing
 
 `.gitconfig` signs commits with SSH (`gpg.format = ssh`) and `gpg.ssh.program = ssh-keygen`. `user.signingkey` is the public half of **Agent SSH Key**. `ssh-keygen` asks `SSH_AUTH_SOCK` to sign, so a commit works only while `just ssh-add-key` has registered that key. The old signer was 1Password's `op-ssh-sign`, which talks to the app and does not see this agent.

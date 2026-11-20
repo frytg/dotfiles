@@ -59,6 +59,20 @@ ssh-add-key lifetime='8h':
 	op read 'op://Agentic/Agent SSH Key/private key?ssh-format=openssh' \
 		| ssh-add -t '{{ lifetime }}' -
 	echo "ok: loaded Agent SSH Key (lifetime {{ lifetime }})"
+
+	# gcloud compute ssh passes `-i ~/.ssh/google_compute_engine` with IdentitiesOnly=yes.
+	# a public-key stub at that path makes ssh sign with the matching agent key.
+	gce="$HOME/.ssh/google_compute_engine"
+	if [[ -e "$gce" && "$(head -c 5 "$gce")" == '-----' ]]; then
+		echo "warning: $gce holds a private key, gcloud keeps using it" >&2
+	else
+		cp "$pub" "$gce"
+		cp "$pub" "$gce.pub"
+		chmod 600 "$gce"
+		chmod 644 "$gce.pub"
+		echo "ok: gcloud compute ssh uses Agent SSH Key"
+	fi
+
 	ssh-add -l
 alias sshk := ssh-add-key
 
