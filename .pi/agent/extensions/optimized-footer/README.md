@@ -64,15 +64,7 @@ It does **not** claim live TCP/HTTP connections.
 
 ## Setup
 
-Pi auto-discovers `extensions/*/index.ts` under the agent dir.
-
-This repo already points PI at:
-
-```text
-PI_CODING_AGENT_DIR=~/.dotfiles/.pi/agent
-```
-
-So the extension path is:
+Pi auto-discovers `extensions/*/index.ts` under `~/.pi/agent/`. [`bin/link.sh`](../../../../bin/link.sh) symlinks `.pi/` to `~/.pi`, so pi loads:
 
 ```text
 .pi/agent/extensions/optimized-footer/index.ts
@@ -88,15 +80,13 @@ No install step, no package.json, no secrets.
 
 ## Commands
 
-| Command       | Effect                           |
-| ------------- | -------------------------------- |
-| `/opt-footer` | Toggle this footer vs pi default |
+- `/opt-footer` — toggle this footer vs pi default
 
 ## Non-goals
 
 - powerline / nerd-font theming frameworks
 - live MCP health probes into adapter internals
-- OpenRouter account-wide spend dashboards (session totals only; use `/atlas` for deeper views)
+- OpenRouter account-wide spend dashboards (session totals only)
 - hosting this as a public npm package (local extension on purpose)
 
 ## Files

@@ -1,13 +1,5 @@
 # `k9s/`
 
-Basic [k9s](https://k9scli.io/) configuration. `link.sh` symlinks `config.yaml` into `~/Library/Application Support/k9s/` so k9s picks it up on launch.
+Basic [k9s](https://k9scli.io/) configuration for macOS. [`bin/link.sh`](../bin/link.sh) symlinks [`config.yaml`](./config.yaml) into `~/Library/Application Support/k9s/config.yaml` instead of symlinking the whole directory, so per-host cluster contexts and `k9s.log` stay local.
 
-## Edit
-
-Edit `config.yaml` in this directory, not in `~/Library/Application Support/k9s/` — the symlink points back here, and only commits persist.
-
-From the repo root:
-
-```sh
-just link
-```
+Edit [`config.yaml`](./config.yaml) here rather than in `~/Library/Application Support/k9s/`, and run `just link` after setting up a new host.

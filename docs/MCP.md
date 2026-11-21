@@ -24,8 +24,7 @@ file. Cursor, Droid, and Devin each have their own MCP config because their form
 
 ## Changing a server
 
-1. **Edit each config:** update `.agents/mcp.json` for pi, `.cursor/mcp.json` with `${env:VAR}`,
-   `factory/mcp.json` in Droid's native format, and `devin/mcp.json` in Devin's native format.
+1. **Edit each config:** update [`.agents/mcp.json`](../.agents/mcp.json) and [`factory/mcp.json`](../factory/mcp.json) with `${VAR}` placeholders, and [`.cursor/mcp.json`](../.cursor/mcp.json) and [`devin/mcp.json`](../devin/mcp.json) with `${env:VAR}`.
 2. **Claude Code:** install or manage the GitHub plugin with `/plugin`. `just mcp` removes legacy
    user-scope MCP entries named `exa`, `firecrawl`, and `github`; it does not sync `.agents/mcp.json`
    to Claude Code. `just run` also runs this cleanup.
@@ -42,15 +41,15 @@ files.
 Cursor, Droid, and Devin only see the environment they start in. A missing `GITHUB_PAT` makes their
 GitHub MCP server fail to connect. Cursor or Droid started from the Dock may not see shell exports.
 
-`victorialogs` is the self-hosted Victoria Logs MCP server on locally0. It has no auth and is only
-reachable on the tailnet, so it fails to connect when Tailscale is down.
-
 For OAuth-backed servers, log in once per tool in each client: `/mcp` in Claude Code and Droid, or the
 MCP settings in Cursor.
 
 ## Figma
 
-Figma isn't in any of the configs yet. To add it, follow the [Guide to the Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server), then apply the steps in [Changing a server](#changing-a-server).
+[`claude/settings.json`](../claude/settings.json) enables `figma@claude-plugins-official` for Claude Code.
+The MCP JSON configs for pi, Cursor, Droid, and Devin do not include Figma yet; follow the
+[Guide to the Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server)
+and apply [Changing a server](#changing-a-server) to add it.
 
 ## Docs
 

@@ -2,19 +2,19 @@
 
 Custom theme for the [Moshi](https://getmoshi.app) iOS app (SSH & MOSH terminal). One palette drives both the terminal and the app chrome, so the phone matches Zed, Ghostty, and herdr.
 
-Not symlinked by `link.sh` — the theme is imported into the app, not read from disk.
+Not symlinked by [`bin/link.sh`](../bin/link.sh) — the theme is imported into the app, not read from disk.
 
 ## Palette source
 
-- ANSI colors lifted from `.zed/themes/dark-greeny.json` (`terminal.ansi.*`), including bright variants; magenta stays mapped to orange as in the editor theme.
-- Cursor `#FFFF11` from `.ghostty`.
+- ANSI colors lifted from [`.zed/themes/dark-greeny.json`](../.zed/themes/dark-greeny.json) (`terminal.ansi.*`), including bright variants; magenta stays mapped to orange as in the editor theme.
+- Cursor `#FFFF11` from [`.ghostty`](../.ghostty).
 - Selection `#3E4939` (the `greeny` border/hover tone).
 
 ## Import
 
 Settings → Theme → Import theme in the app, then one of:
 
-- **File** — pick `moshi-theme-dark-greeny.json`.
+- **File** — pick [`moshi-theme-dark-greeny.json`](./moshi-theme-dark-greeny.json).
 - **Clipboard** — paste the `moshi-theme:` string (regenerate below):
 
   ```

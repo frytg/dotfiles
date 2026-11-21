@@ -4,7 +4,7 @@
 
 ## Install
 
-Run `just install-uzu`. It clones into `../uzu` next to the dotfiles repo (override with `UZU_DIR`), downloads the Metal toolchain if needed, and runs `cargo build --release -p cli`. A rerun pulls and rebuilds.
+Run `just uzu-install` (aliases: `install-uzu`, `uzu-update`). It clones into `../uzu` next to the dotfiles repo (override with `UZU_DIR`), downloads the Metal toolchain if needed, and runs `cargo build --release -p cli`. A rerun pulls and rebuilds.
 
 - **Skip `cargo tools setup`.** The README suggests it, but it also installs uv, pnpm, and other tools that brew and mise already manage. `rust-toolchain.toml` pins a nightly toolchain, and rustup installs it on the first `cargo` call.
 - **Metal toolchain is a separate Xcode component.** `xcrun -f metal` finds the binary even when the toolchain is missing, so the build script fails with `cannot execute tool 'metal' due to missing Metal Toolchain`. `xcodebuild -downloadComponent MetalToolchain` (about 840 MB) fixes it. The recipe checks `xcrun metal --version`, which actually runs the tool.
@@ -12,9 +12,9 @@ Run `just install-uzu`. It clones into `../uzu` next to the dotfiles repo (overr
 
 ## Models
 
-uzu reads only its own model format. It downloads catalog models on first use into `~/.cache/mirai/models/mirai/<model-slug>/`. `just uzu-models` lists the catalog. Pass a Hugging Face ID (`trymirai/Qwen3.6-27B-M`) or a local model directory as `--model`.
+uzu reads only its own model format. It downloads catalog models on first use into `~/.cache/mirai/models/mirai/<model-slug>/`. `just uzu-models` lists the catalog. Pass a Hugging Face ID (`trymirai/Qwen3.8-27B-L`) or a local model directory as `--model`.
 
-- **Default is `trymirai/Qwen3.6-27B-M`** (about 15 GB). `-M` is Mirai's medium checkpoint, likely 4-bit. `-L` is the large one (28.8 GB), likely 8-bit. Override per shell with `UZU_MODEL`.
+- **Default is `trymirai/Qwen3.8-27B-L`** (configured via `UZU_MODEL` in [`just/uzu.just`](../just/uzu.just)). `-M` checkpoints are Mirai's medium quantization (likely 4-bit; `Qwen3.6-27B-M` was about 15 GB), and `-L` checkpoints are the large quantization (likely 8-bit; `Qwen3.6-27B-L` was 28.8 GB). Override per shell with `UZU_MODEL`.
 - **oMLX models don't load.** `~/.omlx/models/Jundot/*-oQ8e-mtp` are MLX safetensors with oMLX's own mixed-bit quantization and separate `.scales` tensors. uzu can't read them, and Mirai's converter, [lalamo](https://github.com/trymirai/lalamo), has no importer for oQ8e.
 - **35B-A3B MoE needs a conversion.** lalamo has a spec for `Qwen/Qwen3.6-35B-A3B`, but only from the bf16 HF weights (about 70 GB download, tight on 64 GB RAM). Mirai's catalog has no prebuilt MoE checkpoint. We haven't tried this.
 

@@ -1,43 +1,23 @@
-# Creating backups of files and folders
+# Keys and encrypted secrets
 
-## Create a key
+`just` recipes in [`just/age.just`](../just/age.just) and [`just/encryption.just`](../just/encryption.just) manage [age](https://github.com/FiloSottile/age) keys and [sops](https://github.com/getsops/sops) secret files configured in [`.sops.yaml`](../.sops.yaml).
 
-```bash
-just create-age-key ".agebackupkey"
-```
+## Age keys
 
-Save this key in a safe place (i.e. password manager).
-
-## Backup a folder or file
-
-Use the public key to backup a folder or file.
+Generate a keypair in `./tmp/` (gitignored) and upload the private key to 1Password:
 
 ```bash
-just wrap "path/to/folder" ".agebackupkeypub.txt"
+just create-age-key my-backup-key
 ```
 
-## Restore an element
+This writes `tmp/my-backup-key.txt` (private key) and `tmp/my-backup-keypub.txt` (public key), then prompts to create a 1Password document titled `Age key > my-backup-key` (`op` must be authenticated). Run `just create-public-key my-backup-key` to re-derive `tmp/my-backup-keypub.txt` from an existing `tmp/my-backup-key.txt`.
 
-Restore using the original key.
+Do not commit `tmp/*.txt` or `.age*.txt` files; [`.gitignore`](../.gitignore) excludes both.
 
-```bash
-just unwrap "path/to/folder.tar.gz.age" ".agebackupkey.txt"
-```
+## Sops secrets
 
-## Backup an entire folder
-
-Backup an entire folder to the remote backup bucket.
-
-E.g. backup the Documents/iCloud folder:
-
-```bash
-just backup-folder "icloud" ~/Documents .agebackupkeypub.txt
-```
-
-## Backup an item
-
-Backup an item to the remote backup bucket.
-
-```bash
-just backup-item "something" "path/to/folder" .agebackupkeypub.txt
-```
+- `just edit-key <file>` (`just ek <file>`) — open an encrypted file in `nano` via `sops edit`
+- `just decrypt-env <file>` — decrypt a `*.sops.yaml` file to dotenv format (`just run` decrypts [`.pi/.env.personal.sops.yaml`](../.pi/.env.personal.sops.yaml) to `.pi/.env.personal`)
+- `just decrypt-key <file>` — decrypt a `*.sops` file to its non-`.sops` sibling path
+- `just update-keys` — re-encrypt `.pi/.env.sops.yaml` after changing recipients in [`.sops.yaml`](../.sops.yaml)
+- `just rotate-keys` — rotate data keys inside `.pi/.env.sops.yaml`

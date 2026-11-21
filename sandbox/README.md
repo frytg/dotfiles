@@ -1,29 +1,30 @@
-# sandbox/
+# `sandbox/`
 
-ephemeral sandbox setup. provisioned into fresh sandboxes via `just nsc-start NAME` (or `just nsc-provision NAME` against an existing instance).
+Ephemeral Linux sandbox setup provisioned via [Namespace](https://namespace.so) (`nsc`) recipes in [`just/sandbox.just`](../just/sandbox.just).
 
-## files
+## Files
 
-- `provision.sh` — idempotent bootstrap. installs system packages + mise + just + bun + pi + fx, clones the dotfiles, runs `link-server.sh`, applies the rc files below. entry point for both Daytona and Namespace.
-- `profile` — POSIX login config. written to `/etc/profile.d/zz-dotfiles.sh` so every login shell (interactive or not) inherits mise shims + bun bin on PATH.
-- `zshrc` — sandbox-tuned zsh config. symlinked to `~/.zshrc` on the sandbox.
-- `bashrc` — sandbox-tuned bash config. symlinked to `~/.bashrc` on the sandbox.
+- [`provision.sh`](./provision.sh) — idempotent bootstrap piped to `bash -s` on the instance. Installs `zsh`, `git`, `curl`, `mise`, `just`, `bun`, `pi`, and `fx`, clones the dotfiles repo, runs `just link-server`, sets `zsh` as the login shell, and applies the rc files below.
+- [`profile`](./profile) — installed to `/etc/profile.d/zz-dotfiles.sh` so login shells inherit `mise` shims and `~/.bun/bin` on `PATH`.
+- [`zshrc`](./zshrc) and [`bashrc`](./bashrc) — symlinked to `~/.zshrc` and `~/.bashrc` inside the sandbox.
 
-## workflow
+## Workflow
 
+```bash
+just nsc-start mybox      # spawn and provision in one step
+just nsc-shell mybox      # open an interactive SSH shell (forwards SSH agent)
+just nsc-down mybox       # destroy the instance and remove its cached ID
 ```
-just nsc-start mybox      # spawn + provision in one step
-just nsc-shell mybox      # ssh in (PATH includes mise shims + bun bin)
-just nsc-down mybox       # tear down
-```
 
-## editing
+Run `just nsc-provision mybox` to pull the latest dotfiles and re-apply rc files on a running sandbox. `nsc ssh` requires the instance UUID rather than `--unique_tag`, so `nsc-up` records the UUID in `~/.cache/nsc/<name>.id` and all `nsc-*` recipes read from there.
 
-changes to any file in this folder take effect on the next `just nsc-provision NAME` against an existing sandbox — the script `git pull`s the latest dotfiles and re-applies the rc files.
+Override defaults via environment variables:
 
-## related
+- OPTIONAL `DOTFILES_REPO` — clone source, defaults to `https://tangled.org/frytg.digital/dotfiles`.
+- OPTIONAL `SANDBOX_MACHINE` — Namespace machine spec, defaults to `linux/amd64:2x8`.
+- OPTIONAL `SANDBOX_DURATION` — instance TTL before auto-destruction, defaults to `60m`.
 
-- `just/sandbox.just` — recipes (`nsc-up`, `nsc-shell`, `nsc-provision`, `nsc-down`, `daytona-*` parallels). imports this folder's `provision.sh` over `bash -s`.
-- `bin/link-server.sh` — server-only symlinks (justfile, agents skills, .pi), invoked by `just link-server` from `provision.sh`.
-- `bin/link.sh` — macOS full symlinks. not used in sandboxes (it touches Cursor/VSCode/Zed/k9s paths that don't exist on Linux).
-- the host-side `.zshrc` (linked via `bin/link.sh`) is the right place for `sb-up`/`sb-down`/etc. aliases — those manage sandboxes FROM the host, not from inside one.
+## Related
+
+- [`bin/link-server.sh`](../bin/link-server.sh) — Linux/server-only symlinks (`justfile`, `skills`, `.pi`) run by `just link-server`. Do not run [`bin/link.sh`](../bin/link.sh) in sandboxes; it targets macOS paths and `ln -sfh`.
+- Host-side sandbox helper aliases belong in the host [`.zshrc`](../.zshrc), not inside `sandbox/`.

@@ -1,104 +1,60 @@
 # dotfiles
 
-A personal collection of dotfiles and scripts for syncing settings across machines.
+Personal dotfiles and setup scripts for macOS machines and ephemeral Linux sandboxes.
 
-The primary repository lives on [tangled.org](https://tangled.org/frytg.digital/dotfiles), which gets synced to [github.com](https://github.com/frytg/dotfiles).
+The primary repository lives on [tangled.org](https://tangled.org/frytg.digital/dotfiles) and mirrors to [github.com](https://github.com/frytg/dotfiles).
+
+**Visibility:** Public repository. Use synthetic placeholders (`acme`, `example.com`, `<host>`) in docs and examples. Exclude internal hostnames, private URLs, IP addresses, account IDs, and credentials.
 
 ## Setup
 
-Install and symlink dotfiles into place:
+1. Install the prerequisite Mac apps in [`docs/APPS.md`](./docs/APPS.md), starting with 1Password, Xcode, and Tailscale.
+2. Bootstrap packages, symlinks, Node, CLI updates, and macOS defaults:
 
-```bash
-just install
-```
+   ```bash
+   just install
+   ```
 
-## Just commands
+3. For repo-root linting and formatting (`just lint`, `just format`), install the pinned tools in [`mise.toml`](./mise.toml):
 
-This repo uses [just](https://github.com/casey/just) as a task runner. Run `just` or `just --list` to see all recipes.
+   ```bash
+   mise install
+   ```
 
-- `just link` — symlink dotfiles via `link.sh`
-- `just brew` — install Homebrew packages from `Brewfile`
-- `just node` — install/pin ambient Node via [mise](https://mise.jdx.dev/)
-- `just install` — brew, link, mise node, and upgrade toolchains
-- `just install-omlx` — install or upgrade the latest oMLX macOS app from GitHub releases, including beta
-- `just install-uzu` — build [uzu](https://github.com/trymirai/uzu) from source for local inference (see [`docs/UZU.md`](./docs/UZU.md))
-- `just install-beszel-agent` — opt-in [Beszel](https://beszel.dev) monitoring agent for this Mac (see [`docs/BESZEL.md`](./docs/BESZEL.md))
+## Key `just` commands
 
-## Mac Setup
+Run `just` or `just --list` for all recipes under [`justfile`](./justfile) and [`just/`](./just).
 
-- install the apps in [`docs/APPS.md`](./docs/APPS.md), starting with 1Password, Xcode, and Tailscale
-- run `just run`
+- `just link` — symlink configs and copy Herdr mods via [`bin/link.sh`](./bin/link.sh)
+- `just brew` — install Homebrew formulas and casks from [`Brewfile`](./Brewfile)
+- `just node` — install and pin ambient Node (`26` in [`mise/config.toml`](./mise/config.toml)) via [mise](https://mise.jdx.dev/lang/node.html); removes any leftover `~/.nub/node-shim`
+- `just install-omlx` — install or upgrade the latest macOS oMLX app via [`bin/install-omlx.sh`](./bin/install-omlx.sh)
+- `just uzu-install` — build [uzu](https://github.com/trymirai/uzu) from source (see [`docs/UZU.md`](./docs/UZU.md))
+- `just install-beszel-agent <hub_url> <key> <token>` — opt-in Beszel monitoring agent (see [`docs/BESZEL.md`](./docs/BESZEL.md))
+- `just ssh-add-key` — load the SSH key from 1Password into `ssh-agent` (see [`docs/1PASSWORD_SSH.md`](./docs/1PASSWORD_SSH.md))
 
-## Tools
+## Structure and docs
 
-### Node (mise)
+- [`AGENTS.md`](./AGENTS.md) and [`.agents/AGENTS.md`](./.agents/AGENTS.md) — repository rules and cross-project agent defaults
+- [`herdr-app/`](./herdr-app/README.md) — Herdr keys, settings, Dark Greeny theme, layout, and sidebar/tab mods (`just link` copies mods because Herdr does not hot-reload symlinks)
+- [`factory/`](./factory/README.md) — shared Droid config; move an existing `~/.factory/settings.json` to `~/.factory/settings.local.json` before the first `just link` so shared defaults do not overwrite machine-specific settings, and keep `~/.factory/` itself local
+- [`.pi/`](./.pi/README.md) — pi coding agent config, extensions, and sops-encrypted env
+- [`skills/`](./skills/README.md) — portable Agent Skills and plugin manifests ([`plugin.json`](./plugin.json), [`.cursor-plugin/`](./.cursor-plugin/), [`.claude-plugin/`](./.claude-plugin/))
+- [`sandbox/`](./sandbox/README.md) — ephemeral Linux sandboxes via `just nsc-start`
+- [`moshi/`](./moshi/README.md), [`k9s/`](./k9s/README.md), [`keyboard/`](./keyboard/README.md) — Moshi iOS theme, k9s config, and QMK/VIA macro pad
+- `fx` — `just link` symlinks only `~/.fx/AGENTS.md`; keep `~/.fx/` local because `fx` refuses durable state in git-tracked paths, and install/upgrade with `just install-fx` ([`just/install.just`](./just/install.just))
 
-Ambient `node` is provisioned by [mise](https://mise.jdx.dev/lang/node.html), not nvm/fnm or nub's shim. Global pin and settings live in [`mise/config.toml`](./mise/config.toml) (linked to `~/.config/mise/config.toml`). Interactive shells activate mise from `.zshrc`; login shells / IDEs get shims from `.zprofile`.
+Guides in [`docs/`](./docs):
 
-```bash
-just node                 # install + pin global node@26
-mise use node@22          # pin a project (writes mise.toml)
-mise doctor               # verify activate/shims
-```
-
-Project pins also come from `.node-version`, `.nvmrc`, or `package.json#devEngines` when those are present. Nub stays the package manager (`nub` / `nubx` / `nub install`) and uses the mise-provided `node` on `PATH`.
-
-### Moshi
-
-The [moshi/](./moshi) directory holds the Dark Greeny theme for the Moshi iOS app, plus the import steps. Sessions run in [herdr](https://herdr.dev).
-
-### Herdr
-
-The window app reads [herdr-app/](./herdr-app/): keys, settings, layout, mods, and the dark-greeny theme. `just link` symlinks them.
-
-### Droid
-
-Shared [Droid settings](https://docs.factory.com/droid-cli/settings) live in
-[`factory/settings.json`](./factory/settings.json). `just link` symlinks that file and
-[`.agents/AGENTS.md`](./.agents/AGENTS.md) into `~/.factory/`. Skills use the existing `~/.agents/skills` link.
-
-The one-line status uses [`factory/statusline.sh`](./factory/statusline.sh), also linked by `just link`.
-It shows the model, directory, Git branch (or detached commit), and context percentage. It requires `jq`.
-Context stays hidden until Droid provides usage. Validate changes with `droid statusline-probe`.
-
-Before the first `just link` on an existing Droid setup, move `~/.factory/settings.json` to
-`~/.factory/settings.local.json`. If the local file already exists, merge the settings you want to keep instead.
-Local settings override the shared file, so keep only machine-specific values there, such as trusted-folder paths.
-Keep credentials out of the shared file. Leave `~/.factory/` itself local because it also holds auth, sessions, and caches.
-
-### Crane
-
-Useful tool for managing containers.
-
-- [Docs](https://github.com/google/go-containerregistry/blob/main/cmd/crane/doc/crane.md)
-- [Common Commands](https://github.com/google/go-containerregistry/blob/main/cmd/crane/recipes.md)
-
-### fx
-
-[fx](https://fx.sh) is an experimental native coding agent CLI (~6.4 MB Zig binary, currently `v0.0.4`). State stays in `~/.fx` — fx manages that folder itself; **do not symlink it into a repo**, fx deliberately refuses to write durable state into git-tracked paths.
-
-```bash
-just install-fx                    # install/upgrade to FX_VERSION (default v0.0.4)
-FX_VERSION=v0.0.5 just install-fx  # pin a different release
-fx                                 # start an interactive session in the cwd
-fx ask "explain this error"        # one noninteractive request, then exit
-fx doctor                          # post-install health check (auth, state, git)
-fx status                          # resolved model / permission mode / workspace
-fx upgrade                         # binary upgrade on selected release channel
-```
-
-Auth once per host (`fx login` for Vercel, or `fx setup` for an AI Gateway API key) and `~/.fx/settings.json` persists model, permission mode, MCP servers, and prompt history.
-
-Resume sessions, record transcripts, and add per-process directories with global flags:
-
-```bash
-fx --resume last                   # resume the last session in this workspace
-fx -c                              # alias for --continue / --resume-last
-fx --record                        # save terminal output under ~/.fx/
-fx --add-dir ../shared             # grant the session access to another dir
-```
-
-Slash commands inside the interactive shell: `/help`, `/settings`, `/permissions`, `/sandbox`, `/workspace`, `/status`, `/usage`. Repo-safe config (sandbox hints, additional directories, permission overrides) goes in the workspace's own `.fx.json`, not `~/.fx`.
+- [`docs/APPS.md`](./docs/APPS.md) — manual Mac and App Store installs outside [`Brewfile`](./Brewfile)
+- [`docs/MCP.md`](./docs/MCP.md) — MCP server configs across pi, Claude Code, Cursor, Droid, and Devin
+- [`docs/1PASSWORD_SSH.md`](./docs/1PASSWORD_SSH.md) — service-account SSH agent and Git commit signing
+- [`docs/SSH.md`](./docs/SSH.md) — YubiKey PIV SSH setup
+- [`docs/BACKUPS.md`](./docs/BACKUPS.md) — age key creation and sops secret management
+- [`docs/BESZEL.md`](./docs/BESZEL.md) — Beszel agent installation and Homebrew tap gotcha
+- [`docs/UZU.md`](./docs/UZU.md) — building, running, and publishing uzu over Tailscale
+- [`docs/DESIGN.md`](./docs/DESIGN.md) — Dark Greeny visual design system for web and iOS
+- [`docs/NATIVE_APP_DEV.md`](./docs/NATIVE_APP_DEV.md) — SwiftUI/XcodeGen patterns and UI test harness notes
 
 ## Author
 

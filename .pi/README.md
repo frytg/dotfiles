@@ -1,75 +1,25 @@
 # `.pi/`
 
-Personal config for [pi](https://www.npmjs.com/package/@earendil-works/pi-coding-agent), the coding agent.
+Personal configuration and local extensions for [pi](https://www.npmjs.com/package/@earendil-works/pi-coding-agent). [`bin/link.sh`](../bin/link.sh) (run via `just link` or `just install`) symlinks `.pi/` itself to `~/.pi`, so pi reads [`agent/`](./agent) from `~/.pi/agent/`. Edit files here, not through `~/.pi/`, and run `/reload` inside pi after changes.
 
-## Overview
-
-This directory holds pi's runtime config. `link.sh` symlinks the files here into `~/.pi/agent/` so pi picks them up at startup. Edit files in this directory, not in `~/.pi/agent/` — the symlink points back here, and only commits persist.
-
-## Install
-
-From the repo root:
+## Setup and updates
 
 ```sh
-just install
+just install    # full bootstrap: brew, symlinks, tool upgrades, and env decrypt
+just update-pi  # update pi and installed packages
 ```
 
-## Manage
-
-- `pi list` — list installed packages
-- `pi config` — enable or disable package resources
-- `/atlas` to see token usage
+Use `pi list` to inspect installed packages and `pi config` to enable or disable package resources.
 
 ## Auto-loaded env
 
-Local directory extension: [`agent/extensions/load-env/`](./agent/extensions/load-env/).
+The local [`load-env`](./agent/extensions/load-env/index.ts) extension reads `~/.pi/.env.personal` into `process.env` at startup before MCP servers connect, so [`mcp.json`](./agent/mcp.json) interpolations like `${GITHUB_PAT}` resolve and shell tools inherit them. Precedence: shell-exported variables win, and a missing file is a silent no-op.
 
-At startup, pi loads `~/.pi/.env.personal` (decrypted from [`agent/../.env.personal.sops.yaml`](./.env.personal.sops.yaml) by `just decrypt-env` / `just run`) into the process env — before MCP servers connect. So `mcp.json` interpolations like `${EXA_API_KEY}` and `${GITHUB_PAT}` resolve without manual sourcing, and bash tool calls inherit the values. Shell-exported vars win; a missing file is a no-op. Never commit the decrypted file.
+`just run` (and `just install`) decrypts [`.env.personal.sops.yaml`](./.env.personal.sops.yaml) to `.pi/.env.personal` via `just decrypt-env .pi/.env.personal.sops.yaml`. Never commit the decrypted `.env.personal` file (gitignored).
 
-## Plugins
+## Local extensions and links
 
-### Optimized footer
-
-Local directory extension: [`agent/extensions/optimized-footer/`](./agent/extensions/optimized-footer/).
-
-- entrypoint: `index.ts` (auto-discovered as `extensions/*/index.ts`)
-- docs: [`README.md`](./agent/extensions/optimized-footer/README.md) — goals, layout, MCP semantics, setup
-
-Loads via `PI_CODING_AGENT_DIR=~/.dotfiles/.pi/agent`. Toggle with `/opt-footer`. Use `/reload` after edits.
-
-## Datadog
-
-Using Datadog [Pi Plugin](https://github.com/datadog-labs/pi-plugin) instead of pure MCP server.
-
-Setup by running `/datadog setup eu` in pi.
-
-### MCP
-
-`agent/mcp.json` is a symlink to [`.agents/mcp.json`](../.agents/mcp.json). See [`docs/MCP.md`](../docs/MCP.md) for how pi, Claude Code, and Cursor read their MCP servers.
-
-### Web search
-
-Using [Exa](https://dashboard.exa.ai/home) through their [MCP server](https://exa.ai/docs/reference/exa-mcp) for search and web extraction (not agents).
-
-### Tidy Tools & Sub-Agents
-
-Reducing output clutter using [Tidy Tools](https://github.com/mikeyobrien/pi-tidy-tools/tree/main/packages/pi-tidy-tools).
-
-Adding sub-agents to pi using [`pi-tidy-subagents`](https://github.com/mikeyobrien/pi-tidy-tools/tree/main/packages/pi-tidy-subagents). See docs or [reference.md](https://github.com/mikeyobrien/pi-tidy-tools/blob/main/packages/pi-tidy-subagents/docs/reference.md) for setup and usage.
-
-## Symlinking files
-
-Some references are already symlinked. If broken, run this again:
-
-```sh
-ln -sf ../../.agents/AGENTS.md .pi/agent/AGENTS.md
-```
-
-The skills directory is linked into `~/.agents/skills`, which gets [picked up by pi](https://pi.dev/docs/latest/skills#locations).
-
-## Trio
-
-Setup [trio](https://github.com/jnsahaj/trio) with `/trio`, after which it can execute `planner -> executor -> reviewer` on its own with one model each.
-Also see [@iamsahaj_xyz](https://x.com/iamsahaj_xyz/status/2077842986806001746).
-
-Config gets saved to [`trio.json`](./agent/trio.json)
+- [`optimized-footer`](./agent/extensions/optimized-footer/README.md) — replaces the default footer with git forge, MCP readiness, token/cost totals, and context bar; toggle with `/opt-footer`.
+- [`agent/mcp.json`](./agent/mcp.json) — symlink to [`.agents/mcp.json`](../.agents/mcp.json). See [`docs/MCP.md`](../docs/MCP.md) before editing MCP servers.
+- [`agent/AGENTS.md`](./agent/AGENTS.md) — symlink to [`.agents/AGENTS.md`](../.agents/AGENTS.md). If broken, restore with `ln -sf ../../.agents/AGENTS.md .pi/agent/AGENTS.md`.
+- Skills load from `~/.agents/skills`, which `bin/link.sh` symlinks to [`skills/`](../skills).

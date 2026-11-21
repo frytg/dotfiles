@@ -98,7 +98,6 @@ the mod doesn't copy them to Keychain or disk, inspect Droid's login or browser 
 API errors or bodies. `FACTORY_API_KEY` and the old Keychain item are no longer used. The next refresh picks up
 changes to the 1Password items.
 
-Run `just test-herdr-usage` for Claude status-line cache and usage-window regression checks.
 Use `herdr-app check herdr-app/mods/usage` from the repo root for the native mod check.
 
 ## Not a setting anymore
