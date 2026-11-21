@@ -3,7 +3,7 @@
 # checkout lives next to the dotfiles repo unless UZU_DIR is set
 UZU_DIR := env('UZU_DIR', justfile_directory() / '..' / 'uzu')
 UZU_BIN := UZU_DIR / 'target' / 'release' / 'cli'
-UZU_MODEL := env('UZU_MODEL', 'trymirai/Qwen3.6-27B-M')
+UZU_MODEL := env('UZU_MODEL', 'trymirai/Qwen3.8-27B-L')
 UZU_PORT := env('UZU_PORT', '8000')
 
 # the Mac app's CLI; the `tailscale` alias isn't visible to just
@@ -12,8 +12,8 @@ UZU_TS_SERVICE := 'svc:uzu'
 UZU_TS_PORT := '8000'
 
 # clone or pull uzu, ensure the Metal toolchain, and build the release CLI (see docs/UZU.md)
-[group('INSTALL')]
-install-uzu:
+[group('UZU')]
+uzu-install:
 	#!/usr/bin/env zsh
 	set -e
 	if [[ -d "{{ UZU_DIR }}/.git" ]]; then
@@ -27,6 +27,8 @@ install-uzu:
 	cd "{{ UZU_DIR }}"
 	cargo build --release -p cli
 	echo "ok: {{ UZU_BIN }}"
+alias install-uzu := uzu-install
+alias uzu-update := uzu-install
 
 # interactive uzu chat with UZU_MODEL (downloads on first run; extra args go to the cli)
 [group('UZU')]

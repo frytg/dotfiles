@@ -64,7 +64,7 @@ Identify the invariant the code must enforce and the narrowest repo-relative cha
 
 ## Full audit workflow
 
-Write audit outputs outside the target repo (default `~/security-audit/<repo-name>/run-<N>/`), or inside the target only when the user selects a git-ignored directory. Track scope (full vs. scoped paths/diff) and reviewed commit ref explicitly, and state when coverage is partial.
+Write audit outputs to `<root>/.local/security-audit/run-<N>/`, where `<root>` is the top level of the repo the skill was invoked in (`git rev-parse --show-toplevel`). Before writing, run `git check-ignore -q .local/` from `<root>`. If `.local` isn't ignored yet, append `.local/` to `<root>/.gitignore` and say so in the final report, so the user can commit it. Never write audit output outside `<root>/.local/security-audit/`. Track scope (full vs. scoped paths/diff) and reviewed commit ref explicitly, and state when coverage is partial.
 
 1. **Reconnaissance**
    - Map product purpose, principals, normal authority, and protected resources.

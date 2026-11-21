@@ -1,12 +1,11 @@
 ---
 name: repo-docs
 description: >-
-  Write and update technical repository documentation (`README.md`, co-located module or service `README.md`s,
-  `TESTING.md`, and `docs/` guides, reference pages, migration notes, and runbooks) with concrete behavioral detail and
-  single-source-of-truth links to code and tasks. Enforces a public/private visibility and identifier-disclosure note in
-  root `README.md` and defaults to English unless specified otherwise. Use when the user asks to "write docs", "update
-  the docs", "document this", "update the README", "add a migration guide", "write a runbook", or when user-facing,
-  configuration, or operational behavior changes. Not for pre-implementation design proposals (use rfc) or CHANGELOG
+  Write and update repository docs (`README.md`, module `README.md`s, `TESTING.md`, `docs/` guides, migration notes,
+  runbooks) that cover setup, workflows, and non-obvious behavior and link to code and tasks instead of restating them.
+  Requires a public/private visibility note in root `README.md` and defaults to English. Use when the user asks to
+  "write docs", "update the docs", "document this", "update the README", "add a migration guide", "write a runbook", or
+  when user-facing, configuration, or operational behavior changes. Not for design proposals (use rfc) or CHANGELOG
   bumps (use changelog).
 license: MIT
 metadata:
@@ -18,8 +17,9 @@ metadata:
 # Repository Documentation
 
 Repository documentation is a contract for users, maintainers, and agents, not a tour of the codebase. Every file owns
-one scope, states exact behavior and failure consequences, links to canonical code or task commands instead of copying
-them, and defaults to English unless the repository's `AGENTS.md` or the user specifies another language.
+one scope, covers only what a reader needs to act and cannot read quickly from the code, states exact behavior and
+failure consequences, links to canonical code or task commands instead of copying them, and defaults to English unless
+the repository's `AGENTS.md` or the user specifies another language.
 
 ## When to use
 
@@ -73,7 +73,43 @@ split broader docs by reader goal:
   - Reference pages — Per-command, per-endpoint, or per-schema contracts, including generated spec workflows.
   - Operations & contributor guides — Secrets handling, deployment/release steps, environment matrices, and runbooks.
 
+## What earns a place
+
+A doc is finished when a reader can set the project up, run its workflows, and avoid its traps, not when it covers
+everything the code does. Length is a cost: every line that restates code goes stale when the code changes, and it hides
+the lines that matter from humans and agents alike.
+
+Include a detail only when it passes both tests:
+
+1. **The reader needs it to act.** It is a setup step, a workflow, a contract between components, an invariant, or a
+   behavior a reasonable reader would get wrong.
+2. **The code does not already say it quickly.** The reader cannot learn it by opening one obvious file for under a
+   minute. Order of operations across files, external prerequisites, decisions with consequences, and silent failures
+   pass. The body of a function does not.
+
+Leave out:
+
+- Step-by-step narration of what a script, function, or task recipe does. State its purpose and when to run it, then
+  link to it.
+- Inventories: every file in a directory, every recipe in the task file, every exported function, every environment
+  variable. Link to the directory, the task list (`just --list`), or the loader, and name only the entries a reader
+  needs first.
+- Settings and flags with unsurprising defaults that the loader or `--help` already lists.
+- Implementation details with no caller-visible effect: internal helper names, data structures, control flow.
+- History of how the code got here. That belongs in commits, PRs, or decision records.
+
+Cut or link when any of these holds:
+
+- A section would need an edit after a refactor that changes no behavior.
+- A co-located `README.md` is longer than the code it describes.
+- Every entry in a list has the same shape and none carries a warning. That list is an inventory.
+
+Reference pages for a public API or CLI are the exception. They may be complete because callers cannot read the source,
+so generate them from the spec or `--help` output where possible instead of writing them by hand.
+
 ## Level of detail
+
+These rules shape the details that passed the tests above. They do not add topics to cover.
 
 1. **Write concrete values, never vague qualifiers.** State exact defaults, units, limits, status codes, paths, and file
    modes (`timeout defaults to 30s`, `body capped at 64 KiB`, `returns HTTP 409 on duplicate key`, `writes mode 600 to
@@ -89,9 +125,11 @@ split broader docs by reader goal:
    - Commands or channels that do less than their name implies: "`--dry-run` validates config syntax locally and does
      not test remote credentials."
    - Module boundaries: "Keep `DATABASE_URL` out of the shared client package; only `src/server/env.ts` reads it."
-4. **Document options, flags, and environment variables with exact parsing and fallback rules.** Mark each setting
-   `REQUIRED` or `OPTIONAL`, give its default and type/unit, note strict parsing (`exact string 'true'` vs truthy), name
-   where secrets come from, and state what happens when unset:
+4. **Document the settings a reader must touch, with exact parsing and fallback rules.** Cover what is required to run,
+   plus any option, flag, or environment variable whose parsing, default, or unset behavior is surprising. Link to the
+   loader or schema for the rest. Mark each setting you include `REQUIRED` or `OPTIONAL`, give its default and
+   type/unit, note strict parsing (`exact string 'true'` vs truthy), name where secrets come from, and state what
+   happens when unset:
 
    ```markdown
    - REQUIRED `API_BASE_URL` — upstream origin (`https://api.example.com`), no trailing slash.
@@ -111,8 +149,8 @@ split broader docs by reader goal:
 
 6. **Annotate sharp edges inline in runnable examples.** Keep code and CLI snippets minimal, complete, and runnable with
    synthetic placeholders (`acme`, `example.com`) and env vars for credentials. Add short inline comments only on lines
-   callers commonly get wrong. When documenting failure modes, include a realistic error output or payload and map each
-   error code/message to its fix.
+   callers commonly get wrong. Document the failure modes readers hit during setup or operation: include a realistic
+   error output or payload and its fix. Do not enumerate every error the code can raise.
 
 ## References and single source of truth
 
@@ -151,14 +189,17 @@ split broader docs by reader goal:
 2. **Verify every fact against the codebase.** Read option parsers, env loaders, schemas, `justfile`/`package.json`, and
    tests before writing. If existing docs contradict the code, trust the code and update the doc (or flag the mismatch
    if the code looks broken). Never guess flags, defaults, or paths; ask the user or use `<placeholder>` / `.invalid`
-   for unknown external values.
+   for unknown external values. Read for accuracy, not coverage: most of what you read stays out of the doc.
 3. **Update the canonical file instead of creating sprawl.** Edit the existing `README.md` or `docs/` page that owns the
    subject. Create a new file only for a genuinely new module, guide, migration, or runbook, and link it from
    `AGENTS.md`, root `README.md`, or the parent index.
-4. **Write direct, zero-filler prose.** Start immediately with what the component, command, or contract does — no "This
+4. **Select, then prune.** Run each planned section through the "What earns a place" tests before writing it. In the
+   sections you touch, delete lines that are stale or restate code in the same edit; a docs update may remove more
+   lines than it adds. If other sections are bloated, name them in the reply instead of rewriting them unasked.
+5. **Write direct, zero-filler prose.** Start immediately with what the component, command, or contract does — no "This
    document describes..." preamble and no table of contents. Use active voice, present tense, short sentences, `-`
    bullets by default, numbered lists for ordered steps, and tables only for true two-axis comparisons.
-5. **Verify links, commands, and formatting.** Confirm every relative file path resolves on disk and every task command
+6. **Verify links, commands, and formatting.** Confirm every relative file path resolves on disk and every task command
    exists in the repo's task file. Run `just format` / `just lint` (or the repo's formatter/linter) before finishing.
 
 ## Checklist
@@ -167,8 +208,10 @@ split broader docs by reader goal:
 - Placed in the right layer (thin root `README.md`, co-located module `README.md`, `TESTING.md`, or single-topic `docs/`
   page) with no table of contents.
 - Opens with what the subject does, followed by routing links to adjacent docs instead of duplicated explanations.
+- Every section covers setup, a workflow, a contract, or a trap. Nothing narrates a script step by step or inventories
+  files, recipes, or settings that the code already lists.
 - States concrete defaults/limits, mechanism + failure consequence for constraints, negative non-behaviors, and strict
-  `REQUIRED`/`OPTIONAL` config semantics.
+  `REQUIRED`/`OPTIONAL` semantics for the settings it includes.
 - Links to source files, task recipes, and secret wrappers as the single source of truth; contains zero real secrets or
   org-specific hostnames.
 - Every relative path and task command was verified against the codebase, and formatting/lint checks pass.
