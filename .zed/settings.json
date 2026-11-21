@@ -1,4 +1,10 @@
 {
+	"suggest_extensions": false,
+	"zoomed_padding": false,
+	"centered_layout": {
+		"right_padding": null,
+		"left_padding": null
+	},
 	"search": {
 		"whole_word": false
 	},
@@ -76,6 +82,7 @@
 			"interval_secs": 600
 		},
 		"inline_blame": {
+			"padding": 7,
 			"enabled": true,
 			"min_column": 60,
 			"show_commit_summary": true
@@ -392,8 +399,12 @@
 	},
 	"preferred_line_length": 120,
 	"project_panel": {
+		"auto_fold_dirs": true,
+		"starts_open": true,
+		"auto_reveal_entries": true,
+		"default_width": 240.0,
 		"hide_hidden": false,
-		"hide_root": true,
+		"hide_root": false,
 		"git_status_indicator": true,
 		"bold_folder_labels": false,
 		"indent_size": 20.0,
