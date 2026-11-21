@@ -3,10 +3,11 @@ import 'just/install.just' # one-shot installer recipes (nix, pi, cursor, fx, om
 import 'just/mac.just' # macos-specific tweaks (defaults, reload, pmset)
 import 'just/ollama.just'
 import 'just/uzu.just' # uzu local inference: build from source, chat, serve (see docs/UZU.md)
+import 'just/firecrawl.just' # firecrawl-local: install, serve, scrape, crawl, map (see docs/FIRECRAWL.md)
 import 'just/beszel.just' # beszel monitoring agent, opt-in per machine (see docs/BESZEL.md)
 import 'just/mise.just' # mise tooling
 import 'just/server.just' # headless server provisioning from a fresh clone (no homebrew, no macos)
-import 'just/sandbox.just' # ephemeral sandbox management (daytona + namespace/nsc)
+import 'just/sandbox.just' # ephemeral sandbox management (namespace/nsc)
 import 'just/age.just' # age key recipes (create, derive pubkey, push to 1password)
 import 'just/encryption.just' # pgp + sops helpers (decrypt, rotate, edit secret files)
 import 'just/nostr.just' # nostr key recipes (nsec/npub generation, push to 1password)

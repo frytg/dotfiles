@@ -1,7 +1,7 @@
 # uzu: local inference engine by Mirai, built from source. See docs/UZU.md.
 
-# checkout lives next to the dotfiles repo unless UZU_DIR is set
-UZU_DIR := env('UZU_DIR', justfile_directory() / '..' / 'uzu')
+# checkout lives in ../_cli/uzu next to the dotfiles repo unless UZU_DIR is set
+UZU_DIR := env('UZU_DIR', justfile_directory() / '..' / '_cli' / 'uzu')
 UZU_BIN := UZU_DIR / 'target' / 'release' / 'cli'
 UZU_MODEL := env('UZU_MODEL', 'trymirai/Qwen3.8-27B-L')
 UZU_PORT := env('UZU_PORT', '8000')

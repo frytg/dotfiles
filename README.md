@@ -30,6 +30,7 @@ Run `just` or `just --list` for all recipes under [`justfile`](./justfile) and [
 - `just node` — install and pin ambient Node (`26` in [`mise/config.toml`](./mise/config.toml)) via [mise](https://mise.jdx.dev/lang/node.html); removes any leftover `~/.nub/node-shim`
 - `just install-omlx` — install or upgrade the latest macOS oMLX app via [`bin/install-omlx.sh`](./bin/install-omlx.sh)
 - `just uzu-install` — build [uzu](https://github.com/trymirai/uzu) from source (see [`docs/UZU.md`](./docs/UZU.md))
+- `just firecrawl-install` — install [firecrawl-local](https://docs.firecrawl.dev/quickstarts/firecrawl-local) into `../_cli` and link it into `~/.local/bin` (see [`docs/FIRECRAWL.md`](./docs/FIRECRAWL.md))
 - `just install-beszel-agent <hub_url> <key> <token>` — opt-in Beszel monitoring agent (see [`docs/BESZEL.md`](./docs/BESZEL.md))
 - `just ssh-add-key` — load the SSH key from 1Password into `ssh-agent` (see [`docs/1PASSWORD_SSH.md`](./docs/1PASSWORD_SSH.md))
 

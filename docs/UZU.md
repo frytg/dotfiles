@@ -4,7 +4,7 @@
 
 ## Install
 
-Run `just uzu-install` (aliases: `install-uzu`, `uzu-update`). It clones into `../uzu` next to the dotfiles repo (override with `UZU_DIR`), downloads the Metal toolchain if needed, and runs `cargo build --release -p cli`. A rerun pulls and rebuilds.
+Run `just uzu-install` (aliases: `install-uzu`, `uzu-update`). It clones into `../_cli/uzu` next to the dotfiles repo (override with `UZU_DIR`), downloads the Metal toolchain if needed, and runs `cargo build --release -p cli`. A rerun pulls and rebuilds.
 
 - **Skip `cargo tools setup`.** The README suggests it, but it also installs uv, pnpm, and other tools that brew and mise already manage. `rust-toolchain.toml` pins a nightly toolchain, and rustup installs it on the first `cargo` call.
 - **Metal toolchain is a separate Xcode component.** `xcrun -f metal` finds the binary even when the toolchain is missing, so the build script fails with `cannot execute tool 'metal' due to missing Metal Toolchain`. `xcodebuild -downloadComponent MetalToolchain` (about 840 MB) fixes it. The recipe checks `xcrun metal --version`, which actually runs the tool.

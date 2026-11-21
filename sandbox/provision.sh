@@ -2,8 +2,8 @@
 # provision an ephemeral sandbox with the dotfiles environment.
 # idempotent: safe to re-run on the same sandbox.
 #
-# pipe it into a fresh sandbox with `daytona exec NAME -- bash -s` or
-# `nsc ssh NAME -- bash -s` from `just/sandbox.just`.
+# pipe it into a fresh sandbox with `nsc ssh NAME -- bash -s`
+# from `just/sandbox.just`.
 #
 # customize via env (read at the top of the script):
 #   DOTFILES_REPO — git URL of the dotfiles repo (default: https://tangled.org/frytg.digital/dotfiles)
@@ -51,7 +51,7 @@ fi
 # so we add ~/.local/bin to PATH explicitly and re-activate per command.
 export PATH="$HOME/.local/bin:$PATH"
 # export the shims dir explicitly — `eval "$(mise activate bash)"` is unreliable
-# in the `bash -s` context that nsc/daytona use to pipe this script.
+# in the `bash -s` context that `nsc ssh` uses to pipe this script.
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # --- bootstrap: just via mise (chicken-and-egg: needs just to run just commands) ---
@@ -129,6 +129,5 @@ ln -sfn "$DOTFILES_DIR/sandbox/zshrc" "$HOME/.zshrc"
 ln -sfn "$DOTFILES_DIR/sandbox/bashrc" "$HOME/.bashrc"
 
 echo
-echo "ok: sandbox provisioned. shell in with one of:"
-echo "    just daytona-shell NAME"
+echo "ok: sandbox provisioned. shell in with:"
 echo "    just nsc-shell NAME"
