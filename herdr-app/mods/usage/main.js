@@ -1,9 +1,10 @@
-// Claude Code, Cursor and Factory plan usage, between the agents list and the footer.
+// Claude Code, Cursor and Factory plan usage plus Baseten spend, between the agents list and the footer.
 
 import { Buffer } from 'buffer'
 import { v_flex, h_flex } from 'gpui-base'
 import { View, div, image, svg } from 'gpui-kit'
 import { theme, layout, run, exec, home, readTextFile } from 'herdr'
+import { readBasetenKey, readBaseten } from './baseten-usage.js'
 import { readFactoryKey, readFactory } from './factory-usage.js'
 
 // Written by claude/statusline.sh on every Claude Code status line refresh.
@@ -14,6 +15,8 @@ const CURSOR_ORIGIN = 'https://cursor.com'
 const CLAUDE_POLL_MS = 60 * 1000
 const CURSOR_POLL_MS = 12 * 60 * 1000
 const FACTORY_POLL_MS = 5 * 60 * 1000
+// Baseten updates usage hourly.
+const BASETEN_POLL_MS = 15 * 60 * 1000
 // From here the bar turns the blocked color.
 const WARN_PCT = 80
 // The layout block this box sizes to fit, and the top border it draws outside its content.
@@ -36,6 +39,33 @@ function find(node, id) {
 const narrow = () => (find(layout(), 'sidebar')?.size?.px ?? Infinity) < 160
 
 const pct = (n) => (n == null ? '–' : `${Math.floor(n)}%`)
+
+/**
+ * Format dollars short enough for the rail: "$4.20", "$420", "$4.2k".
+ * @param {number} n Dollars.
+ * @returns {string} The formatted amount.
+ */
+const money = (n) => (n < 100 ? `$${n.toFixed(2)}` : n < 1000 ? `$${Math.round(n)}` : `$${(n / 1000).toFixed(1)}k`)
+
+/**
+ * A meter's compact reading for the folded header and the rail, with `*` when stale.
+ * @param {object} m A meter with `w.used` or a preformatted `amount`.
+ * @returns {string} The compact reading.
+ */
+const short = (m) => `${m.amount ?? pct(m.w.used)}${m.stale ? '*' : ''}`
+
+// Providers read with a 1Password API key. `denied` names a key that authenticates but lacks access.
+const KEYED = {
+	factory: { label: 'Factory', short: 'F', readKey: readFactoryKey, read: readFactory, pollMs: FACTORY_POLL_MS },
+	baseten: {
+		label: 'Baseten',
+		short: 'B',
+		readKey: readBasetenKey,
+		read: readBaseten,
+		pollMs: BASETEN_POLL_MS,
+		denied: 'no billing access',
+	},
+}
 
 // "2h13m" or "4d" until an epoch-seconds reset, "" without one.
 function until(resetsAt) {
@@ -154,10 +184,10 @@ export default class Usage extends View {
 	init(_props, cx) {
 		this.claude = null
 		this.cursor = null
-		this.factory = null
-		this.factoryPending = false
-		this.factoryUpdatedAt = null
-		this.factoryStatus = 'loading'
+		// Per keyed provider: last reading, its time, a pending flag, and a status note.
+		this.keyed = Object.fromEntries(
+			Object.keys(KEYED).map((name) => [name, { value: null, updatedAt: null, pending: false, status: 'loading' }])
+		)
 		try {
 			this.folded = Boolean(localStorage.getItem(FOLDED_KEY))
 		} catch {
@@ -165,42 +195,56 @@ export default class Usage extends View {
 		}
 		this.poll(cx, 'claude', readClaude)
 		this.poll(cx, 'cursor', readCursor)
-		this.pollFactory(cx)
+		for (const name of Object.keys(KEYED)) this.pollKeyed(cx, name)
 		cx.timer.every(CLAUDE_POLL_MS, (tickCx) => this.poll(tickCx, 'claude', readClaude))
 		cx.timer.every(CURSOR_POLL_MS, (tickCx) => this.poll(tickCx, 'cursor', readCursor))
-		cx.timer.every(FACTORY_POLL_MS, (tickCx) => this.pollFactory(tickCx))
+		for (const [name, p] of Object.entries(KEYED)) cx.timer.every(p.pollMs, (tickCx) => this.pollKeyed(tickCx, name))
 	}
 
 	/**
-	 * Refresh Factory without overlapping requests or logging credentials and API bodies.
+	 * Refresh a keyed provider without overlapping requests or logging credentials and API bodies.
 	 * @param {object} context This callback's Herdr view context.
+	 * @param {string} name The provider's key in `KEYED`.
 	 * @returns {void}
 	 */
-	pollFactory(context) {
-		if (this.factoryPending) {
+	pollKeyed(context, name) {
+		const p = KEYED[name]
+		const state = this.keyed[name]
+		if (state.pending) {
 			context.notify()
 			return
 		}
-		this.factoryPending = true
+		state.pending = true
 		context.spawn(async (cx) => {
 			try {
-				const key = await readFactoryKey(exec)
+				const key = await p.readKey(exec)
 				if (!key) {
-					this.factory = null
-					this.factoryUpdatedAt = null
-					this.factoryStatus = 'key needed'
+					Object.assign(state, { value: null, updatedAt: null, status: 'key needed' })
 					return
 				}
-				this.factory = await readFactory(fetch, key)
-				this.factoryUpdatedAt = Date.now()
-				this.factoryStatus = null
-			} catch {
-				this.factoryStatus = this.factory ? 'stale' : 'unavailable'
+				state.value = await p.read(fetch, key)
+				state.updatedAt = Date.now()
+				state.status = null
+			} catch (e) {
+				const denied = p.denied && (e?.status === 401 || e?.status === 403)
+				state.status = state.value ? 'stale' : denied ? p.denied : 'unavailable'
 			} finally {
-				this.factoryPending = false
+				state.pending = false
 				cx.notify()
 			}
 		})
+	}
+
+	/**
+	 * Whether a keyed provider's reading is older than two refreshes or its last refresh failed.
+	 * @param {string} name The provider's key in `KEYED`.
+	 * @returns {boolean} True when the reading is stale.
+	 */
+	keyedStale(name) {
+		const state = this.keyed[name]
+		return (
+			state.status === 'stale' || (state.updatedAt != null && Date.now() - state.updatedAt >= KEYED[name].pollMs * 2)
+		)
 	}
 
 	// Keeps the last good reading when a read fails (offline, Cursor signed out).
@@ -216,8 +260,8 @@ export default class Usage extends View {
 		})
 	}
 
-	// One meter: icon, name, percentage and reset, with a thin bar below.
-	row(t, id, icon, name, w, stale = false) {
+	// One meter: icon, name, percentage (or amount) and reset, with a thin bar below for percentages.
+	row(t, { id, icon, name, w, stale = false, amount }) {
 		const used = Math.min(100, Math.max(0, w.used ?? 0))
 		const reset = until(w.resets_at)
 		return v_flex()
@@ -238,21 +282,28 @@ export default class Usage extends View {
 							.child(`${name}${stale ? ' · stale' : ''}`)
 					)
 					.when(Boolean(reset), (el) => el.child(div().flex_none().text_size(11).text_color(t.dim).child(`↻ ${reset}`)))
-					.child(div().flex_none().text_color(t.foreground).child(pct(w.used)))
-			)
-			.child(
-				div()
-					.w_full()
-					.h(3)
-					.rounded(2)
-					.bg(t.border)
 					.child(
 						div()
-							.h(3)
-							.rounded(2)
-							.w(`${used}%`)
-							.bg(used >= WARN_PCT ? t.blocked : t.accent)
+							.flex_none()
+							.text_color(t.foreground)
+							.child(amount ?? pct(w.used))
 					)
+			)
+			.when(amount == null, (el) =>
+				el.child(
+					div()
+						.w_full()
+						.h(3)
+						.rounded(2)
+						.bg(t.border)
+						.child(
+							div()
+								.h(3)
+								.rounded(2)
+								.w(`${used}%`)
+								.bg(used >= WARN_PCT ? t.blocked : t.accent)
+						)
+				)
 			)
 	}
 
@@ -272,15 +323,24 @@ export default class Usage extends View {
 
 	render() {
 		const t = theme()
-		const factoryStale =
-			this.factoryStatus === 'stale' ||
-			(this.factoryUpdatedAt != null && Date.now() - this.factoryUpdatedAt >= FACTORY_POLL_MS * 2)
-		const factoryNote = !this.factory && this.factoryStatus ? `Factory: ${this.factoryStatus}` : null
+		const { factory, baseten } = this.keyed
+		// Providers without a reading show their status instead: still loading, missing key, or failed.
+		const notes = Object.entries(KEYED)
+			.filter(([name]) => !this.keyed[name].value && this.keyed[name].status)
+			.map(([name, p]) => ({ ...p, status: this.keyed[name].status }))
 		const meters = [
 			this.claude?.five && { id: 'claude-5h', icon: 'claude', name: 'Claude 5h', w: this.claude.five },
 			this.claude?.week && { id: 'claude-7d', icon: 'claude', name: 'Claude 7d', w: this.claude.week },
 			this.cursor && { id: 'cursor', icon: 'cursor', name: 'Cursor', w: this.cursor },
-			...(this.factory ?? []).map((m) => ({ ...m, icon: 'agent', stale: factoryStale })),
+			...(factory.value ?? []).map((m) => ({ ...m, icon: 'agent', stale: this.keyedStale('factory') })),
+			baseten.value && {
+				id: 'baseten',
+				icon: 'program',
+				name: 'Baseten month',
+				w: { resets_at: baseten.value.resets_at },
+				amount: money(baseten.value.spend),
+				stale: this.keyedStale('baseten'),
+			},
 		].filter(Boolean)
 		const root = v_flex().size_full().min_h(0).bg(t.chrome).border_t(1).border_color(t.border).text_size(12.5)
 		// Natural height, never stretched by the block, so its size is what the block should be.
@@ -301,23 +361,16 @@ export default class Usage extends View {
 							.items_center()
 							.gap(2)
 							.child(image(`icons/${m.icon}.svg`).size(14))
-							.child(
-								div()
-									.text_size(10)
-									.text_color(t.dim)
-									.child(`${pct(m.w.used)}${m.stale ? '*' : ''}`)
-							)
+							.child(div().text_size(10).text_color(t.dim).child(short(m)))
 					)
 				)
 			return root.child(
-				rail.when(Boolean(factoryNote), (el) =>
-					el.child(
+				rail.children(
+					notes.map((n) =>
 						div()
 							.text_size(10)
 							.text_color(t.dim)
-							.child(
-								this.factoryStatus === 'key needed' ? 'F: key' : this.factoryStatus === 'loading' ? 'F: …' : 'F: !'
-							)
+							.child(`${n.short}: ${n.status === 'key needed' ? 'key' : n.status === 'loading' ? '…' : '!'}`)
 					)
 				)
 			)
@@ -340,12 +393,7 @@ export default class Usage extends View {
 			.child(svg(`mods/workspace-chrome/${this.folded ? 'chevron-right' : 'chevron-down'}.svg`).size(12))
 			.child(div().flex_1().text_size(11.5).font_medium().child('Usage'))
 			.when(this.folded && meters.length > 0, (el) =>
-				el.child(
-					div()
-						.truncate()
-						.text_size(11)
-						.child(meters.map((m) => `${pct(m.w.used)}${m.stale ? '*' : ''}`).join(' · '))
-				)
+				el.child(div().truncate().text_size(11).child(meters.map(short).join(' · ')))
 			)
 		return root.child(
 			content
@@ -359,12 +407,10 @@ export default class Usage extends View {
 							.px(8)
 							.pb(LIST_BOTTOM)
 							.gap(2)
-							.children(meters.map((m) => this.row(t, m.id, m.icon, m.name, m.w, m.stale)))
+							.children(meters.map((m) => this.row(t, m)))
 					)
 				)
-				.when(Boolean(factoryNote), (el) =>
-					el.child(div().px(16).pb(8).text_size(11).text_color(t.dim).child(factoryNote))
-				)
+				.children(notes.map((n) => div().px(16).pb(8).text_size(11).text_color(t.dim).child(`${n.label}: ${n.status}`)))
 		)
 	}
 }

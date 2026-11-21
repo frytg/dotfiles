@@ -58,8 +58,8 @@ The app writes `gpui-kit.d.ts` and `jsconfig.json` next to the mod for editor ty
 ## Usage box
 
 The [usage mod](mods/usage/main.js) is a box under the agents list in the sidebar's second column.
-It shows Claude Code (5h and 7d), Cursor, and Factory (5h, 7d and 30d) plan usage as meters with their reset times.
-On the compact rail it shows only icons and percentages. The box resizes its `usage` layout block to fit its content,
+It shows Claude Code (5h and 7d), Cursor, and Factory (5h, 7d and 30d) plan usage as meters with their reset times,
+plus Baseten's month-to-date spend in dollars. On the compact rail it shows only icons, percentages and amounts. The box resizes its `usage` layout block to fit its content,
 so the layout's `px` is only the starting height. Click the header to fold it down to one line with the percentages.
 
 The usage mod's files are copied together, so imports and reloads use files inside Herdr's home.
@@ -79,17 +79,24 @@ After editing, run `just link` to refresh the mod.
   [CodexBar's Factory provider](https://github.com/steipete/CodexBar/blob/main/docs/factory.md).
   Failed refreshes keep the last reading, marked `stale` (or `*` when folded or compact). No key shows
   `Factory: key needed`; a failed first request shows `Factory: unavailable`. The generic agent icon represents Factory.
+- Baseten: every 15 minutes the mod calls the documented
+  [`v1/billing/usage_summary`](https://docs.baseten.co/organization/billing) for the current UTC month and sums the
+  pre-credit `subtotal` of every product it reports (dedicated, Model APIs, training, loops). Baseten updates usage hourly. The row has no
+  bar, because pay-as-you-go spend has no quota, and it resets at the start of the next UTC month.
+  Billing needs organization-wide permission, so a team key shows `Baseten: no billing access`. Use an Organization
+  Admin's personal key, which expires within 90 days. Missing keys and failed refreshes behave like Factory's.
+  The generic program icon represents Baseten.
 
-### Factory API key
+### API keys
 
-The mod reads its dedicated API key from 1Password with `op`, using the same service account as `just ssh-add-key`.
-See the [credential loader](mods/usage/factory-usage.js) for the configured item and token source.
-The account must have read access to the item.
+The mod reads the Factory and Baseten API keys from 1Password with `op`, using the same service account as
+`just ssh-add-key`. See the [Factory](mods/usage/factory-usage.js) and [Baseten](mods/usage/baseten-usage.js)
+credential loaders for the configured items and token source. The account must have read access to both items.
 
-Keep `op` on Herdr's command `PATH` and the token file readable only by your user. The API key stays in memory;
-the mod doesn't copy it to Keychain or disk, inspect Droid's login or browser cookies, or log Factory API errors
-or bodies. `FACTORY_API_KEY` and the old Keychain item are no longer used. The next five-minute refresh picks up
-changes to the 1Password item.
+Keep `op` on Herdr's command `PATH` and the token file readable only by your user. The API keys stay in memory;
+the mod doesn't copy them to Keychain or disk, inspect Droid's login or browser cookies, or log Factory or Baseten
+API errors or bodies. `FACTORY_API_KEY` and the old Keychain item are no longer used. The next refresh picks up
+changes to the 1Password items.
 
 Run `just test-herdr-usage` for Claude status-line cache and usage-window regression checks.
 Use `herdr-app check herdr-app/mods/usage` from the repo root for the native mod check.

@@ -69,7 +69,7 @@ for m in my-spaces my-agents my-tabs; do
 	done
 done
 # Copy the whole usage mod so imports and reloads use files inside Herdr's home.
-for f in main.js mod.json factory-usage.js; do
+for f in main.js mod.json factory-usage.js baseten-usage.js; do
 	target="$HOME/.config/herdr-app/mods/usage/$f"
 	# Replace links from earlier installs without copying through to the source.
 	if [[ -L "$target" ]]; then rm "$target"; fi

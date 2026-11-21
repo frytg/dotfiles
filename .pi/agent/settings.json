@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.5.2",
+  "lastChangelogVersion": "1.6.0",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "xai",
@@ -76,6 +76,6 @@
     "mistral/mistral-large-4"
   ],
   "extensionChangelogVersions": {
-    "{\"source\":\"npm:@gotgenes/pi-permission-system\",\"scope\":\"user\"}": "42.0.0"
+    "{\"source\":\"npm:@gotgenes/pi-permission-system\",\"scope\":\"user\"}": "42.2.0"
   }
 }
