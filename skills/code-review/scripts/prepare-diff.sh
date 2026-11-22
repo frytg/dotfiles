@@ -53,17 +53,18 @@ ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
 HEAD_SHA="$(git rev-parse --verify -q HEAD || true)"
+EMPTY_TREE='4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 BRANCH="$(git branch --show-current)"
 if [ -n "$BRANCH" ]; then
 	SLUG="$(printf '%s' "$BRANCH" | tr '/ ' '__')"
-else
+elif [ -n "$HEAD_SHA" ]; then
 	SLUG="detached-${HEAD_SHA:0:12}"
+else
+	SLUG='unborn'
 fi
-STATE_DIR="$ROOT/.local/code-review/$SLUG"
-mkdir -p "$STATE_DIR"
 
-# Append .local/ to the repo .gitignore unless something already ignores it. Runs on exit,
-# so the auto-mode dirty check below sees the tree as the user left it.
+# Append .local/ to the repo .gitignore unless something already ignores it. Called only after
+# a non-empty diff succeeds, so empty or failing runs never dirty tracked files.
 ensure_ignored() {
 	if git check-ignore -q .local/code-review/state.json; then
 		echo 'gitignore=ok'
@@ -75,7 +76,6 @@ ensure_ignored() {
 	} >>.gitignore
 	echo 'gitignore=added'
 }
-trap ensure_ignored EXIT
 
 # Working-tree scans skip .local so state files never review themselves, even before .gitignore covers them.
 LOCAL_SPEC=(-- . ':(exclude).local')
@@ -99,6 +99,8 @@ default_branch() {
 if [ -z "$MODE" ]; then
 	if [ -n "$(git status --porcelain --untracked-files=normal "${LOCAL_SPEC[@]}")" ]; then
 		MODE='worktree'
+	elif [ -z "$HEAD_SHA" ]; then
+		die 'empty repo with no commits or changes' 3
 	else
 		DEFAULT="$(default_branch)"
 		if [ -n "$DEFAULT" ] && [ "$(git rev-parse "$DEFAULT")" != "$HEAD_SHA" ] &&
@@ -113,23 +115,30 @@ if [ -z "$MODE" ]; then
 	fi
 fi
 
+if [ "$MODE" = 'pr' ]; then
+	SLUG="pr-$ARG"
+fi
+STATE_DIR="$ROOT/.local/code-review/$SLUG"
+mkdir -p "$STATE_DIR"
+
 PATCH="$STATE_DIR/$NAME.patch"
 OUT="$STATE_DIR/$NAME.md"
 DIFF_OPTS=(--no-color --no-ext-diff -M)
 export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.quotePath GIT_CONFIG_VALUE_0=false
 HEAD_LABEL="$HEAD_SHA"
+HEAD_MATCH='yes'
 
 case "$MODE" in
 staged)
-	BASE_SHA="$HEAD_SHA"
+	BASE_SHA="${HEAD_SHA:-$EMPTY_TREE}"
 	LABEL='staged changes vs HEAD'
 	git diff "${DIFF_OPTS[@]}" --cached "${LOCAL_SPEC[@]}" >"$PATCH"
 	HEAD_LABEL='INDEX'
 	;;
 worktree)
-	BASE_SHA="$HEAD_SHA"
+	BASE_SHA="${HEAD_SHA:-$EMPTY_TREE}"
 	LABEL='working tree vs HEAD (incl. untracked)'
-	git diff "${DIFF_OPTS[@]}" HEAD "${LOCAL_SPEC[@]}" >"$PATCH"
+	git diff "${DIFF_OPTS[@]}" "$BASE_SHA" "${LOCAL_SPEC[@]}" >"$PATCH"
 	# Untracked files without touching the index (no `git add -N`).
 	while IFS= read -r -d '' f; do
 		git diff "${DIFF_OPTS[@]}" --no-index -- /dev/null "$f" >>"$PATCH" || true
@@ -137,11 +146,13 @@ worktree)
 	HEAD_LABEL='WORKTREE'
 	;;
 base)
+	[ -n "$HEAD_SHA" ] || die 'repo has no commits yet'
 	BASE_SHA="$(git merge-base "$ARG" HEAD)" || die "no merge-base with $ARG"
 	LABEL="${BRANCH:-HEAD} vs $ARG (merge-base ${BASE_SHA:0:12})"
 	git diff "${DIFF_OPTS[@]}" "$BASE_SHA" HEAD >"$PATCH"
 	;;
 from)
+	[ -n "$HEAD_SHA" ] || die 'repo has no commits yet'
 	BASE_SHA="$(git rev-parse --verify "$ARG^{commit}")" || die "unknown commit: $ARG"
 	LABEL="${BRANCH:-HEAD} since ${BASE_SHA:0:12}"
 	git diff "${DIFF_OPTS[@]}" "$BASE_SHA" HEAD >"$PATCH"
@@ -150,6 +161,7 @@ pr)
 	command -v gh >/dev/null || die 'gh not installed'
 	BASE_SHA="$(gh pr view "$ARG" --json baseRefOid -q .baseRefOid)" || die "cannot read PR $ARG"
 	HEAD_LABEL="$(gh pr view "$ARG" --json headRefOid -q .headRefOid)"
+	[ "$HEAD_SHA" = "$HEAD_LABEL" ] || HEAD_MATCH='no'
 	LABEL="PR #$ARG"
 	gh pr diff "$ARG" --color=never >"$PATCH"
 	;;
@@ -169,12 +181,14 @@ function emit(s) { body[++nb] = s }
 	flush_file()
 	line = $0; sub(/^diff --git a\//, "", line)
 	n = index(line, " b/"); path = (n ? substr(line, n + 3) : line)
-	stat = "M"; adds = 0; dels = 0; inhunk = 0
+	stat = "M"; adds = 0; dels = 0; inhunk = 0; old_mode = ""
 	emit(""); start = nb + 1; emit("## " path)
 	next
 }
 !inhunk && /^new file mode/ { stat = "A"; next }
 !inhunk && /^deleted file mode/ { stat = "D"; next }
+!inhunk && /^old mode / { old_mode = substr($0, 10); next }
+!inhunk && /^new mode / { emit("(mode changed: " old_mode " -> " substr($0, 10) ")"); next }
 !inhunk && /^rename from / { stat = "R"; emit("(renamed from " substr($0, 13) ")"); next }
 !inhunk && /^rename to / { path = substr($0, 11); next }
 !inhunk && /^Binary files / { emit("(binary file changed)"); next }
@@ -222,5 +236,7 @@ echo "mode=$MODE"
 echo "label=$LABEL"
 echo "base=$BASE_SHA"
 echo "head=$HEAD_LABEL"
+echo "head_match=$HEAD_MATCH"
 echo "files=$FILES"
 echo "lines=$(wc -l <"$OUT" | tr -d ' ')"
+ensure_ignored
