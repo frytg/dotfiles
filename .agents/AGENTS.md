@@ -6,7 +6,7 @@ Defaults that apply across all projects unless overridden by a project-level `AG
 
 - TypeScript is the default. Use strict mode.
 - `import type { ... }` for type-only imports.
-- Explicit `.ts`/`.js` extensions where the runtime requires them (Nub, Deno, NodeNext).
+- Explicit `.ts`/`.js` extensions where the runtime requires them (Node, Bun, NodeNext).
 - Avoid `any`. Narrow unions. Type request/response bodies and handlers.
 
 ## Code style
@@ -38,9 +38,17 @@ Direct technical prose, the way you'd answer in chat. Not docs, not a report.
 - **Close with a bottom line only when the answer weighed a real decision.** Plain prose: the call plus the condition that would flip it. Factual or confirmation answers just end.
 - **Lean toward ASD-STE100 (Simplified Technical English) in replies.** Short sentences, one idea per sentence, active voice, no idioms. Don't enforce it strictly; keep the clarity, drop the discipline when a more conversational shape carries the same point better.
 
+## Repo standard
+
+Repo-level setup lives in the [repo-standard skill](../skills/repo-standard/SKILL.md): tool pins, package manager
+config, the standard `just` recipes, lint and format config, git hooks, CI, and the sops layout. Load it to set up a
+new repo or to audit an existing one. The sections below keep only the rules that apply on every edit.
+
 ## Tasks
 
 - All task definitions live in a `justfile`. Run with `just <recipe>`.
+- Every repo has `install`, `update`, `lint`, `format`, `format-check`, `typecheck`, `test`, and `pre-push`. Use them
+  instead of raw tool commands.
 
 ## Skills
 
@@ -50,9 +58,11 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 
 ## Package manager & runtime
 
-- [Nub](https://github.com/nubjs/nub) is the preferred package manager and runner: `nub`, `nubx`, `nub watch`, `nub install`.
-- Lockfiles are committed and reviewed. No floating `latest` in CI.
-- If Nub is not a fit, fall back to a `justfile` + a lockfile-driven package manager. No parallel ad-hoc tooling.
+- [Bun](https://bun.com/docs) is the package manager and bin runner: `bun install`, `bun x`, `bun check`.
+  `bun.lock` is the only lockfile.
+- The runtime is a per-project choice, Bun or Node. Keep code portable between both: no `bun:*` imports and no `Bun.*`
+  globals in shared code.
+- Lockfiles are committed and reviewed. Tool and dependency versions are pinned, with no floating `latest`.
 - Avoid Python when existing tools or runtimes can handle the task. Prefer shell for system automation and the project's
   existing runtime for scripts. Use Python only when it materially simplifies the work or no suitable alternative exists.
   Don't add Python tooling or dependencies for one-off tasks.
@@ -61,7 +71,7 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 
 ### Node version selection
 
-[Node is managed by mise](https://mise.jdx.dev/lang/node.html) — not `nvm`, `fnm`, `Volta`, or nub's node shim. Ambient `node`/`npm`/`npx` come from mise; nub remains the preferred _package manager_ (`nub` / `nubx` / `nub install`) and uses whatever `node` is on `PATH`.
+[Node is managed by mise](https://mise.jdx.dev/lang/node.html) — not `nvm`, `fnm`, or `Volta`. Ambient `node`/`npm`/`npx` come from mise; bun remains the _package manager_ (`bun install` / `bun x`).
 
 **Dotfiles wiring**
 
@@ -92,9 +102,9 @@ When creating new skills, follow the [Agent Skills spec](https://agentskills.io/
 
 ## Hosting & CI
 
-- Code lives on **github.com** or **tangled.org**. Pick one per project; stay consistent.
-- CI is the host's native system: GitHub Actions (`.github/workflows/`) for GitHub, Spindles for Tangled.
-- CI runs lint, test, and build on every push and PR. Pin action versions by SHA or major tag.
+- Personal repos live on **tangled.org**, organization repos on the organization's **github.com**. CI is the host's
+  native system and calls the same `just` recipes as the local hooks.
+- Never lower a lint category, skip a test, or drop a check to get a green run.
 
 ## Dependencies
 
@@ -155,13 +165,15 @@ Adapters expose `storage.raw` for provider-specific features without casts. Fork
 
 ### Tooling
 
-- `oxlint` — lint (JS/TS/JSX/TSX/Vue and related).
-- `oxfmt` — format (JS/TS/JSON/CSS/Vue/Markdown and related).
-- Prefer Oxc over Biome/Prettier/ESLint for new and migrated projects. Config: `.oxlintrc.json` + `.oxfmtrc.json`. Run via `just lint` / `just format`.
+- `oxlint` — lint, configured in `.oxlintrc.json`. Run via `just lint`.
+- `oxfmt` — format, configured in `.oxfmtrc.json`. Run via `just format`. Not `bun fmt`: it is a separate
+  implementation and the editor formats with oxfmt.
+- `bun check` — typecheck. Run via `just typecheck`.
+- No Biome, Prettier, or ESLint in new and migrated projects.
 
 ### Ease-of-use
 
-- [`esm.sh`](https://esm.sh) - CDN for NPM, JSR, GitHub, Deno file imports for quick scripts ([docs as markdown](https://esm.sh/gh/esm-dev/esm.sh@main/README.md))
+- [`esm.sh`](https://esm.sh) - CDN for npm, JSR, and GitHub imports for quick scripts ([docs as markdown](https://esm.sh/gh/esm-dev/esm.sh@main/README.md))
   - do not use in production, only for quick scripts and prototyping. Use a proper package manager for production code.
 - [`nixery.dev`](https://nixery.dev) — Container registry that builds ad-hoc images from a URL path (e.g. `nixery.dev/shell/curl` gives a shell with curl pre-installed). Useful for one-off containers.
 - [`atproto.md`](https://atproto.md) - retrieving AT Proto content via Markdown
@@ -236,13 +248,14 @@ Never reach for `process.env` directly to validate required env vars. Document n
 
 ## Testing
 
-- Universal tests that run in **Bun, Node, and Deno**:
+- Universal tests that run in **Bun and Node**:
   - [@cross/test](https://jsr.io/@cross/test) — test runner.
-  - [@cross/assert](https://jsr.io/@cross/assert) — assertions.
+  - [@std/assert](https://jsr.io/@std/assert) — assertions.
   - `sinon` — stubs/spies when needed.
 - Avoid runtime-specific APIs (`bun:test` `mock.module`, Jest-style `expect`) in cross-runtime code.
 - Prefer dependency injection for HTTP/identity clients. Stub process I/O with sinon.
 - Bug fixes ship with a regression test.
+- No retries, wider timeouts, or `skip` to make a run green. Never delete or weaken auth, privacy, or security tests.
 
 ## Safety
 
@@ -254,16 +267,16 @@ Never reach for `process.env` directly to validate required env vars. Document n
 
 ## Secrets (sops)
 
-- All secrets are encrypted with [sops](https://github.com/getsops/sops). Default key backend: **age**.
-- Store encrypted files in the repo (e.g. `.env.sops.yaml`, `secrets.<env>.enc.yaml`) so they are reviewed in the same PR as the code that consumes them.
-- Decrypt at runtime, not at rest. CI loads the age key from a secret store (GitHub Actions secret, Spindles secret), never from the repo.
-- Local dev: decrypt into memory with `sops exec-env` or an equivalent wrapper. Do not write plaintext secrets to disk.
+- All secrets are encrypted with [sops](https://github.com/getsops/sops) and **age**, and stored in the repo as
+  `*.sops.*` files. File names, the `_env` recipe, and the key recipes are in the repo-standard skill.
+- Decrypt at runtime with `sops exec-env`, not at rest. Do not write plaintext secrets to disk.
+- Do not change `.sops.yaml` or rotate keys without an explicit request.
 - Do not paste real secret values into chat, issues, or PR descriptions.
 
 ## Commits & PRs
 
 - **Never create commits or push on your own.** Wait for the user to ask explicitly. If they do, follow their stated message style and never run destructive git operations (amend shared history, force-push, rewrite branches) without explicit request.
-- Conventional Commits: `<type>(<scope>): <description>`. Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `build`, `ci`.
+- Conventional Commits: `<type>(<scope>): <description>`. Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `build`, `ci`, `revert`. Write `refactor`, not `refact`.
 - One logical change per PR. PR description: what changed, why, how to test, follow-ups.
 - No amending or force-pushing shared history without coordination.
 
@@ -284,7 +297,7 @@ When the user asks for a specific company's design system, fetch its public desi
 ## Avoid
 
 - `scripts` blocks in `package.json` for tasks.
-- `nub run` / `npm run` for tasks that have a `just` recipe.
+- `bun run` / `npm run` for tasks that have a `just` recipe.
 - Heavy frameworks for a single feature.
 - Lockfile churn unrelated to the change.
 - New top-level directories without updating the project's `AGENTS.md` and `README.md`.
