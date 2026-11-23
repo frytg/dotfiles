@@ -76,6 +76,12 @@ install-origin:
 install-fx:
 	curl -fsSL https://fx.sh/setup.sh | bash
 
+# install Cua Driver (native GUI automation CLI + MCP server, see docs/CUA.md)
+[group('INSTALL')]
+install-cua-driver:
+	/bin/bash -c "$(curl -fsSL https://cua.ai/driver/install.sh)"
+alias install-cua := install-cua-driver
+
 # install Rust/ Cargo
 [group('INSTALL')]
 install-rust:

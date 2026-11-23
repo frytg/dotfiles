@@ -1,5 +1,10 @@
 {
 	"mcpServers": {
+		"cua-driver": {
+			"type": "stdio",
+			"command": "/Users/dan/.local/bin/cua-driver",
+			"args": ["mcp"]
+		},
 		"github": {
 			"type": "http",
 			"url": "https://api.githubcopilot.com/mcp/",

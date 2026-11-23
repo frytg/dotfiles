@@ -265,6 +265,14 @@ Never reach for `process.env` directly to validate required env vars. Document n
 - Treat the working tree as untrusted. Do not `curl ... | sh`. Do not execute fetched code without inspection.
 - Flag changes to auth, secrets handling, CI permissions, or network egress for explicit review.
 
+## Computer use
+
+- **Any agent MUST ALWAYS ask the user for permission before it runs a computer-use skill or tool.** This covers
+  anything that drives a GUI, a desktop, or a local or remote computer: Cua Spaces, Cua sandboxes, Cua Volume,
+  `cua-driver`, `gui-automation`, and similar skills and MCP servers.
+- Ask before the first call, and say what you will do and on which machine or Space. Wait for an explicit yes.
+- Permission covers only the task the user approved. Ask again for a new task, another machine, or a wider scope.
+
 ## Secrets (sops)
 
 - All secrets are encrypted with [sops](https://github.com/getsops/sops) and **age**, and stored in the repo as

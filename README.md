@@ -49,6 +49,7 @@ Guides in [`docs/`](./docs):
 
 - [`docs/APPS.md`](./docs/APPS.md) — manual Mac and App Store installs outside [`Brewfile`](./Brewfile)
 - [`docs/MCP.md`](./docs/MCP.md) — MCP server configs across pi, Claude Code, Cursor, Droid, and Devin
+- [`docs/CUA.md`](./docs/CUA.md) — Cua Driver install, macOS permissions, and its MCP server in Droid and Claude Code
 - [`docs/1PASSWORD_SSH.md`](./docs/1PASSWORD_SSH.md) — service-account SSH agent and Git commit signing
 - [`docs/SSH.md`](./docs/SSH.md) — YubiKey PIV SSH setup
 - [`docs/BACKUPS.md`](./docs/BACKUPS.md) — age key creation and sops secret management
