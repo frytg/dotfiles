@@ -14,6 +14,8 @@ import {
 	shared,
 	setShared,
 	setAgentOrder,
+	nextCommand,
+	checking,
 	openOverlay,
 	closeOverlay,
 	props,
@@ -125,6 +127,7 @@ function icon(p, size, color) {
 export default class Agents extends View {
 	init(_props, cx) {
 		if (props()?.sortMenu) return
+		this.list = []
 		this.folded = new Set()
 		// Each agent's last state and when it changed (ms), kept across restarts.
 		this.changed = JSON.parse(localStorage.getItem('changed') ?? '{}')
@@ -132,6 +135,28 @@ export default class Agents extends View {
 		if (!this.pendingPins.length) localStorage.removeItem('pins')
 		this.migratingPins = new Set()
 		cx.timer.every(30000, (cx) => cx.notify())
+		if (!checking()) {
+			cx.spawn(async (cx) => {
+				for (;;) {
+					const c = await nextCommand()
+					this.command(c)
+					cx.notify()
+				}
+			})
+		}
+	}
+
+	/**
+	 * Focuses the numbered agent from the rendered list when triggered by a key command.
+	 * @param {string} c Command name delivered by `nextCommand()`.
+	 */
+	command(c) {
+		const match = /^select_(\d+)$/.exec(c)
+		if (!match) return
+		const target = this.list?.[Number(match[1]) - 1]
+		if (!target) return
+		if (target.pane) run('pane.focus', { pane: target.pane })
+		else run('agent.focus', { terminal: target.address })
 	}
 
 	// Stamps agents whose state changed. Done and idle count as one: looking at a
@@ -360,6 +385,7 @@ export default class Agents extends View {
 		const pinned = list.filter((a) => a.pinned)
 		const rest = list.filter((a) => !a.pinned)
 		list = [...pinned, ...rest]
+		this.list = list
 		setAgentOrder(list.map((a) => a.address))
 
 		const withKids = (a, i) => {

@@ -8,10 +8,11 @@ Migrated from the TUI `[keys]` block. The window has no prefix mode, so `ctrl+a`
 
 - `ctrl-1` through `ctrl-9` selects tabs (`switch_tab`).
 - `ctrl-a` then `1` through `9` selects spaces (`prefix+1..9`).
+- `alt-1` through `alt-9` focuses the numbered agent from [my-agents](mods/my-agents/main.js) (`my-agents.select_1..9`).
 - `ctrl-a` then an arrow, and shift+arrow, moves between spaces (up/down) and tabs (left/right).
 - `ctrl-a ctrl-a` in a terminal sends `^A`. A lone `ctrl-a` is the leader and does not.
 
-`prefix+ctrl+1..9` (focus an agent by index) has no command here. `cmd-[` and `cmd-]` move between agents.
+`cmd-[` and `cmd-]` move between agents.
 
 `cmd-1` through `cmd-9` still selects tabs.
 
