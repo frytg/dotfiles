@@ -18,6 +18,15 @@
 			"maxOutputTokens": 8192,
 			"maxContextLimit": 24000,
 			"noImageSupport": true
+		},
+		{
+			"model": "omlx/Inkling-2-Mini-oQ4e-mtp",
+			"displayName": "Feather: oMLX Inkling 2 Mini",
+			"baseUrl": "https://llm.moose-mulley.ts.net/v1",
+			"provider": "generic-chat-completion-api",
+			"apiKeyHelper": "op read 'op://Agentic/Feather LLM Proxy/credential'",
+			"maxOutputTokens": 16384,
+			"maxContextLimit": 1048576
 		}
 	],
 	"sessionDefaultSettings": {
