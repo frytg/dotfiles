@@ -32,6 +32,7 @@ ln -sf "$(PWD)/.cursor/mcp.json" ~/.cursor/mcp.json
 # A global-only filename avoids loading these hooks again as project hooks.
 ln -sf "$(PWD)/.cursor/hooks.global.json" ~/.cursor/hooks.json
 ln -sf "$(PWD)/.cursor/herdr-desktop-status.sh" ~/.cursor/herdr-desktop-status.sh
+ln -sfh "$(PWD)/commands" ~/.cursor/commands
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Cursor/User/settings.json
 mkdir -p ~/Library/Application\ Support/Code/User/
 ln -sf "$(PWD)/.vscode/settings.json" ~/Library/Application\ Support/Code/User/settings.json
@@ -98,6 +99,7 @@ ln -sf "$(PWD)/factory/settings.json" ~/.factory/settings.json
 ln -sf "$(PWD)/factory/mcp.json" ~/.factory/mcp.json
 ln -sf "$(PWD)/factory/statusline.sh" ~/.factory/statusline.sh
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.factory/AGENTS.md
+ln -sfh "$(PWD)/commands" ~/.factory/commands
 
 # devin: config, MCP servers, and global rules. config.json is shared across
 # hosts, so CLI-written keys (theme, permissions) propagate everywhere.
@@ -106,7 +108,7 @@ ln -sf "$(PWD)/devin/config.json" ~/.config/devin/config.json
 ln -sf "$(PWD)/devin/mcp.json" ~/.config/devin/mcp_config.json
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.config/devin/AGENTS.md
 
-# claude code: settings, keybindings, global rules (CLAUDE.md), and skills.
+# claude code: settings, keybindings, global rules (CLAUDE.md), skills, and commands.
 # lives in claude/ (not .claude/) so it isn't picked up as project settings here.
 # ~/.claude itself stays a real dir — it also holds sessions, history, and plugins.
 mkdir -p ~/.claude
@@ -115,6 +117,7 @@ ln -sf "$(PWD)/claude/keybindings.json" ~/.claude/keybindings.json
 ln -sf "$(PWD)/claude/statusline.sh" ~/.claude/statusline.sh
 ln -sfh "$(PWD)/.agents/AGENTS.md" ~/.claude/CLAUDE.md
 ln -sfh "$(PWD)/skills" ~/.claude/skills
+ln -sfh "$(PWD)/commands" ~/.claude/commands
 
 # setup skills link; -h keeps `ln` from following an existing symlink at the target
 mkdir -p ~/.agents

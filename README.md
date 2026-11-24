@@ -41,6 +41,7 @@ Run `just` or `just --list` for all recipes under [`justfile`](./justfile) and [
 - [`factory/`](./factory/README.md) — shared Droid config; move an existing `~/.factory/settings.json` to `~/.factory/settings.local.json` before the first `just link` so shared defaults do not overwrite machine-specific settings, and keep `~/.factory/` itself local
 - [`.pi/`](./.pi/README.md) — pi coding agent config, extensions, and sops-encrypted env
 - [`skills/`](./skills/README.md) — portable Agent Skills and plugin manifests ([`plugin.json`](./plugin.json), [`.cursor-plugin/`](./.cursor-plugin/), [`.claude-plugin/`](./.claude-plugin/))
+- [`commands/`](./docs/COMMANDS.md) — `/cmd-*` slash-command prompts shared by Claude Code, Cursor, and Droid
 - [`sandbox/`](./sandbox/README.md) — ephemeral Linux sandboxes via `just nsc-start`
 - [`moshi/`](./moshi/README.md), [`k9s/`](./k9s/README.md), [`keyboard/`](./keyboard/README.md) — Moshi iOS theme, k9s config, and QMK/VIA macro pad
 - `fx` — `just link` symlinks only `~/.fx/AGENTS.md`; keep `~/.fx/` local because `fx` refuses durable state in git-tracked paths, and install/upgrade with `just install-fx` ([`just/install.just`](./just/install.just))

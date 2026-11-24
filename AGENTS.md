@@ -8,6 +8,8 @@ For cross-cutting rules (code style, secrets, commits, etc.) see [`.agents/AGENT
 
 - New dotfiles are wired through `link.sh` (or have manual steps documented in `README.md`).
 - Editor settings are shared: `.vscode/settings.json` is symlinked to Cursor and VS Code, `.zed/settings.json` to Zed.
+- Commands: `commands/` holds `/cmd-*` slash-command prompts, linked into `~/.claude/commands`, `~/.cursor/commands`, and `~/.factory/commands` by `bin/link.sh`.
+  Keep them portable across all three harnesses (see [`docs/COMMANDS.md`](./docs/COMMANDS.md)).
 - Herdr: `herdr-app/` holds the window app config (keys, settings, theme, layout, mods), wired in `link.sh`.
 - Droid: `factory/settings.json`, `factory/mcp.json`, `factory/statusline.sh`, and `.agents/AGENTS.md` are linked into `~/.factory/` by `bin/link.sh`.
   Keep `~/.factory/` itself local because it also holds auth, sessions, and machine-specific settings.
