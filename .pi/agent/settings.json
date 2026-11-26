@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.6.0",
+  "lastChangelogVersion": "1.6.1",
   "theme": "dark",
   "httpIdleTimeoutMs": 300000,
   "defaultProvider": "xai",
@@ -40,7 +40,6 @@
   "tuiMode": "fullscreen",
   "doubleEscapeAction": "none",
   "collapseChangelog": true,
-  "showCacheMissNotices": false,
   "outputPad": 1,
   "editorPaddingX": 0,
   "defaultTools": [
@@ -76,6 +75,12 @@
     "mistral/mistral-large-4"
   ],
   "extensionChangelogVersions": {
-    "{\"source\":\"npm:@gotgenes/pi-permission-system\",\"scope\":\"user\"}": "42.2.0"
+    "{\"source\":\"npm:@gotgenes/pi-permission-system\",\"scope\":\"user\"}": "42.2.1"
+  },
+  "notices": {
+    "cacheMisses": false,
+    "cacheWarming": false,
+    "compactionCosts": false,
+    "reasoningDrops": false
   }
 }

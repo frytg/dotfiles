@@ -30,10 +30,10 @@ optional `delivery_mode` field: this mirrors the macOS `delivery_mode`
 surface (same name, same two values). The default is `"background"`:
 strict no-foreground:
 
-| `delivery_mode`          | Behavior on Windows                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `delivery_mode`          | Behavior on Windows                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `"background"` (DEFAULT) | Never fronts and **never raises/restacks** the target: macOS-aligned (mirrors CGEvent-to-pid). **Pixel clicks**: a UIA hit-test at the point first (accessibility-channel Invoke, works on UWP / WinUI3 / Win11 packaged apps, no flash); if that misses, coordinate-injected pen/touch, **but only when the target is the _visible_ window at that point**; PostMessage for plain Win32. It returns a structured `background_unavailable` error (rather than raising or fronting) when the target is **occluded** at the point, or the event kind is known-dropped (Chromium DOM mouse + key-combos, GTK buttons, VCL/LibreOffice accelerators, terminal / WPF text with no `element_token`). **No foreground swap and no z-order raise, ever.** |
-| `"foreground"`           | SendInput with brief `SetForegroundWindow(target)` → restore. The explicit, agent-chosen rung where fronting IS allowed: required to reach occluded targets, Chromium DOM content, GTK buttons, VCL accelerators, WPF drag, terminals, and canvas / custom-drawn surfaces with no UIA peer. Implemented for **every** input tool: `type_text` (SendInput Unicode via `send_text_synthesized`) and `scroll` (SendInput wheel via `send_wheel_synthesized`) included. The activation and restoration are scoped to that action.                                                                                                                                                                                                                       |
+| `"foreground"`           | SendInput with brief `SetForegroundWindow(target)` → restore. The explicit, agent-chosen rung where fronting IS allowed: required to reach occluded targets, Chromium DOM content, GTK buttons, VCL accelerators, WPF drag, terminals, and canvas / custom-drawn surfaces with no UIA peer. Implemented for **every** input tool: `type_text` (SendInput Unicode via `send_text_synthesized`) and `scroll` (SendInput wheel via `send_wheel_synthesized`) included. The activation and restoration are scoped to that action.                                                                                                                                                                                                                     |
 
 > **macOS is the source of truth: `background` never alters the screen.**
 > Earlier Windows builds "cheated" in background with three tricks that this
@@ -80,14 +80,14 @@ costlier path; only use it for surfaces with no UIA peer.
 
 ```json
 {
-  "isError": true,
-  "structuredContent": {
-    "code": "background_unavailable",
-    "target_class": "Chrome_WidgetWin_1",
-    "event_kind": "mouse_click",
-    "escalation": { "recommended": "foreground", "reason": "occluded / known-dropped event kind" },
-    "suggestion": "Retry this action with delivery_mode:\"foreground\"."
-  }
+	"isError": true,
+	"structuredContent": {
+		"code": "background_unavailable",
+		"target_class": "Chrome_WidgetWin_1",
+		"event_kind": "mouse_click",
+		"escalation": { "recommended": "foreground", "reason": "occluded / known-dropped event kind" },
+		"suggestion": "Retry this action with delivery_mode:\"foreground\"."
+	}
 }
 ```
 
@@ -136,7 +136,7 @@ is therefore forbidden unless the user **explicitly** asked for
 frontmost state:
 
 - **`Start-Process <exe>` / `Start-Process <url>` / `Start-Process
--FilePath ...`**: defaults to launching with `SW_SHOWNORMAL` which
+  -FilePath ...`**: defaults to launching with `SW_SHOWNORMAL` which
   _activates_ the new window. Windows treats new processes as
   user-initiated foreground apps. The CmdLine flag `-WindowStyle Hidden`
   helps but does not block activation for apps that call
@@ -157,7 +157,7 @@ frontmost state:
   but still activates the new window before minimizing it (flash
   visible to the user). Forbidden for the same reason.
 - **`explorer.exe shell:AppsFolder\<AUMID>` / `explorer.exe ms-edge:
-<url>`**: these are the Windows-shell equivalents of `open -a` /
+  <url>`**: these are the Windows-shell equivalents of `open -a` /
   `open <url>` on macOS. They go through `IApplicationActivationManager`
   with the wrong activation kind and foreground the target. Use
   `launch_app({aumid})` or `launch_app({urls})` instead: those route
@@ -181,7 +181,7 @@ frontmost state:
   never touch the OS cursor.
 - **`SendInput(KEYBDINPUT)` with no target HWND**: same idea, it goes
   to the focused window, not your target. Use `hotkey({pid, keys:
-[...]})` which uses `PostMessage(WM_KEYDOWN/UP)` to the named pid's
+  [...]})` which uses `PostMessage(WM_KEYDOWN/UP)` to the named pid's
   focused window.
 - **Keyboard shortcuts that semantically mean "focus here":
   Chromium / Edge / Firefox `Ctrl+L` (focus address bar),
@@ -191,7 +191,7 @@ frontmost state:
   raises its window to be key. Even when delivered to a backgrounded
   pid via `hotkey`, the downstream app pulls focus. **For omnibox
   navigation specifically**, the correct path is `launch_app({path:
-"...msedge.exe", additional_arguments: ["https://example.com/"]})`.
+  "...msedge.exe", additional_arguments: ["https://example.com/"]})`.
   This hands the URL to the selected browser process; no omnibox dance
   or `Ctrl+L` is needed. Do not combine `path` or `aumid` with `urls`
   for selected-browser navigation: `urls` opens separately in the default
@@ -338,18 +338,18 @@ For recording or browser preparation, use one persistent MCP connection.
 If you find yourself reaching for the right column, something has
 gone wrong: re-read "The no-foreground contract" above.
 
-| Intent                             | Use                                                                                             | Don't use                                                                            |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Open / launch a Win32 app          | `launch_app({path: "C:\\Program Files\\…\\foo.exe"})` or `{name: "foo"}`                        | `Start-Process`, `cmd /c start`, `& "C:\\path\\foo.exe"`                             |
-| Open / launch a UWP / packaged app | `launch_app({aumid: "Microsoft.Foo_8wekyb3d8bbwe!App"})`                                        | `explorer.exe shell:AppsFolder\\<AUMID>`, Start Menu typing                          |
-| Open a URL in the default browser  | `launch_app({urls: ["https://example.com"]})`                                                   | `Start-Process "https://…"`, `explorer.exe ms-edge:…`, `cmd /c start "" "https://…"` |
-| Find a pid                         | `list_apps` or `launch_app`'s return                                                            | `Get-Process`, `tasklist`, Win+S typing                                              |
-| Enumerate an app's windows         | `list_windows({pid})`, or read the `windows` array `launch_app` already returns                | `Get-Process \| Where-Object { $_.MainWindowHandle }`                                |
-| Move or resize one exact window    | `set_window_frame({pid, window_id, x, y, width, height})`                                       | PowerShell Add-Type wrappers, Win+Arrow, or title-bar dragging                       |
-| Click / type / scroll / keys       | `click`, `type_text`, `scroll`, `press_key`, `hotkey`                                           | `SendInput`, `cliclick`-style C# add-types, AutoHotkey scripts                       |
-| Drag / drag-and-drop               | `drag({pid, from_x, from_y, to_x, to_y})`                                                       | `SendInput` with `MOUSEEVENTF_MOVE`, mouse_event                                     |
-| Screenshot                         | `get_window_state` (window) or authorized `get_desktop_state` (desktop)                         | `[System.Windows.Forms.Screen]::CopyFromScreen`, `nircmd savescreenshot`             |
-| Quit an app                        | ask the user first, then `hotkey({pid, keys:["alt","f4"]})`                                     | `taskkill /F`, `Stop-Process -Force`, `Get-Process \| Stop-Process`                  |
+| Intent                             | Use                                                                                                             | Don't use                                                                            |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Open / launch a Win32 app          | `launch_app({path: "C:\\Program Files\\…\\foo.exe"})` or `{name: "foo"}`                                        | `Start-Process`, `cmd /c start`, `& "C:\\path\\foo.exe"`                             |
+| Open / launch a UWP / packaged app | `launch_app({aumid: "Microsoft.Foo_8wekyb3d8bbwe!App"})`                                                        | `explorer.exe shell:AppsFolder\\<AUMID>`, Start Menu typing                          |
+| Open a URL in the default browser  | `launch_app({urls: ["https://example.com"]})`                                                                   | `Start-Process "https://…"`, `explorer.exe ms-edge:…`, `cmd /c start "" "https://…"` |
+| Find a pid                         | `list_apps` or `launch_app`'s return                                                                            | `Get-Process`, `tasklist`, Win+S typing                                              |
+| Enumerate an app's windows         | `list_windows({pid})`, or read the `windows` array `launch_app` already returns                                 | `Get-Process \| Where-Object { $_.MainWindowHandle }`                                |
+| Move or resize one exact window    | `set_window_frame({pid, window_id, x, y, width, height})`                                                       | PowerShell Add-Type wrappers, Win+Arrow, or title-bar dragging                       |
+| Click / type / scroll / keys       | `click`, `type_text`, `scroll`, `press_key`, `hotkey`                                                           | `SendInput`, `cliclick`-style C# add-types, AutoHotkey scripts                       |
+| Drag / drag-and-drop               | `drag({pid, from_x, from_y, to_x, to_y})`                                                                       | `SendInput` with `MOUSEEVENTF_MOVE`, mouse_event                                     |
+| Screenshot                         | `get_window_state` (window) or authorized `get_desktop_state` (desktop)                                         | `[System.Windows.Forms.Screen]::CopyFromScreen`, `nircmd savescreenshot`             |
+| Quit an app                        | ask the user first, then `hotkey({pid, keys:["alt","f4"]})`                                                     | `taskkill /F`, `Stop-Process -Force`, `Get-Process \| Stop-Process`                  |
 | Hand a file/URL to an app          | `launch_app({urls:[<path>]})` (default app) or `{path: "...exe", additional_arguments:[<file>]}` (specific app) | `& "app.exe" "file"`, `Invoke-Item`, shell associations                              |
 
 ### The narrow carve-out
@@ -422,7 +422,7 @@ run the self-check:
    translate to the cua-driver equivalent from the mapping table.
 2. **Does this command move the user's real cursor?** (`SendInput`,
    `SetCursorPos` from inline C#, AutoHotkey scripts, `nircmd
-sendmouse`.) If yes, stop; use `click({pid, x, y})` which routes
+   sendmouse`.) If yes, stop; use `click({pid, x, y})` which routes
    per-HWND via PostMessage / per-element via UIA Invoke and never
    warps the cursor.
 3. **Does this command bypass cua-driver entirely?** (PowerShell

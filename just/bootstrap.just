@@ -34,6 +34,7 @@ run:
 	mise install
 	just mise-update
 	-bun upgrade
+	bun install --global vlt
 	-gcloud components update --quiet
 	-hc update
 	just --yes decrypt-env .pi/.env.personal.sops.yaml

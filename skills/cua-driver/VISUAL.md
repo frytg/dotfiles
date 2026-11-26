@@ -78,12 +78,12 @@ Example parse shape:
 
 ```json
 {
-  "capture_id": "capture-from-current-observation",
-  "options": {
-    "kinds": ["text", "icon"],
-    "min_confidence": 0.5,
-    "max_regions": 100
-  }
+	"capture_id": "capture-from-current-observation",
+	"options": {
+		"kinds": ["text", "icon"],
+		"min_confidence": 0.5,
+		"max_regions": 100
+	}
 }
 ```
 

@@ -61,14 +61,14 @@ Example CLI window action, with IDs and token replaced from the preceding respon
 cua-driver click '{"target":{"kind":"window","pid":844,"window_id":10725},"element_token":"s0000002a:14","session":"run-1"}'
 ```
 
-| Intent                          | Arguments in addition to exact target/session                                  |
-| ------------------------------- | ------------------------------------------------------------------------------ |
-| Activate a control              | `click` with `element_token`                                                   |
-| Double/right click              | `double_click` / `right_click`; inspect the host schema and delivery result    |
-| Insert text                     | `type_text` with `element_token` and `text`                                    |
-| Focus a visible field and type  | `type_text` with `x,y,text`, when that form is advertised                      |
-| Replace an exposed native value | `set_value` with `pid,element_token,value` (its own schema, no `target`)       |
-| Send a key or combination       | `press_key` with `key`, or `hotkey` with `keys`                                |
+| Intent                          | Arguments in addition to exact target/session                                                                                                                                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Activate a control              | `click` with `element_token`                                                                                                                                                                     |
+| Double/right click              | `double_click` / `right_click`; inspect the host schema and delivery result                                                                                                                      |
+| Insert text                     | `type_text` with `element_token` and `text`                                                                                                                                                      |
+| Focus a visible field and type  | `type_text` with `x,y,text`, when that form is advertised                                                                                                                                        |
+| Replace an exposed native value | `set_value` with `pid,element_token,value` (its own schema, no `target`)                                                                                                                         |
+| Send a key or combination       | `press_key` with `key`, or `hotkey` with `keys`                                                                                                                                                  |
 | Scroll / drag                   | `scroll` takes `direction` and `amount` (wheel notches); signed `dx`/`dy` is converted (positive `dy` is down; up to 50 is notches, more is pixels at 100 px per notch). Inspect `describe drag` |
 
 Text insertion and value replacement are different intents. Setting a field does not prove a form submission, navigation, or rename committed. Open a collapsed search/input control and reobserve before typing into it; one focus-click may not both open and focus it. Inspect the existing value/selection before replacing content.
