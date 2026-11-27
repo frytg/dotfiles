@@ -17,4 +17,4 @@ create-public-key name="key":
 [confirm]
 [group('ENCRYPTION')]
 age-key-to-1password name:
-	op document create "./tmp/{{ name }}.txt" --title "Age key > {{ name }}" --tags "age" --file-name "{{ name }}.txt"
+	op document create "./tmp/{{ name }}.txt" --title "Age key > {{ name }}" --tags "age" --file-name "{{ name }}.txt" --vault "Agentic"
