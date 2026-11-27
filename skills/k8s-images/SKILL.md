@@ -168,7 +168,7 @@ Produce a tight, scannable report. Group entries by category. Don't trigger edit
 
 One bullet per image. Include the file path, container name, pinned tag, latest tag, and a one-line note (e.g. "patch only", "new minor in same 0.x series", "major available — see release notes").
 
-```
+```text
 - clusters/cluster-a/apps/observability/deployment.yaml  [api-service]  v0.53.1 → v0.55.0  (new minor)
 - clusters/cluster-c/apps/indexer/deployment.yaml        [indexer]       0.4.5009 → 0.4.5100  (patch)
 ```
@@ -177,14 +177,14 @@ One bullet per image. Include the file path, container name, pinned tag, latest 
 
 Call out anything where the latest tag has a different major than the pinned one, and link to the upstream release notes. **Do not silently bump these** — breaking changes need review.
 
-```
+```text
 - clusters/cluster-a/apps/api-service/deployment.yaml  [api-service]  v1.4.2 → v2.0.0  (major)
   Release notes: https://github.com/<owner>/<api-service>/releases/tag/v2.0.0
 ```
 
 ### Floating tags (should be pinned)
 
-```
+```text
 - shared/services/collector/deployment.yaml    [collector]   tag: latest            (pin to a version)
 - clusters/cluster-b/apps/notify/cronjobs.yaml [notify-cron] tag: nixery.dev/shell/curl  (rolling — pin a digest or specific build)
 ```
@@ -193,7 +193,7 @@ Call out anything where the latest tag has a different major than the pinned one
 
 One line per file with a templated image, so the user can see what was _not_ checked.
 
-```
+```text
 - shared/charts/api-service/values.yaml  [api-service]  image is templated ({{ .Values.image }}) — skipped
 - clusters/cluster-c/apps/indexer/deployment.yaml  [indexer]  pinned to sha256:abc123… — skipped
 ```
@@ -202,13 +202,13 @@ One line per file with a templated image, so the user can see what was _not_ che
 
 If `crane ls` failed (auth, network, rate limit, missing repo), report the image and the error. Don't silently drop it.
 
-```
+```text
 - clusters/cluster-a/apps/agent/deployment.yaml  [agent]  registry error: unauthorized
 ```
 
 ### Summary footer
 
-```
+```text
 Checked: 28 images across 22 files
 Out of date: 11 (10 patch/minor, 1 major)
 Floating: 2
@@ -220,7 +220,7 @@ Registry errors: 0
 
 For each out-of-date or major-available entry, present one bullet at a time and wait for a direct yes/no. **Never batch-confirm.** The prompt is a plain question that names the file, the line, the pinned tag, the proposed tag, and the bump type — the user should answer with the file path or image name to make the intent unambiguous:
 
-```
+```text
 Bump clusters/cluster-a/apps/observability/deployment.yaml  api-service: v0.53.1 → v0.55.0  (new minor, same 0.x)
   [y/n] _
 ```
@@ -268,7 +268,7 @@ After all edits, show:
 - Any registry errors that surfaced so the user can retry later.
 - A reminder that **nothing was applied to any cluster**. The diff is on disk; the user runs `kubectl apply`, `argocd app sync`, or the cluster's reconciler at their discretion.
 
-```
+```text
 Applied 7 bumps across 6 files:
   clusters/cluster-a/apps/observability/deployment.yaml  api-service v0.53.1 → v0.55.0
   clusters/cluster-b/apps/metrics/deployment.yaml       metrics     12.3.1   → 12.5.4

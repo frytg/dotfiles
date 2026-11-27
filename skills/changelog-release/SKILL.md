@@ -74,7 +74,7 @@ If the changelog header points at a **public** changelog UI (e.g. a Vue module),
 
 ## 5. Report and stop
 
-```
+```text
 Current branch: <branch>
 Base branch:    <base>
 Commits ahead:  <n>

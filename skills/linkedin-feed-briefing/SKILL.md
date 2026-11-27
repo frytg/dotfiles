@@ -40,7 +40,7 @@ Pick the first row that is loaded. Prefer anything that exposes a real browser w
 
 Open the feed:
 
-```
+```text
 url: https://www.linkedin.com/feed/
 ```
 

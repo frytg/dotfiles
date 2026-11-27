@@ -239,7 +239,7 @@ The footer line is the audit trail. Keep it. When the rubric changes, the footer
 
 Append a plain-text record to `MEMORIES.md`, one per incident. Lead with a timestamp in ISO 8601, then short labelled lines. Add a second plain-text record per open question (see the **Open questions** section). No JSON, no structured envelope — a future you (or a future agent) should be able to read these without a parser.
 
-```
+```text
 2025-03-09T17:38:00Z — incident 23, monitor 2
 Severity: P2
 Cause: app (medium confidence)
@@ -268,7 +268,7 @@ Lines to keep on every entry:
 
 Anything you couldn't decide without the user, append a separate plain-text record to `MEMORIES.md` so it surfaces in future runs:
 
-```
+```text
 2025-03-09T17:38:00Z — open question for incident 23
 Question: Monitor foo-prod-heartbeat is a heartbeat but the team
   treats it as P1 — should the rubric promote heartbeats to P2 by
@@ -337,7 +337,7 @@ Over time, `MEMORIES.md` and `INCIDENTS.md` accumulate enough entries that the a
 
 One Markdown section per incident, keyed by id. On a fresh incident, create the section at the end of the file. On a re-triage, find the existing section and append; never overwrite the prior content.
 
-```
+```markdown
 ## Incident 451 — api.orders.write (2026-05-12)
 
 Started: 2026-05-12T08:14:22Z
@@ -346,24 +346,26 @@ Monitor: 88 (api.orders.write, http, regions us/eu)
 Severity: P1
 Cause: capacity (medium confidence)
 Blast radius: EU customers hitting POST /orders; orders placement
-  degraded; isolated on this monitor, trending toward widespread
+degraded; isolated on this monitor, trending toward widespread
 Summary: POST /orders returns 500 from eu-west-1 after a 90-minute
-  latency climb (p95 220ms -> 1.4s). Likely capacity saturation, not
-  a deploy - no recent ship to orders. Suggested next step: check
-  orders pool saturation and connection counts to the upstream auth
-  service before the EU region also tips over.
+latency climb (p95 220ms -> 1.4s). Likely capacity saturation, not
+a deploy - no recent ship to orders. Suggested next step: check
+orders pool saturation and connection counts to the upstream auth
+service before the EU region also tips over.
 Evidence: 30d 99.97%, 7d 99.81%, 24h 98.4% (degrading);
-  p95 220ms -> 1.4s over 90 minutes;
-  4 prior incidents on monitor 88 in 7 days, all infra, all resolved
-  by LB rule change.
+p95 220ms -> 1.4s over 90 minutes;
+4 prior incidents on monitor 88 in 7 days, all infra, all resolved
+by LB rule change.
 Comment: drafted (no write tool available)
 Open questions: see MEMORIES.md
 
 ## Timeline
+
 - 2026-05-12T08:14:22Z incident created
 - 2026-05-12T08:38:00Z triage completed by pi
 
 ## Feedback
+
 (none yet)
 ```
 

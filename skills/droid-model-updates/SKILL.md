@@ -172,7 +172,7 @@ Once tested, stage `factory/settings.json` with the repository's normal
 git workflow. Use `factory/settings.json` and sync it to the session.
 Commit with a conventional message:
 
-```
+```text
 feat(settings): add provider/acme-model-xl to customModels
 feat(settings): add provider/acme-model-xl to customModels
 ```

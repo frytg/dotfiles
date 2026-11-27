@@ -70,7 +70,7 @@ curl "https://atproto.md/backlinks/at://bsky.app/app.bsky.feed.post/3lgwdn7vd722
 
 ### Resolve identity
 
-```
+```http
 GET https://atproto.md/resolve/{actor}
 ```
 
@@ -79,7 +79,7 @@ Returns the DID, all `alsoKnownAs` handles, services, and verification keys.
 
 ### PLC audit log
 
-```
+```http
 GET https://atproto.md/plc/audit/{actor}
 ```
 
@@ -90,7 +90,7 @@ and signing/rotation key rotations — useful for dating a migration or verifyin
 
 ### PLC data
 
-```
+```http
 GET https://atproto.md/plc/data/{actor}
 ```
 
@@ -100,7 +100,7 @@ rotation keys that actually control the identity.
 
 ### PLC last operation
 
-```
+```http
 GET https://atproto.md/plc/last/{actor}
 ```
 
@@ -109,7 +109,7 @@ Lightweight "what changed last" check; use `/plc/audit` for the full dated histo
 
 ### Repo overview
 
-```
+```http
 GET https://atproto.md/at://{actor}
 ```
 
@@ -117,7 +117,7 @@ Lists all collections present in the actor's repo with links to browse each one.
 
 ### List records
 
-```
+```http
 GET https://atproto.md/at://{actor}/{collection}[?limit=&cursor=&reverse=]
 ```
 
@@ -125,7 +125,7 @@ Paginated list of records in any collection. Unknown collections are rendered as
 
 ### Single record
 
-```
+```http
 GET https://atproto.md/at://{actor}/{collection}/{rkey}
 ```
 
@@ -133,7 +133,7 @@ Fetch a single record by its record key.
 
 ### Get lexicon
 
-```
+```http
 GET https://atproto.md/lexicon/{nsid}
 ```
 
@@ -144,7 +144,7 @@ Works for any published lexicon — e.g. `/lexicon/app.bsky.feed.post`.
 
 ### Discover repos by collection
 
-```
+```http
 GET https://atproto.md/discover/{collection}[?limit=&cursor=]
 ```
 
@@ -155,7 +155,7 @@ Each result links straight into that repo's records for the collection.
 
 ### Backlinks
 
-```
+```http
 GET https://atproto.md/backlinks/{at-uri-or-did-or-url}[?source=&limit=&cursor=]
 ```
 
@@ -166,7 +166,7 @@ lists the actual linking records, cursor-paginated. Indexed by Constellation (mi
 
 URLs accept `at://` URIs directly in the path:
 
-```
+```text
 https://atproto.md/at://{actor}                          → repo overview
 https://atproto.md/at://{actor}/{collection}              → list records
 https://atproto.md/at://{actor}/{collection}/{rkey}       → single record

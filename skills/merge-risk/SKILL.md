@@ -12,7 +12,7 @@ metadata:
 
 Output format:
 
-```
+```markdown
 **Merge risk: <low-medium-high>**
 
 **<category>:** <verdict>

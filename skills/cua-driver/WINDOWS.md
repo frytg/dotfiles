@@ -442,26 +442,33 @@ your prior tool calls earned.
    `%LOCALAPPDATA%\Programs\trycua\cua-driver-rs\bin\cua-driver.exe`,
    added to the user PATH by the install script.
    If missing, point the user at:
+
    ```powershell
    irm https://cua.ai/driver/install.ps1 | iex
    ```
+
    and stop.
+
 2. **The runtime owner must run in an interactive session (Session 1+),
    NOT Session 0.** This is the daemon for one-shot CLI/service mode and the
    MCP process for bare stdio MCP. Windows isolates services into Session 0 with no
    desktop. UIA enumeration, screenshot via PrintWindow, and
    `IApplicationActivationManager` all silently return empty /
    timeout in Session 0. Check:
+
    ```powershell
    Get-Process cua-driver | Select Id,SessionId
    ```
+
    `SessionId == 0` is refused before runtime actions. The autostart Scheduled Task uses
    `LogonType=Interactive` so the daemon lands in the user's logon
    session. If you started the daemon via SSH-into-Windows, that
    session is usually Session 0: kick the autostart task instead:
+
    ```powershell
    schtasks /Run /TN cua-driver-serve
    ```
+
 3. **Run `cua-driver doctor`**: reports session ID, COM apartment
    status, UIA desktop-enumeration reachability, install paths,
    version. If anything reads `false` / `error`, fix that before
@@ -678,7 +685,7 @@ Windows architectural quirks that matter:
 
 ### Known AUMIDs for common Win11 apps
 
-```
+```text
 Microsoft.WindowsCalculator_8wekyb3d8bbwe!App
 Microsoft.WindowsNotepad_8wekyb3d8bbwe!App
 Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe!App

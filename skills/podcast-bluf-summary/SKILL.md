@@ -37,7 +37,7 @@ Produce a BLUF summary of a podcast episode from its URL. The heavy lifting is d
 
 4. **Append sources.** End the output with both links on their own lines (page URL first, then audio URL if different), so the summary is traceable:
 
-   ```
+   ```text
    <pageUrl>
    <audioUrl>
    ```

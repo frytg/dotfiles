@@ -23,12 +23,13 @@ State the answer in the first sentence, then provide only the context the reader
 
 ## Output structure
 
-```
+```markdown
 # [Title — topic in 3-7 words]
 
 **BLUF:** [The answer in one sentence.] [2-4 sentences of maximum context: critical who/what/when/why, decision or action required, deadline if any. The reader can act on this paragraph alone.]
 
 ## [Supporting sections, in order of importance, not chronology:]
+
 - Wins / Outcomes
 - Risks / Watchlist
 - Open items / Carry-over
@@ -67,35 +68,40 @@ State the answer in the first sentence, then provide only the context the reader
 
 Input: a 20-message thread about a Friday service migration with five services to cut over.
 
-```
+```markdown
 # Acme migration — on track for Friday, payments test still unproven
 
 **BLUF:** Migration ships Friday with four of five services cut over in staging; payments passes the schema check but rollback failed in this morning's dry run, so we're blocked on one re-test before we go. **Hold the cutover for an extra half-day to re-run the rollback test — the dominant risk is silent data drift in `orders_v2`, where three rows already mismatched the legacy table during staging and we don't yet have a reconciler.**
 
 ## Status
+
 - Cutover in staging: auth, catalog, search, billing. Payments pending re-test.
 - Rollback dry run at 09:00 failed at step 4 (queue drain) — stuck consumer.
 
 ## Decisions needed
+
 - Today EOD: confirm the half-day delay, or override with VP-Eng sign-off.
 - Tomorrow 14:00: re-run the rollback dry run; cut over if it passes.
 
 ## Watchlist
+
 - `orders_v2` row drift — 3 mismatches found, 0 reconciled.
 - On-call coverage thin Saturday; PagerDuty rotation still has the gap.
 ```
 
 ## Example (bad)
 
-```
+```markdown
 # Weekly Summary
 
 This week was a productive week with many things happening. Overall, there was a lot of progress in various areas.
 
 ## Work
+
 Some work was done on various projects.
 
 ## Training
+
 Training was lighter this week due to holidays.
 ```
 

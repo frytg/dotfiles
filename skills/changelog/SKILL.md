@@ -118,7 +118,7 @@ Use today's date in `YYYY-MM-DD` (local time). The date is the release date, not
 
 Print a summary, then stop. Do not stage, commit, tag, or push.
 
-```
+```text
 Current branch: <branch>
 Base branch:    <base>
 Commits ahead:  <n>

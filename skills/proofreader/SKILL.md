@@ -140,7 +140,7 @@ After the bullet list, a single line:
 
 Input (line 3 has the issues):
 
-```
+```text
 line 1: this is fine
 line 2: another clean line
 line 3: teh quick brown fox jumps and soem more text

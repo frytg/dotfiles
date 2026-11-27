@@ -6,7 +6,7 @@ SSH uses the agent on `SSH_AUTH_SOCK`. `just ssh-add-key` fills that agent with 
 
 `.sshconfig` used to set `IdentityAgent` on `Host *` to the 1Password app socket:
 
-```
+```text
 ~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock
 ```
 

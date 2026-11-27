@@ -17,7 +17,7 @@ Settings → Theme → Import theme in the app, then one of:
 - **File** — pick [`moshi-theme-dark-greeny.json`](./moshi-theme-dark-greeny.json).
 - **Clipboard** — paste the `moshi-theme:` string (regenerate below):
 
-  ```
+  ```text
   moshi-theme:ewoJInYiOiAxLAoJIm5hbWUiOiAiRGFyayBHcmVlbnkiLAoJIm1vZGUiOiAiZGFyayIsCgkiY29sb3JzIjogewoJCSJiYWNrZ3JvdW5kIjogIiMxODFEMTYiLAoJCSJmb3JlZ3JvdW5kIjogIiNFQ0VCRTMiLAoJCSJjdXJzb3IiOiAiI0ZGRkYxMSIsCgkJImJsYWNrIjogIiMxODFEMTYiLAoJCSJyZWQiOiAiI0ZGMDAzQyIsCgkJImdyZWVuIjogIiM4MEQwODAiLAoJCSJ5ZWxsb3ciOiAiI0ZGRTk0QSIsCgkJImJsdWUiOiAiIzJBQzJGMSIsCgkJIm1hZ2VudGEiOiAiI0YwOTEzOSIsCgkJImN5YW4iOiAiIzgwRDA4MCIsCgkJIndoaXRlIjogIiNFQ0VCRTMiLAoJCSJicmlnaHRCbGFjayI6ICIjM0U0OTM5IiwKCQkiYnJpZ2h0UmVkIjogIiNGRjZCODUiLAoJCSJicmlnaHRHcmVlbiI6ICIjQjBFMEIwIiwKCQkiYnJpZ2h0WWVsbG93IjogIiNGRkZGN0YiLAoJCSJicmlnaHRCbHVlIjogIiM3QkQ4RjEiLAoJCSJicmlnaHRNYWdlbnRhIjogIiNGRkIwNzAiLAoJCSJicmlnaHRDeWFuIjogIiNCMEUwQjAiLAoJCSJicmlnaHRXaGl0ZSI6ICIjRkZGRkZGIiwKCQkic2VsZWN0aW9uQmFja2dyb3VuZCI6ICIjM0U0OTM5IgoJfQp9Cg==
   ```
 

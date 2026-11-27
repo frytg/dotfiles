@@ -31,7 +31,7 @@ Keep the existing broadcaster row order unless the user asks to change it.
 
 Base filter (always):
 
-```
+```text
 service:swr-radiohub-ingest @data.source:eventhub
 ```
 
@@ -53,7 +53,7 @@ Do **not** hardcode or paste institution URNs into this skill, the docs, or chat
 
 3. Build a unique map from feed items:
 
-   ```
+   ```text
    items[].publisher.institution.id        → urn:ard:institution:<hex>
    items[].publisher.institution.acronym   → short label
    items[].publisher.institution.title     → full name
@@ -88,13 +88,13 @@ Use:
 
    Logged as `@data.data.message.id`:
 
-   ```
+   ```text
    urn:ard:institution:<hex>-<ulid-suffix>
    ```
 
    Filter with a wildcard on the feed-derived hex (escape colons):
 
-   ```
+   ```text
    @data.data.message.id:urn\:ard\:institution\:<hex>*
    ```
 

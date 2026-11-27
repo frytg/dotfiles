@@ -32,7 +32,6 @@ flowchart LR
     C -.leak.-> D[PricingClient]
   end
 ```
-````
 
 ```mermaid
 flowchart LR
@@ -65,7 +64,6 @@ One sentence. What deepens, not a full redesign.
 ## Top recommendation
 
 **{{Candidate title}}** — {{one sentence why first}}.
-
 ````
 
 ## Header
@@ -101,7 +99,7 @@ flowchart LR
   A[OrderHandler] --> B[OrderValidator]
   B --> C[OrderRepo]
   C -.leak.-> D[PricingClient]
-````
+```
 
 ```mermaid
 sequenceDiagram

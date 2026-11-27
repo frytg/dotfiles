@@ -36,7 +36,7 @@ Ask **one** decision per turn. Multiple simultaneous questions are slightly wors
 
 Prefer this shape:
 
-```
+```markdown
 **Q:** [the decision, concrete]
 **Why it matters:** [what it unblocks or what fails if wrong]
 **Recommendation:** [your pick] — [one-line reason]
@@ -76,8 +76,9 @@ Push back when my answer is inconsistent with an earlier choice or with facts yo
 
 After each of my answers, silently update the working model. Periodically (every few decisions, or when a subtree closes) dump a **compact running understanding** — bullets, not a new essay:
 
-```
+```markdown
 **So far:**
+
 - Goal: …
 - In: … / Out: …
 - Decided: …

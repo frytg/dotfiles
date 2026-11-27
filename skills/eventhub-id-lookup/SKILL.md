@@ -45,7 +45,7 @@ You cannot compute any URN from the human-readable form. The only way to find a 
 
 ## Datadog query template
 
-```
+```text
 service:swr-radiohub-ingest @data.stage:{stage} @data.source:{source} @data.data.message.services.topic.id:"{topic_urn}"
 ```
 
@@ -75,7 +75,7 @@ When this skill produces a deliverable file (a JSON dump of ingested tracks, an 
 
 Naming pattern:
 
-```
+```text
 ~/Downloads/<service>-<stage>-<source>-<topic-or-descriptor>-<YYYYMMDD>.json
 ```
 
@@ -100,7 +100,7 @@ You need to find a log that contains both the human-readable and the hashed form
 
 1. **Station name in `playlistItemId`** — radio playlists are prefixed by station slug (look for `<station-slug>-<digits>-<8hex>` patterns in the rendered `message` field). Use the service log's own `message` text (which **does** contain the playlist id) to find a recent station activity log, then read the structured `data.data.message` to get the URNs.
 
-   ```
+   ```text
    service:swr-radiohub-ingest @data.stage:dev message:"<station-slug>-"
    ```
 
@@ -108,7 +108,7 @@ You need to find a log that contains both the human-readable and the hashed form
 
 2. **`creator` address** — Eventhub messages from a given station have a per-station `creator` value (typically a per-station email; the OpenAPI doesn't define this field, it's added by the radiohub ingest). Query for recent logs and look for the desired creator in the structured `data.data.message`, then read out the topic URN from `services[0].topic.id`.
 
-   ```
+   ```text
    service:swr-radiohub-ingest @data.stage:dev @data.source:eventhub
    ```
 
@@ -198,7 +198,7 @@ Two stations are active in dev:
 
 Query for station A:
 
-```
+```text
 service:swr-radiohub-ingest @data.stage:dev @data.source:eventhub @data.data.message.services.topic.id:"urn:ard:permanent-livestream:0000ffff5678abcd"
 ```
 

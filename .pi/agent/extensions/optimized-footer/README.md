@@ -14,7 +14,7 @@ Local pi extension that replaces the default footer with a denser, session-aware
 
 Pi’s built-in footer is useful, but mixes full path noise with weak MCP semantics and bland model/thinking presentation. This extension owns `ctx.ui.setFooter()` and paints two fixed lines:
 
-```
+```text
 repo · git branch@host · mcp readiness          model · thinking
 ↑in ↓out Rcache Wcache τreason  $cost …         context% bar
 ```

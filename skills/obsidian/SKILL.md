@@ -116,7 +116,7 @@ TEMPLATE_BODY=$(obsidian template:read name="Daily Standup")
 
 **Update a scalar property.** Use the file tool.
 
-```
+```text
 edit "$VAULT/Projects/Foo.md"  oldText="status: active"  newText="status: done"
 ```
 

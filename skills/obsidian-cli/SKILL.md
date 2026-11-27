@@ -104,19 +104,26 @@ obsidian tasks todo format=json   # many list commands also accept format=
 Turn on console capture once with `obsidian dev:debug on`, so messages from the reload are kept. After making code changes to a plugin or theme, follow this workflow:
 
 1. **Reload** the plugin to pick up changes:
+
    ```bash
    obsidian plugin:reload id=my-plugin
    ```
+
 2. **Check for errors** — if errors appear, fix and repeat from step 1:
+
    ```bash
    obsidian dev:errors
    ```
+
 3. **Verify visually** with a screenshot or DOM inspection:
+
    ```bash
    obsidian dev:screenshot
    obsidian dev:dom selector=".workspace-leaf" text
    ```
+
 4. **Check console output** for warnings or unexpected logs:
+
    ```bash
    obsidian dev:console level=error
    ```

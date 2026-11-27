@@ -1,6 +1,6 @@
 # AI, LLM, and Agent Hunting
 
-#### When to use this file
+## When to use this file
 
 Reach for this file when a language model participates in a trust-sensitive decision: chatbots and assistants, RAG pipelines, persistent agent memory, agent/tool-calling loops, MCP servers and clients, code that builds prompts from untrusted input, or code that consumes model output and acts on it. The important data flow is _untrusted content → model or memory → capability, authority, or sink_.
 
@@ -8,7 +8,7 @@ Use this alongside `ATTACK-CLASSES.md`, not instead of it. Transport, access con
 
 ## Core discipline (include in every agent prompt for this domain)
 
-```
+```text
 - Prompt injection alone is not a finding. Require a code-level boundary failure: content reaches another principal's context, invokes authority the requester lacks, discloses data they cannot read, or drives a sink they cannot reach directly.
 - Model output, memory, tool descriptions, and MCP responses are untrusted inputs. Point to the code that grants authority, trusts output, writes durable state, or feeds a sink.
 - A guardrail prompt is not a security boundary. Count only deterministic checks, resource-scoped authorization, isolation, binding, and constrained credentials.

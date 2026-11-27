@@ -137,19 +137,25 @@ Group the eligible updates into two buckets: **patch/minor** and **major**. Only
 For every `uses: owner/repo@ref` in `.github/workflows/*.yml` (or `.yaml`):
 
 1. Resolve `ref`. If it's a major-version tag (e.g. `@v4`), the next breaking change is the next major (e.g. `@v5`). If it's a SHA, resolve to the matching tag first:
+
    ```bash
    gh api "repos/{owner}/{repo}/git/refs/tags"
    ```
+
 2. Fetch the next major's release notes:
+
    ```bash
    gh release view v5 --repo actions/checkout
    # or list recent releases
    gh api "repos/actions/checkout/releases?per_page=10"
    ```
+
 3. For public repos, the raw API works without auth, but is rate-limited to 60 requests/hour/IP. Use `gh` with auth (`gh auth status`) for higher limits:
+
    ```bash
    curl -s https://api.github.com/repos/{owner}/{repo}/releases/latest
    ```
+
 4. Read the body for `BREAKING`, `Breaking`, `⚠️`, or migration notes. Note API/signature changes, default-behavior changes, and required Node/runtime bumps.
 
 ### Other dependencies
