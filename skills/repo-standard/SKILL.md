@@ -39,7 +39,7 @@ Monorepo-only CI (affected-package selection, per-package jobs, sparse checkout)
 - Fields, engines, and secrets of a Tangled workflow. Use `tangled-ci`.
 - Moving a repo to Tangled or the first GitHub mirror setup. Use `migrate-to-tangled`.
 - What goes into `README.md` and `docs/`. Use `repo-docs`. For `CHANGELOG.md` use `changelog`, for design docs `rfc`.
-- Outdated dependency reports. Use `deps`.
+- Outdated dependency reports. Use `deps-check`, or `deps-auto` to apply the safe updates.
 
 ## Pick the mode
 

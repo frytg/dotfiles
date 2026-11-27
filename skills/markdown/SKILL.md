@@ -1,6 +1,6 @@
 ---
 name: markdown
-description: Lint and write Markdown that renders correctly across CommonMark, GFM, GitHub, Hugo, MkDocs, and most static-site generators. Use when editing any .md file or auditing documentation. Covers spacing around block elements, list and emphasis conventions, and final-newline requirements.
+description: Lint and write Markdown that renders correctly across CommonMark, GFM, GitHub, Hugo, MkDocs, and most static-site generators. Use when editing any .md file or auditing documentation. Covers spacing around block elements, line length and safe wrapping, list and emphasis conventions, and final-newline requirements.
 metadata:
   category: writing
 ---
@@ -15,6 +15,18 @@ Brief rules for Markdown that renders consistently across CommonMark, GFM, GitHu
 2. **At most one consecutive blank line.** Two blanks adds nothing and breaks some lints.
 3. **No trailing whitespace on prose lines.** Two trailing spaces is a hard line break in Markdown — fragile and invisible in most editors. Prefer blank line + new paragraph instead. (Projects with `trim_trailing_whitespace = false` for `*.md` in `.editorconfig` are opting into allowing it — leave those alone.)
 4. **File ends with a single newline.** No trailing blank lines.
+
+## Line length
+
+1. **Wrap prose at the project limit.** Read it from `max_line_length` in `.editorconfig` or `printWidth` in the
+   formatter config. Use 120 when neither sets one.
+2. **Break at sentence or clause boundaries, not mid-phrase.** A later edit then touches one line instead of
+   reflowing the paragraph, so diffs stay small.
+3. **Never wrap what breaks when split.** Leave table rows, headings, URLs and link targets, fenced code, and YAML
+   frontmatter values (such as a skill `description`) on one line. A long line beats broken markup.
+4. **Indent continuation lines to the item's text** inside list items. Without the indent, the line can drop out of
+   the list.
+5. **Only wrap lines you touch.** Reflowing a whole existing file is an unrelated change that hides the real diff.
 
 ## Headings
 
