@@ -1,6 +1,6 @@
 ---
-name: deps
-description: Checks for outdated dependencies in a project using its configured package manager (bun, npm, nub, cargo, go, pip, bundler), plus GitHub Actions refs, Terraform provider pins, and container images in Kubernetes manifests; fetches upstream release notes to flag breaking changes. Use when the user asks to check for updates, look for outdated packages, audit dependencies, or review upgrade impact.
+name: deps-check
+description: Checks for outdated dependencies in a project using its configured package manager (bun, npm, cargo, go, pip, bundler), plus GitHub Actions refs, Terraform provider pins, and container images in Kubernetes manifests; respects the repo's configured release cooldown (minimumReleaseAge and equivalents) and fetches upstream release notes to flag breaking changes. Read-only. Use when the user asks to "check for updates", "look for outdated packages", "audit dependencies", "deps check", or review upgrade impact. Not for applying updates (use deps-auto).
 license: MIT
 metadata:
   author: frytg
@@ -12,6 +12,8 @@ metadata:
 
 Detect the project's package manager, list outdated dependencies, and surface breaking changes from upstream release notes. Infra-style repos with no lockfile still have dependencies: GitHub Actions refs, Terraform provider pins, and container images pinned in Kubernetes manifests — all covered below.
 
+This skill only reports. The `deps-auto` skill runs it, then applies the safe part of the report.
+
 ## 1. Detect the package manager
 
 Walk the project root for the first matching lockfile or manifest. Stop at the first hit.
@@ -20,13 +22,12 @@ Walk the project root for the first matching lockfile or manifest. Stop at the f
 | -------------------------------------- | ---------- | --------------------- |
 | `bun.lock` / `bun.lockb`               | bun        | `bun outdated`        |
 | `package-lock.json`                    | npm        | `npm outdated`        |
-| `lock.yaml`                            | nub        | `nub outdated`        |
 | `Cargo.lock`                           | cargo      | `cargo outdated`      |
 | `go.sum`                               | go modules | `go list -u -m all`   |
 | `pyproject.toml` / `requirements*.txt` | pip        | `pip list --outdated` |
 | `Gemfile.lock`                         | bundler    | `bundle outdated`     |
 
-When multiple lockfiles are present, prefer (in order): `lock.yaml` (explicit nub declaration) > `bun.lock*` > `package-lock.json`. Only ask the user when the signal is truly ambiguous.
+When both `bun.lock*` and `package-lock.json` are present, prefer bun. Only ask the user when the signal is truly ambiguous.
 
 `cargo outdated` requires `cargo install cargo-outdated` once.
 
@@ -44,16 +45,6 @@ bun outdated
 
 ```bash
 npm outdated
-```
-
-### nub
-
-```bash
-nub outdated                  # table of outdated deps
-nub outdated --json           # machine-readable
-nub outdated --long           # also show specifier and dep type
-nub outdated -r               # across all workspace packages
-nub outdated '<pattern>'      # e.g. '@babel/*'
 ```
 
 ### cargo
@@ -92,9 +83,54 @@ curl -s "https://registry.terraform.io/v1/providers/{namespace}/{name}/versions"
 
 Pins are usually exact (`version = "2.81.0"`), so any newer release is an update. Same-major newer → patch/minor bucket; different major (or a 0.x provider minor flagged as breaking in its changelog — 0.x providers don't guarantee semver) → major bucket with a changelog link. The `.terraform.lock.hcl` mirrors the pins; report against the pin, not the lockfile.
 
-## 3. Find breaking changes
+## 3. Apply the release cooldown
 
-Group outdated packages into two buckets: **patch/minor** and **major**. Only majors need release-note research.
+A version that is newer than the repo's cooldown is not an update yet. Freshly published releases are the main vector for supply-chain attacks, so the cooldown filters every candidate before any other step.
+
+### Resolve the cooldown
+
+Read each setting that exists in the repo. Each one uses a different unit, so convert all values to a duration before you compare them:
+
+- bun: `bunfig.toml` → `[install] minimumReleaseAge` — **seconds** (`259200` = 3 days).
+- npm: `.npmrc` → `min-release-age` — **days**.
+- pip: `--uploaded-prior-to` in `pip.conf` or the install recipe — a timestamp or a duration.
+- mise: `mise.toml` `[settings]` → `minimum_release_age` — a duration (`3d`). Applies to the tools mise pins.
+- Renovate: `renovate.json5` / `renovate.json` → `minimumReleaseAge` — a duration (`3 days`). Package rules can override it per manager.
+- Dependabot: `.github/dependabot.yml` → `cooldown.default-days` and the per-semver keys — **days**.
+
+Rules:
+
+1. Each ecosystem uses its own setting.
+2. An ecosystem without a setting (GitHub Actions, Terraform providers, container images, cargo, go) uses the strictest value configured anywhere in the repo.
+3. A repo with no setting at all uses **3 days**.
+4. An explicit cooldown in the user's request or the automation prompt overrides all of the above.
+
+### Check each candidate
+
+Get the publish time of every candidate version:
+
+```bash
+# npm registry (bun, npm)
+curl -s "https://registry.npmjs.org/<name>" | jq -r '.time["<version>"]'
+# PyPI
+curl -s "https://pypi.org/pypi/<name>/<version>/json" | jq -r '.urls[0].upload_time_iso_8601'
+# crates.io
+curl -s -A "deps-check" "https://crates.io/api/v1/crates/<name>/<version>" | jq -r '.version.created_at'
+# Go module proxy
+curl -s "https://proxy.golang.org/<module>/@v/<version>.info" | jq -r '.Time'
+# GitHub release (Actions, Terraform providers, anything released on GitHub)
+gh api "repos/{owner}/{repo}/releases/tags/<tag>" --jq '.published_at'
+# Container image (the field is often zeroed by reproducible builds)
+crane config "<image>:<tag>" | jq -r '.created'
+```
+
+- Pick the **newest version that is older than the cooldown**, not the newest version. The result can be a lower version than `latest`.
+- A version with an unknown or zeroed publish time counts as too new. Do not guess.
+- A newer version that is still in cooldown goes in the report with the date it becomes eligible.
+
+## 4. Find breaking changes
+
+Group the eligible updates into two buckets: **patch/minor** and **major**. Only majors need release-note research. A minor bump of a `0.x` package goes in the major bucket, because semver does not promise compatibility below `1.0`.
 
 ### GitHub Actions
 
@@ -142,7 +178,7 @@ curl -sL https://raw.githubusercontent.com/{owner}/{repo}/main/CHANGELOG.md
 
 Scan for `BREAKING`, `Breaking`, `⚠️`, `Migration`, `Removed`, renamed exports, default flips, and minimum runtime/peer bumps. Skip the raw changelog if it's mostly patch entries — only the majors are interesting.
 
-## 4. Check container images (Kubernetes manifests)
+## 5. Check container images (Kubernetes manifests)
 
 If the repo contains Kubernetes workload manifests (files with `kind: Deployment`, `StatefulSet`, `DaemonSet`, `Job`, `CronJob`, or `Pod`), every pinned `image:` tag is a dependency. Find them:
 
@@ -165,50 +201,46 @@ Registry notes:
 - Private registries need ambient credentials; a failed lookup is a registry error in the report, not a bug.
 - `crane ls` is slow; call it once per repo, not per file. Don't wrap it in `timeout` on macOS — the binary doesn't exist there and every call silently fails.
 
-## 5. Check tool config drift (biome)
+## 6. Find the repo's checks
 
-If the project uses biome, the version pinned in `biome.json#.$schema` can lag behind the installed `biome` binary. Drift means new rules/options aren't available and deprecated keys may be ignored or warned. Biome ships a built-in `migrate` command for exactly this:
-
-```bash
-# Dry-run — prints a diff if the config needs an update, no-op if not
-biome migrate
-
-# Apply the migration
-biome migrate --write
-```
-
-The check is safe to run unconditionally: if `$schema` already matches the installed version, `biome migrate` exits silently. To compare versions explicitly without running the command:
+`deps-auto` verifies every update with the repo's own checks, and a toolchain bump can change what those checks report. Read them from the `justfile`, including files it imports (`just/*.just`):
 
 ```bash
-# Installed version
-biome --version
-
-# Schema version (matches the URL in $schema: .../schemas/X.Y.Z/schema.json)
-grep -oE '/schemas/[0-9]+\.[0-9]+\.[0-9]+' biome.json | head -1
+just --summary                 # recipe names
+just --show <recipe>           # the commands a recipe runs
 ```
 
-If a migration was applied, re-run the linter to confirm the new schema parses cleanly:
+Map the recipes by their usual names. Most repos run the oxc toolchain behind them, but the recipe name is the contract, not the tool:
 
-```bash
-biome check .
-```
+- `typecheck` — type check, usually `bun check` or `tsc --noEmit`.
+- `lint` — linter, usually `oxlint`.
+- `format-check` — formatter in check mode, usually `oxfmt --check`. `format` writes the fixes.
+- `test` — the test suite.
+- `pre-push` — runs what CI runs. Prefer it when it exists.
 
-Skip this step if the project has no `biome.json` / `biome.jsonc`. For other tooling config (`.eslintrc`, `prettier.config.*`, etc.) there's no equivalent `migrate` command — compare the pinned version against the installed binary and consult the tool's changelog manually.
+Without a `justfile`, read the checks from the CI workflow, then `AGENTS.md` or `README.md`. Do not invent a command. Report a repo with no checks at all as an action item.
 
-## 6. Report
+Then compare the report with the recipe bodies:
 
-Produce a tight summary, not a raw dump:
+- An update to a tool that a check recipe calls (`oxlint`, `oxfmt`, `typescript`, a test runner) goes in the report as a **toolchain** update. It can add new lint findings, reformat files, or tighten types without any code change.
+- A config `$schema` that points into `node_modules` follows the installed version. A `$schema` URL with a version in it needs the same bump as the tool; list it next to the tool.
+
+## 7. Report
+
+Produce a tight summary, not a raw dump. Open with the cooldown in effect and where it came from (for example `3 days, bunfig.toml`), and the checks found in step 6 (for example `checks: just pre-push`).
 
 - **Patch & minor** — one bullet per package, no commentary.
+- **Toolchain** — updates to tools that a check recipe calls, with the recipe that calls them.
 - **Major & breaking** — one bullet per package with: current → next, a one-line breaking-change summary, and a link to the release notes. Includes container images whose upstream major differs from the pinned one.
 - **Container images** — out-of-date pinned tags (file, container name, current → latest), plus separate buckets for floating tags that should be pinned and registry errors. Already-latest images get one line, not a list.
+- **In cooldown** — one bullet per newer release that is still too young: name, version, and the date it becomes eligible.
 - **Action items** — anything needing user decision: Node/runtime bump, peer-dep conflict, deprecated transitive, security advisory, rolling tags to pin.
 
 Keep the report scannable. Don't paste the full `outdated` output.
 
 ## Safety
 
-- Never run `update` / `upgrade` / `install` as part of this skill. The user decides what to bump.
+- Never run `update` / `upgrade` / `install` as part of this skill. The user decides what to bump, or runs `deps-auto` to apply the safe updates.
 - Never edit lockfiles or `package.json` versions. Reporting is the only job.
 - Never deploy or mutate live state: no `terraform apply`/`init -upgrade`, no `kubectl apply`, no cluster or host changes. Infra deps (providers, images) are reported like any other dependency.
 - For private registries, `npm outdated` may still work, but `gh` release lookups need an authenticated user.
